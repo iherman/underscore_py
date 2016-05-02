@@ -1,2 +1,2 @@
 # underscore_py
-A blatant rewrite of (most of ) the javascript underscore module to Pythong
+A blatant rewrite of (most of ) the [Javascript underscore module](http://underscorejs.org/) to Python. I found the Javascript module very useful when using Javascript, no reason why not have the same facility in Python...
