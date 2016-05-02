@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+# coding=utf-8
 from types import *
 import itertools
 import random
 import math
-import collections
+import bisect
+
+__version__ = 0.2
 
 class underscore(object):
 	"""
@@ -36,7 +39,9 @@ class underscore(object):
 	"""
 	@staticmethod
 	def _exec1(f, context, a1):
-		if context is None:
+		if isinstance(f, basestring):
+			return a1[f]
+		elif context is None:
 			return f(a1)
 		else:
 			return f(context, a1)
@@ -658,29 +663,121 @@ class underscore(object):
 			return {list[i]:values[i] for i in xrange(0,min(len(list),len(values)))}
 
 	@staticmethod
-	def indexOf(array, value):
-		pass
+	def indexOf(array, value, isSorted = False):
+		"""
+		Returns the index at which value can be found in the array, or -1 if value is not present in the array. If you're working with a large array, and you know that the array is already sorted, pass `True` for isSorted to use a faster binary search... or, pass a number as the third argument in order to look for the first matching value in the array after the given index.
+
+		```
+		>>> _.indexOf([1, 2, 3, 1, 2, 3], 2)
+		1
+		```
+
+		"""
+		# I could have relied on findIndex, but this is way simpler. Actually, I could have
+		# also used the built-in facility, but the lastIndexOf cannot be done that way, so
+		# I kept this for the sake of symmetry, but also to use bisect for large arrays
+		if type(isSorted) is BooleanType and isSorted:
+		    'Locate the leftmost value exactly equal to x using bisect'
+		    i = bisect.bisect_left(array, value)
+		    if i != len(array) and array[i] == value:
+		        return i
+		    return -1
+		else:
+			start = 0 if (type(isSorted) is BooleanType and isSorted is False) or type(isSorted) is not IntType else isSorted
+			for i in xrange(start, len(array)):
+				if array[i] == value :
+					return i
+			return -1
 
 	@staticmethod
-	def lastIndexOf(array,value):
-		pass
+	def lastIndexOf(array, value, fromIndex = None):
+		"""
+		Returns the index of the last occurrence of value in the array, or -1 if value is not present. Pass fromIndex to start your search at a given index.
+
+		```
+		>>> _.lastIndexOf([1, 2, 3, 1, 2, 3], 2)
+		4
+		```
+		"""
+		start = len(array) if fromIndex is None else fromIndex
+		for i in xrange(start-1, -1, -1):
+			if array[i] == value :
+				return i
+		return -1
 
 	@staticmethod
-	def sortedIndex(array,value, iteratee = None, context = None):
-		pass
+	def sortedIndex(array, value, iteratee = None, context = None):
+		"""
+		Determine the index at which the value should be inserted into the list in order to maintain the list's sorted order. If an iteratee function is provided, it will be used to compute the sort ranking of each value, including the value you pass. The iteratee may also be the string name of the key to sort by.
+
+		```
+		>>> _.sortedIndex([10, 20, 30, 40, 50], 35)
+		3
+		>>> stooges2 = [{'name': 'moe', 'age': 40}, {'name': 'curly', 'age': 60}]
+		>>> _.sortedIndex(stooges2, {'name': 'larry', 'age': 50}, 'age')
+		1
+		```
+		"""
+		# The version with a real iteratee is inefficient for larger arrays.
+		# Ideally, the bisect module should be rewritten to use the iteratee directly. T.B.D.
+		if iteratee is None:
+			a = array
+			v = value
+		else :
+			a = [ underscore._exec1(iteratee, context, x) for x in array ]
+			v = underscore._exec1(iteratee, context, value)
+		return bisect.bisect_left(a, v)
 
 	@staticmethod
 	def findIndex(array, predicate, context = None):
-		pass
+		"""
+		Similar to _.indexOf, returns the first index where the predicate truth test passes; otherwise returns -1.
+
+		```
+		>>> def isPrime(n):
+		...
+		...
+		>>> _.findIndex([4, 6, 8, 12], isPrime)
+		-1
+		>>> _.findIndex([4, 6, 7, 12], isPrime)
+		2
+		"""
+		for i in xrange(0, len(array)):
+			if underscore._exec1(predicate, context, array[i]):
+				return i
+		return -1
 
 	@staticmethod
 	def findLastIndex(array, predicate, context = None):
-		pass
+		"""
+		Like _.findIndex but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.
+		```
+		>>> _.findLastIndex([4,6,5,7,12],isPrime)
+		3
+		```
+		"""
+		for i in xrange(len(array)-1,-1,-1):
+			if underscore._exec1(predicate, context, array[i]):
+				return i
+		return -1
 
 	@staticmethod
 	def range(*args):
 		"""
 		A function to create flexibly-numbered lists of integers, handy for each and map loops. start, if omitted, defaults to 0; step defaults to 1. Returns a list of integers from start (inclusive) to stop (exclusive), incremented (or decremented) by step, exclusive. Note that ranges that stop before they start are considered to be zero-length instead of negative — if you'd like a negative range, use a negative step.
+
+		This is just an alias to the built-in **range** function.
+
+		```
+		>>> _.range(10)
+		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+		>>> _.range(3,10)
+		[3, 4, 5, 6, 7, 8, 9]
+		>>> _.range(3,10,2)
+		[3, 5, 7, 9]
+		>>>
+		```
+
 		"""
 		return range(*args)
 
@@ -859,9 +956,6 @@ class underscore(object):
 	any     = some
 	include = contains
 	unique  = uniq
-
-
-
 
 
 if __name__ == '__main__':
