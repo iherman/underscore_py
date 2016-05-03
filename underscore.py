@@ -77,6 +77,12 @@ class underscore(object):
 		return False
 
 	@staticmethod
+	def _index_sorted(a, x):
+		"""Locate the leftmost value exactly equal to x when the array is sorted"""
+		i = bisect.bisect_left(a, x)
+		return i if i != len(a) and a[i] == x else -1
+
+	@staticmethod
 	def identity(x):
 		return x
 
@@ -605,9 +611,9 @@ class underscore(object):
 			return retval
 
 	@staticmethod
-	def uniq(array, iteratee = None, context = None):
+	def uniq(array, iteratee = None, context = None, isSorted = False):
 		"""
-		Produces a duplicate-free version of the array, based on the "in" operator of Python's list. If you want to compute unique items after a transformation, pass an iteratee function.
+		Produces a duplicate-free version of the array, based on the "in" operator of Python's list. If you want to compute unique items after a transformation, pass an iteratee function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.
 		```
 		>>> _.uniq([1, 2, 1, 3, 1, 4])
 		[1, 2, 3, 4]
@@ -619,12 +625,18 @@ class underscore(object):
 			to_compare = (lambda x: x) if iteratee is None else (lambda x: underscore._exec1(iteratee, context, x))
 			retval      = [array[0]]
 			comparisons = [to_compare(array[0])]
-			for x in array[1:]:
-				y = to_compare(x)
-				if y in comparisons:
-					continue
-				retval.append(x)
-				comparisons.append(y)
+			if isSorted:
+				for x in array[1:]:
+					y = to_compare(x)
+					if underscore._index_sorted(comparisons, y) == -1:
+						retval.append(x)
+						comparisons.append(y)
+			else:
+				for x in array[1:]:
+					y = to_compare(x)
+					if y not in comparisons:
+						retval.append(x)
+						comparisons.append(y)
 			return retval
 
 	@staticmethod
@@ -677,11 +689,7 @@ class underscore(object):
 		# also used the built-in facility, but the lastIndexOf cannot be done that way, so
 		# I kept this for the sake of symmetry, but also to use bisect for large arrays
 		if type(isSorted) is BooleanType and isSorted:
-		    'Locate the leftmost value exactly equal to x using bisect'
-		    i = bisect.bisect_left(array, value)
-		    if i != len(array) and array[i] == value:
-		        return i
-		    return -1
+			return underscore._index_sorted(array, value)
 		else:
 			start = 0 if (type(isSorted) is BooleanType and isSorted is False) or type(isSorted) is not IntType else isSorted
 			for i in xrange(start, len(array)):
