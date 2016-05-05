@@ -82,16 +82,13 @@ class underscore(object):
 		i = bisect.bisect_left(a, x)
 		return i if i != len(a) and a[i] == x else -1
 
-	@staticmethod
-	def identity(x):
-		return x
 
 	@staticmethod
 	def each(list, iteratee, context = None):
 		"""Iterates over a list of elements, yielding each in turn to an **iteratee** function. Each
 		invocation of **iteratee** is called with three arguments: if **list** is of list type,
 		then the arguments are ``(element, index, list)``, if it is of dictionary type, or
-		the arguments are ``(value, key, list``). Returns **list** for chaining.
+		the arguments are ``(value, key, list``). Returns **list** for possible composition.
 
 		```
 		>>> def pr(element, index, list):
@@ -124,7 +121,7 @@ class underscore(object):
 		```
 		>>> _.map([1, 2, 3], lambda num, *args: num * 3)
 		[3, 6, 9]
-		>>> _.map({'one': 1, 'two': 2, 'three': 3}, lambda num, key, *args: num * 4)
+		>>> _.map({'one': 1, 'two': 2, 'three': 3}, lambda val, key, *args: val * 4)
 		[12, 8, 4]
 		>>> _.map([[1, 2], [3, 4]], lambda a, *args: _.first(a));
 		[1, 3]
@@ -955,6 +952,362 @@ class underscore(object):
 			return nextarg
 		return ff
 
+	###############################################################################
+	#                       Object (dictionary) Functions                         #
+	###############################################################################
+
+	@staticmethod
+	def keys(object):
+		"""Retrieve all the names of the object's own enumerable properties. Alias of the built-in Python method.
+		```
+		>>> _.keys({'one':1, 'two':2, 'three':3})
+		['three', 'two', 'one']
+		```
+		"""
+		return object.keys()
+
+	@staticmethod
+	def values(object):
+		"""Retrieve all the names of the object's own enumerable properties. Alias of the built-in Python method.
+		```
+		>>> _.keys({'one':1, 'two':2, 'three':3})
+		[3,2,1]
+		```
+		"""
+		return object.values()
+
+	@staticmethod
+	def mapObject(obj, iteratee = None, context = None):
+		"""Like map, but for objects. Transform the value of each property in turn.
+		The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+		If **itereatee** is not set or is ``None``, a copy of **obj** is returned.
+
+		```
+		>>> _.mapObject({'one': 1, 'two': 2, 'three': 3})
+		{'one': 1, 'three': 3, 'two': 2}
+		>>> _.mapObject({'one': 1, 'two': 2, 'three': 3}, lambda key, val, obj: 3*val)
+		{'one': 3, 'three': 9, 'two': 6}
+		```
+		"""
+		if iteratee is None:
+			return underscore.clone(obj)
+		else:
+			transform = lambda key: underscore._exec3(iteratee, context, key, obj[key], obj)
+			return {k: transform(k) for k in obj.iterkeys()}
+
+	@staticmethod
+	def pairs(obj, tuple = False):
+		"""Convert an object into a list of [key, value] pairs. If the value of **tuple** is set to true,
+		an array of tuples is returned, instead of an array of (binary) arrays.
+		```
+		>>> _.pairs({'one':1, 'two':2, 'three':3})
+		[['three', 3], ['two', 2], ['one', 1]]
+		>>> _.pairs({'one':1, 'two':2, 'three':3}, tuple = True)
+		[('three', 3), ('two', 2), ('one', 1)]
+		```
+		"""
+		return obj.items() if tuple else underscore.zip(obj.keys(),obj.values())
+
+	@staticmethod
+	def invert(obj):
+		"""Returns a copy of **obj** where the keys have become the values and the values the keys. For this to work, all of your object's values should be unique and string serializable.
+
+		```
+		>>> _.invert({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"})
+		{'Louis': 'Larry', 'Moses': 'Moe', 'Jerome': 'Curly'}
+		```
+		"""
+		return {obj[key]:key for key in obj.iterkeys()}
+
+	@staticmethod
+	def findKey(obj, predicate, context = None):
+		"""Returns the a key where the predicate truth test passes; otherwise returns ``None``.
+
+		>>> _.findKey({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"}, lambda val: val == "Jerome")
+		Curly
+		"""
+		check = lambda val: underscore._exec1(predicate, context, val)
+		for key in obj:
+			if check(obj[key]):
+				return key
+		return None
+
+	@staticmethod
+	def extend(destination, *sources):
+		"""Copy all of the properties in the source objects over to the **destination** object, and return the **destination** object. It's in-order, so the last source will override properties of the same name in previous arguments.  Return **destination** (for possible possible composition)
+
+		```
+		>>> _.extend({'name': 'moe', age:'40'}, {'age': 50}, {'age':60, 'gender':'male'})
+		{'gender': 'male', 'age': 60, 'name': 'moe'}
+		```
+		"""
+		for source in sources:
+			for key in source:
+				destination[key] = source[key]
+		return destination
+
+	@staticmethod
+	def extendOwn(destination, *sources):
+		"""Like **extend**, but only copies _own_ properties over to the destination object. Return **destination** (for possible possible composition)
+
+		```
+		>>> _.extendOwn({'name': 'moe', age:'40'}, {'age': 50}, {'age':60, 'gender':'male'})
+		{'age': 60, 'name': 'moe'}
+		```
+		"""
+		for source in sources:
+			for key in source:
+				if key in destination:
+					destination[key] = source[key]
+		return destination
+
+	@staticmethod
+	def pick(obj, *keys):
+		"""
+		Return a copy of the object, filtered to only have values for the whitelisted keys (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.
+
+		```
+		>>> _.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, 'name', 'age')
+		{'age': 50, 'name': 'moe'}
+		>>> a = ['name', 'age']
+		>>> _.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, *a)
+		{'age': 50, 'name': 'moe'}
+		>>> _.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, lambda val, *args: _.isNumber(val))
+		{'age': 50}
+		```
+		"""
+		if len(keys) == 0:
+			return {}
+		elif hasattr(keys[0], '__call__'):
+			return {key:obj[key] for key in obj.keys() if keys[0](obj[key], key, obj)}
+		else:
+			return {key:obj[key] for key in obj.keys() if key in keys}
+
+	@staticmethod
+	def omit(obj, *keys):
+		"""
+		Return a copy of the object, filtered to omit values for the blacklisted keys (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.
+
+		```
+		>>> _.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, 'name', 'age')
+		{'userid': 'moe1'}
+		>>> a = ['name', 'age']
+		>>> _.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, *a)
+		{'userid': 'moe1'}
+		>>> _.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, lambda val, *args: _.isNumber(val))
+		{'userid': 'moe1', 'name': 'moe'}
+		```
+		"""
+		if len(keys) == 0:
+			return {}
+		elif hasattr(keys[0], '__call__'):
+			return {key:obj[key] for key in obj.keys() if not keys[0](obj[key], key, obj)}
+		else :
+			return {key:obj[key] for key in obj.keys() if key not in keys}
+
+	@staticmethod
+	def defaults(obj, *defaults):
+		"""Fill in undefined properties in **obj** with the first value present in the following list of defaults objects. Return **obj** (for possible possible composition)
+		```
+		>>> iceCream = {'flavor': "chocolate"}
+		>>> _.defaults(iceCream, {'flavor': "vanilla", 'sprinkles': "lots"})
+		{'flavor': 'chocolate', 'sprinkles': 'lots'}
+		```
+		"""
+		for default in defaults:
+			for key in default.iterkeys():
+				if key not in obj:
+					obj[key] = default[key]
+		return obj
+
+	@staticmethod
+	def clone(obj):
+		"""
+		Create a shallow-copied clone of the provided plain **obj**. Any nested objects or arrays will be copied by reference, not duplicated.
+		"""
+		return { k:obj[k] for k in obj.keys() }
+
+
+	@staticmethod
+	def has(obj,key):
+		"""Does the object contain the given key? Alias to built in dictionary method"""
+		return key in obj
+
+	@staticmethod
+	def property(key):
+		"""Returns a function that will itself return the key property of any passed-in object.
+		```
+		>>> getName = underscore.property('name')
+		>>> getName(stooges[0])
+		>>> getName(stooges[1])
+		moe
+		larry
+		```
+		"""
+		return lambda obj: obj[key]
+
+	@staticmethod
+	def propertyOf(obj):
+		"""Inverse of _.property. Takes an object and returns a function which will return the value of a provided property.
+		```
+		>>> getValue = underscore.propertyOf(stooges[0])
+		>>> getValue('name')
+		moe
+		```
+		"""
+		return lambda key: obj[key]
+
+	@staticmethod
+	def matcher(attrs):
+		"""Returns a predicate function that will tell you if a passed in object contains all of the key/value properties present in attrs.
+		```
+		>>> stooges = [{'name': 'moe', 'age': 40, 'gender': 'male'},
+		...			   {'name': 'larry', 'age': 50, 'gender':'male'},
+		...			   {'name': 'curly', 'age': 60, 'gender':'female'}]
+		...
+		>>> _.filter(stooges, _.matcher({'gender':'female'}))
+		[{'gender': 'female', 'age': 60, 'name': 'curly'}]
+		```
+		"""
+		def func(obj):
+			for k in attrs:
+				if k not in obj or obj[k] != attrs[k]:
+					return False
+			return True
+		return func
+
+	@staticmethod
+	def isMatch(obj, properties):
+		"""Tells you if the keys and values in properties are contained in object.
+		```
+		>>> stooge = {'name': 'moe', 'age': 32}
+		>>> _.isMatch(stooge, {'age': 32})
+		True
+		```
+		"""
+		return underscore.matcher(properties)(obj)
+
+	@staticmethod
+	def isEqual(obj,other):
+		"""Performs an optimized deep comparison between the two objects, to determine if they should be considered equal."""
+		return obj == other
+
+	@staticmethod
+	def isEmpty(obj):
+		"""Returns true if an enumerable object contains no values (no enumerable own-properties). For strings and array-like objects _.isEmpty checks if the length property is 0."""
+		return len(obj) == 0
+
+	@staticmethod
+	def isArray(obj):
+		return type(obj) is ListType
+
+	@staticmethod
+	def isTuple(obj):
+		return type(obj) is TupleType
+
+	@staticmethod
+	def isObject(obj):
+		return type(obj) is DictType
+
+	@staticmethod
+	def isFunction(obj):
+		return type(obj) is FunctionType or type(obj) is MethodType
+
+	@staticmethod
+	def isString(obj):
+		return isinstance(obj, basestring)
+
+	@staticmethod
+	def isNumber(val):
+		return type(val) is IntType or type(val) is FloatType
+
+	@staticmethod
+	def isFinite(val):
+		return type(val) is IntType or (type(val) is FloatType and not math.isnan(val))
+
+	@staticmethod
+	def isBoolean(val):
+		return type(val) is BooleanType
+
+	@staticmethod
+	def isError(val):
+		return isinstance(val, Exception)
+
+	@staticmethod
+	def isNaN(object):
+		return type(val) is FloatType and math.isnan(val)
+
+	@staticmethod
+	def isNone(object):
+		return object is None
+
+	###############################################################################
+	#                              Utility Functions                              #
+	###############################################################################
+
+	@staticmethod
+	def identity(x):
+		return x
+
+
+
+	###############################################################################
+	#                                    Chaining                                 #
+	###############################################################################
+
+	@staticmethod
+	def chain(obj):
+		"""
+		Returns a wrapped object. Calling underscore methods on this object will continue to return wrapped objects until value is called.
+		If a new method call is attempted _after_ a call to ``value``, an exception is raised.
+
+		The tapped object has two more methods:
+		value():
+			Extract the value of the wrapped object. A call to value means that no more chaining is possible.
+		tap(func):
+		 	Execute the function 'func' on the value of the wrapped object; the object itself is returned. This can be used
+			to 'tap into' the chain.
+
+
+		```
+		>>> _.chain(stooges).sortBy('age').map(lambda st, *args: "%s is %s" % (st['name'],st['age'])).first().value()
+		moe is 40
+		>>> def pr(a):
+		...		print "intermediate: %s" % a
+		...
+		>>> _.chain([1,2,3,200]).filter(lambda x: x % 2 ==0).tap(pr).map(lambda x, *a: x*x).value()
+		intermediate: [2, 200]
+		[4, 40000]
+		```
+		"""
+		class _chain:
+			def __init__(self, val):
+				self.current_value = val
+				self.chaining_on   = True
+
+			def tap(self,f):
+				f(self.current_value)
+				return self
+
+			def value(self):
+				if self.chaining_on:
+					self.chaining_on = False
+				return self.current_value
+
+			def __getattr__(self, name):
+				if name == "__module__" or name == "__doc__" or name not in underscore.__dict__:
+					raise AttributeError(name)
+				if self.chaining_on:
+					def func(*args):
+						self.current_value = underscore.__dict__[name].__func__(self.current_value, *args)
+						return self
+					return func
+				else:
+					raise AttributeError("Chained value already retreived, no more chaining")
+		return _chain(obj)
+
+
+
 	# Aliases to the core method names
 	forEach = each
 	collect = map
@@ -967,7 +1320,5 @@ class underscore(object):
 
 
 if __name__ == '__main__':
-	greet    = lambda name: "hi: " + name
-	exclaim  = lambda statement: statement.upper() + "!"
-	welcome  = underscore.compose(greet, exclaim)
-	print welcome('moe')
+	stooge = {'name': 'moe', 'age': 32};
+	print underscore.isMatch(stooge, {'age': 32});
