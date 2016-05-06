@@ -1312,19 +1312,65 @@ class underscore(object):
 	#                                    Chaining                                 #
 	###############################################################################
 
+	# Chaining is done by creating an instance of underscore, and catching all method requests...
+	def __init__(self, val):
+		self.current_value = val
+		self.chaining_on   = True
+
+	# This method catches **all** attribute dereferencing attempts. This means that any access to the local variables
+	# must be done through the superclass and through the special attributes. A bit convoluted, but does the job...
+	def __getattribute__(self, name):
+		if name == "value":
+			def func():
+				#
+				# i.e.:
+				# self.chaining_on = True
+				# return self.current_value
+				#
+				object.__setattr__(self, 'chaining_on', False)
+				return object.__getattribute__(self, 'current_value')
+			return func
+		elif name == "tap":
+			def func(f):
+				#
+				# i.e.:
+				# f(self.current_value)
+				# return self
+				#
+				f(object.__getattribute__(self, 'current_value'))
+				return self
+			return func
+		elif name == "__module__" or name == "__doc__" or name not in underscore.__dict__:
+			raise AttributeError(name)
+		elif object.__getattribute__(self, 'chaining_on'):
+			def func(*args):
+				#
+				# I.e. (approximately)
+				# self.current_value = underscore.`name`(self.current_value,*args)
+				# return self
+				#
+				object.__setattr__(self, 'current_value', underscore.__dict__[name].__func__(object.__getattribute__(self, 'current_value'), *args))
+				return self
+			return func
+		else:
+			raise AttributeError("Chained value already retreived, no more chaining")
+
 	@staticmethod
 	def chain(obj):
 		"""
 		Returns a wrapped object. Calling underscore methods on this object will continue to return wrapped objects until value is called.
 		If a new method call is attempted _after_ a call to ``value``, an exception is raised.
 
+		In fact, the usage of this method is not necessary to induce chaining; instead, the underscore object can be initialized
+		directly with **obj**. Ie, it is possible to use ``_(obj)`` instead of ``_.chain(obj)
+
 		The tapped object has two more methods:
+
 		value():
 			Extract the value of the wrapped object. A call to value means that no more chaining is possible.
 		tap(func):
 		 	Execute the function 'func' on the value of the wrapped object; the object itself is returned. This can be used
 			to 'tap into' the chain.
-
 
 		```
 		>>> _.chain(stooges).sortBy('age').map(lambda st, *args: "%s is %s" % (st['name'],st['age'])).first().value()
@@ -1332,37 +1378,16 @@ class underscore(object):
 		>>> def pr(a):
 		...		print "intermediate: %s" % a
 		...
-		>>> _.chain([1,2,3,200]).filter(lambda x: x % 2 ==0).tap(pr).map(lambda x, *a: x*x).value()
+		>>> _([1,2,3,200]).filter(lambda x: x % 2 ==0).tap(pr).map(lambda x, *a: x*x).value()
 		intermediate: [2, 200]
 		[4, 40000]
 		```
 		"""
-		class _chain:
-			def __init__(self, val):
-				self.current_value = val
-				self.chaining_on   = True
-
-			def tap(self,f):
-				f(self.current_value)
-				return self
-
-			def value(self):
-				if self.chaining_on:
-					self.chaining_on = False
-				return self.current_value
-
-			def __getattr__(self, name):
-				if name == "__module__" or name == "__doc__" or name not in underscore.__dict__:
-					raise AttributeError(name)
-				if self.chaining_on:
-					def func(*args):
-						self.current_value = underscore.__dict__[name].__func__(self.current_value, *args)
-						return self
-					return func
-				else:
-					raise AttributeError("Chained value already retreived, no more chaining")
-		return _chain(obj)
-
+		return underscore(obj)
 
 if __name__ == '__main__':
-	print underscore.now()
+	stooges = [{'name': 'moe', 'age': 40}, {'name': 'larry', 'age': 50}, {'name': 'curly', 'age': 60}]
+	print underscore(stooges).sortBy('age').map(lambda st, *args: "%s is %s" % (st['name'],st['age'])).first().value()
+	def pr(a):
+		print "intermediate: %s" % a
+	print underscore([1,2,3,200]).filter(lambda x: x % 2 ==0).tap(pr).map(lambda x, *a: x*x).value()
