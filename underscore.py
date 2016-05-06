@@ -1247,9 +1247,66 @@ class underscore(object):
 
 	@staticmethod
 	def identity(x):
+		"""Returns the same value that is used as the argument. In math: f(x) = x. This function looks useless, but can be used as a default iteratee."""
 		return x
 
+	@staticmethod
+	def constant(value):
+		"""
+		Creates a function that returns the same value that is used as the argument of _.constant
+		```
+		>> stooge = {'name': 'moe'}
+		>> stooge == _.constant(stooge)()
+		True
+		```
+		"""
+		return lambda *args: value
 
+	@staticmethod
+	def noop(*args):
+		"""Returns ``None`` irrespective of the arguments passed to it. Useful as the default for optional callback arguments."""
+		return None
+
+	@staticmethod
+	def times(n, iteratee, context = None):
+		"""
+		Invokes the given iteratee function n times. Each invocation of iteratee is called with an index argument. Produces an array of the returned values.
+		"""
+		for i in xrange(0, n) :
+			underscore._exec1(iteratee, context, i)
+
+	@staticmethod
+	def random(min, max = None):
+		"""Returns a random integer between **min** and **max**, inclusive. If you only pass one argument, it will return a number between 0 and that number."""
+		return random.randint(0,min) if max is None else random.randint(min, max)
+
+	@staticmethod
+	def uniqueId(prefix = None):
+		"""
+		Generate a globally-unique id for client-side models or DOM elements that need one. If prefix is passed, the id will be appended to it.
+		The method relies on the `uuid.uuid1()` library function, ie, based on the host ID and the current time.
+		"""
+		import uuid
+		return str(prefix) + str(uuid.uuid1()) if prefix is not None else str(uuid.uuid1())
+
+	@staticmethod
+	def now():
+		import time
+		return int(time.time())
+
+	###############################################################################
+	#                                   Aliases                                   #
+	###############################################################################
+
+	# Aliases to some of the core method names
+	forEach = each
+	collect = map
+	inject  = reduce
+	detect  = find
+	select  = filter
+	any     = some
+	include = contains
+	unique  = uniq
 
 	###############################################################################
 	#                                    Chaining                                 #
@@ -1307,18 +1364,5 @@ class underscore(object):
 		return _chain(obj)
 
 
-
-	# Aliases to the core method names
-	forEach = each
-	collect = map
-	inject  = reduce
-	detect  = find
-	select  = filter
-	any     = some
-	include = contains
-	unique  = uniq
-
-
 if __name__ == '__main__':
-	stooge = {'name': 'moe', 'age': 32};
-	print underscore.isMatch(stooge, {'age': 32});
+	print underscore.now()
