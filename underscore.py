@@ -9,6 +9,15 @@ import bisect
 __version__ = 0.9
 
 class underscore(object):
+	"""
+	All (static) method below can be used directly, or as methods used on chaining without the first argument (which is fed via the previous step in the chain). When looking for a specific method, see the :ref:`genindex` to find the methods, or simply search in this page.
+
+	Many methods have an **iteratee** (or **predicate**) and **context** arguments (with the latter defaulting to ``None``). In general, an **iteratee** is a (global) function, or a static method of a class, in which case a reference to that function is used as an **iteratee**, without a need for a **context** argument. However, if the **iteratee** is a method for a *class instance*, then that instance has to be made available for the callback, too. That is the role of the **context**: it is the reference to the class instance; in practice, its value will be used as ``self`` in the method invocation.
+
+	Some methods have *aliases*. This simply means that the same function has two different possible method names with identical behavior. The reason for having those is because different communities have different function names for the same functionalitys (e.g., “each” and “forEach”). In those cases the method description lists the aliases.
+	"""
+
+
 	@staticmethod
 	def _exec1(f, context, a1):
 		if isinstance(f, basestring):
@@ -56,7 +65,11 @@ class underscore(object):
 
 	@staticmethod
 	def each(list, iteratee, context = None):
-		"""Iterates over a list of elements, yielding each in turn to an **iteratee** function. Each
+		"""
+		**Aliases**:
+			:py:meth:`each`, :py:meth:`forEach`
+
+		Iterates over a list of elements, yielding each in turn to an **iteratee** function. Each
 		invocation of **iteratee** is called with three arguments: if **list** is of list type,
 		then the arguments are ``(element, index, list)``; if it is of dictionary type
 		the arguments are ``(value, key, list``). Returns **list** for possible composition.
@@ -85,7 +98,11 @@ class underscore(object):
 
 	@staticmethod
 	def map(list, iteratee, context = None):
-		"""Produces a new array of values by mapping each value in **list** through a transformation function (**iteratee**). The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+		"""
+		**Aliases**:
+			:py:meth:`map`, :py:meth:`collect`
+
+		Produces a new array of values by mapping each value in **list** through a transformation function (**iteratee**). The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 
 		Example:
 			>>> _.map([1, 2, 3], lambda num, *args: num * 3)
@@ -107,6 +124,9 @@ class underscore(object):
 	@staticmethod
 	def reduce(list, iteratee, memo = None, context = None):
 		"""
+		**Aliases**:
+			:py:meth:`reduce`, :py:meth:`inject`
+
 		Reduce boils down a **list** of values into a single value. **memo** is the initial state of the reduction, and each successive step of should be returned by **iteratee**. The **iteratee** is passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 
 		If no memo is passed to the initial invocation of reduce, **iteratee** is not invoked on the first element of the list. The first element is instead passed as the ``memo`` in the invocation of the **iteratee** on the next element in the list.
@@ -123,6 +143,9 @@ class underscore(object):
 	@staticmethod
 	def find(list, predicate, context = None):
 		"""
+		**Aliases**:
+			:py:meth:`find`, :py:meth:`detect`
+
 		Looks through each value in the **list**, returning the first one that passes a truth test (**predicate**), or ``None`` if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn't traverse the entire list.
 
 		Example:
@@ -138,6 +161,9 @@ class underscore(object):
 	@staticmethod
 	def filter(list, predicate, context = None):
 		"""
+		**Aliases**:
+			:py:meth:`filter`, :py:meth:`select`
+
 		Looks through each value in the **list**, returning an array of all the values that pass a truth test (**predicate**).
 
 		Example:
@@ -202,6 +228,9 @@ class underscore(object):
 	@staticmethod
 	def some(list, predicate = None, context = None):
 		"""
+		**Aliases**:
+			:py:meth:`some`, :py:meth:`any`
+
 		Returns ``True`` if any of the values in the **list** pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.
 
 		Example:
@@ -217,6 +246,9 @@ class underscore(object):
 	@staticmethod
 	def contains(list, value):
 		"""
+		**Aliases**:
+			:py:meth:`contains`, :py:meth:`include`
+
 		Returns ``True`` if the value is present in the list.
 		"""
 		return value in list
@@ -560,6 +592,9 @@ class underscore(object):
 	@staticmethod
 	def uniq(array, iteratee = None, context = None, isSorted = False):
 		"""
+		**Aliases**:
+			:py:meth:`uniq`, :py:meth:`unique`
+
 		Produces a duplicate-free version of the **array**, based on the *in* operator of Python's list. If you want to compute unique items after a transformation, pass an **iteratee** function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.
 
 		Example:

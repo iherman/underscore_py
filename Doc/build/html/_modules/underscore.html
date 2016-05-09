@@ -53,6 +53,15 @@
 <span class="n">__version__</span> <span class="o">=</span> <span class="mf">0.9</span>
 
 <div class="viewcode-block" id="underscore"><a class="viewcode-back" href="../index.html#underscore.underscore">[docs]</a><span class="k">class</span> <span class="nc">underscore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	All (static) method below can be used directly, or as methods used on chaining without the first argument (which is fed via the previous step in the chain). When looking for a specific method, see the :ref:`genindex` to find the methods, or simply search in this page.</span>
+
+<span class="sd">	Many methods have an **iteratee** (or **predicate**) and **context** arguments (with the latter defaulting to ``None``). In general, an **iteratee** is a (global) function, or a static method of a class, in which case a reference to that function is used as an **iteratee**, without a need for a **context** argument. However, if the **iteratee** is a method for a *class instance*, then that instance has to be made available for the callback, too. That is the role of the **context**: it is the reference to the class instance; in practice, its value will be used as ``self`` in the method invocation.</span>
+
+<span class="sd">	Some methods have *aliases*. This simply means that the same function has two different possible method names with identical behavior. The reason for having those is because different communities have different function names for the same functionalitys (e.g., “each” and “forEach”). In those cases the method description lists the aliases.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+
 	<span class="nd">@staticmethod</span>
 	<span class="k">def</span> <span class="nf">_exec1</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">a1</span><span class="p">):</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
@@ -100,7 +109,11 @@
 
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.each"><a class="viewcode-back" href="../index.html#underscore.underscore.each">[docs]</a>	<span class="k">def</span> <span class="nf">each</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Iterates over a list of elements, yielding each in turn to an **iteratee** function. Each</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`each`, :py:meth:`forEach`</span>
+
+<span class="sd">		Iterates over a list of elements, yielding each in turn to an **iteratee** function. Each</span>
 <span class="sd">		invocation of **iteratee** is called with three arguments: if **list** is of list type,</span>
 <span class="sd">		then the arguments are ``(element, index, list)``; if it is of dictionary type</span>
 <span class="sd">		the arguments are ``(value, key, list``). Returns **list** for possible composition.</span>
@@ -129,7 +142,11 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.map"><a class="viewcode-back" href="../index.html#underscore.underscore.map">[docs]</a>	<span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Produces a new array of values by mapping each value in **list** through a transformation function (**iteratee**). The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`map`, :py:meth:`collect`</span>
+
+<span class="sd">		Produces a new array of values by mapping each value in **list** through a transformation function (**iteratee**). The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.map([1, 2, 3], lambda num, *args: num * 3)</span>
@@ -151,6 +168,9 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.reduce"><a class="viewcode-back" href="../index.html#underscore.underscore.reduce">[docs]</a>	<span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">memo</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`reduce`, :py:meth:`inject`</span>
+
 <span class="sd">		Reduce boils down a **list** of values into a single value. **memo** is the initial state of the reduction, and each successive step of should be returned by **iteratee**. The **iteratee** is passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
 
 <span class="sd">		If no memo is passed to the initial invocation of reduce, **iteratee** is not invoked on the first element of the list. The first element is instead passed as the ``memo`` in the invocation of the **iteratee** on the next element in the list.</span>
@@ -167,6 +187,9 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.find"><a class="viewcode-back" href="../index.html#underscore.underscore.find">[docs]</a>	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`find`, :py:meth:`detect`</span>
+
 <span class="sd">		Looks through each value in the **list**, returning the first one that passes a truth test (**predicate**), or ``None`` if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn&#39;t traverse the entire list.</span>
 
 <span class="sd">		Example:</span>
@@ -182,6 +205,9 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.filter"><a class="viewcode-back" href="../index.html#underscore.underscore.filter">[docs]</a>	<span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`filter`, :py:meth:`select`</span>
+
 <span class="sd">		Looks through each value in the **list**, returning an array of all the values that pass a truth test (**predicate**).</span>
 
 <span class="sd">		Example:</span>
@@ -246,6 +272,9 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.some"><a class="viewcode-back" href="../index.html#underscore.underscore.some">[docs]</a>	<span class="k">def</span> <span class="nf">some</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`some`, :py:meth:`any`</span>
+
 <span class="sd">		Returns ``True`` if any of the values in the **list** pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.</span>
 
 <span class="sd">		Example:</span>
@@ -261,6 +290,9 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.contains"><a class="viewcode-back" href="../index.html#underscore.underscore.contains">[docs]</a>	<span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`contains`, :py:meth:`include`</span>
+
 <span class="sd">		Returns ``True`` if the value is present in the list.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span>
@@ -604,6 +636,9 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.uniq"><a class="viewcode-back" href="../index.html#underscore.underscore.uniq">[docs]</a>	<span class="k">def</span> <span class="nf">uniq</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">iteratee</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">isSorted</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Aliases**:</span>
+<span class="sd">			:py:meth:`uniq`, :py:meth:`unique`</span>
+
 <span class="sd">		Produces a duplicate-free version of the **array**, based on the *in* operator of Python&#39;s list. If you want to compute unique items after a transformation, pass an **iteratee** function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.</span>
 
 <span class="sd">		Example:</span>
