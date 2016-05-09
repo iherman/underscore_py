@@ -61,7 +61,6 @@
 <span class="sd">	Some methods have *aliases*. This simply means that the same function has two different possible method names with identical behavior. The reason for having those is because different communities have different function names for the same functionalitys (e.g., “each” and “forEach”). In those cases the method description lists the aliases.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
-
 	<span class="nd">@staticmethod</span>
 	<span class="k">def</span> <span class="nf">_exec1</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">a1</span><span class="p">):</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
@@ -221,7 +220,6 @@
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Looks through each value in the **list**, returning an array of all the values that contain all of the key-value pairs listed in **properties**.</span>
 
-
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.where(listOfPlays, {&#39;author&#39;: &quot;Shakespeare&quot;, &#39;year&#39;: 1611})</span>
 <span class="sd">			[{&#39;title&#39;: &#39;The tempest&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;},</span>
@@ -246,7 +244,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.reject"><a class="viewcode-back" href="../index.html#underscore.underscore.reject">[docs]</a>	<span class="k">def</span> <span class="nf">reject</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns the values in **list** without the elements that the truth test (**predicate**) passes. The opposite of *filter*.</span>
+<span class="sd">		Returns the values in **list** without the elements that the truth test (**predicate**) passes. The opposite of :py:meth:`filter`.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.reject([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)</span>
@@ -300,7 +298,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.pluck"><a class="viewcode-back" href="../index.html#underscore.underscore.pluck">[docs]</a>	<span class="k">def</span> <span class="nf">pluck</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">propertyName</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		A convenient version of what is perhaps the most common use-case for *map*: extracting a list of property values from an array of dictionaries.</span>
+<span class="sd">		A convenient version of what is perhaps the most common use-case for :py:meth:`map`: extracting a list of property values from an array of dictionaries.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.pluck(stooges, &#39;name&#39;);</span>
@@ -385,7 +383,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.indexBy"><a class="viewcode-back" href="../index.html#underscore.underscore.indexBy">[docs]</a>	<span class="k">def</span> <span class="nf">indexBy</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Given a **list**, and an **iteratee** function that returns a key for each element in the list (or a property name), returns an object with an index of each item. Just like *groupBy*, but for when you know your keys are unique.</span>
+<span class="sd">		Given a **list**, and an **iteratee** function that returns a key for each element in the list (or a property name), returns an object with an index of each item. Just like :py:meth:`groupBy`, but for when you know your keys are unique.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.indexBy(stooges, &#39;age&#39;)</span>
@@ -399,7 +397,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.countBy"><a class="viewcode-back" href="../index.html#underscore.underscore.countBy">[docs]</a>	<span class="k">def</span> <span class="nf">countBy</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Sorts a **list** into groups and returns a count for the number of objects in each group. Similar to **groupBy**, but instead of returning a list of values, returns a count for the number of values in that group.</span>
+<span class="sd">		Sorts a **list** into groups and returns a count for the number of objects in each group. Similar to :py:meth:`groupBy`, but instead of returning a list of values, returns a count for the number of values in that group.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.countBy([1, 2, 3, 4, 5], lambda num: &#39;even&#39; if num % 2 == 0 else &#39;odd&#39;)</span>
@@ -439,7 +437,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.toArray"><a class="viewcode-back" href="../index.html#underscore.underscore.toArray">[docs]</a>	<span class="k">def</span> <span class="nf">toArray</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Creates a real Array from the **lst** (anything that can be iterated over). Useful for transmuting the arguments object. An alias to the built-in **list** function.</span>
+<span class="sd">		Creates a real array from the **lst** (anything that can be iterated over). Useful for transmuting the arguments object. An alias to the built-in **list** function.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.toArray(xrange(0,4))</span>
@@ -542,7 +540,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.flatten"><a class="viewcode-back" href="../index.html#underscore.underscore.flatten">[docs]</a>	<span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">shallow</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Flattens a nested **array** (the nesting can be to any depth). If you pass **shallow** with a value set to ``True``, the array will only be flattened a single level.</span>
+		<span class="sd">&quot;&quot;&quot;Flattens a nested **array** (the nesting can be to any depth). If you pass **shallow** with value ``True``, the array is only be flattened a single level.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.flatten([1, [2], [3, [[4]]]])</span>
@@ -614,7 +612,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.difference"><a class="viewcode-back" href="../index.html#underscore.underscore.difference">[docs]</a>	<span class="k">def</span> <span class="nf">difference</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Similar to **without**, but returns the values from array that are not present in the other arrays.</span>
+<span class="sd">		Similar to :py:meth:`without`, but returns the values from array that are not present in the other arrays.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.difference([1, 2, 3, 4, 5], [5, 2, 10])</span>
@@ -669,7 +667,6 @@
 <div class="viewcode-block" id="underscore.zip"><a class="viewcode-back" href="../index.html#underscore.underscore.zip">[docs]</a>	<span class="k">def</span> <span class="nf">zip</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Merges together the values of each of the **arrays** with the values at the corresponding position. Useful when you have separate data sources that are coordinated through matching array indexes. If the arguments are tuples, a tuple is returned, otherwise an array.</span>
-
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.zip([&#39;moe&#39;, &#39;larry&#39;, &#39;curly&#39;], [30, 40, 50], [True, False, False])</span>
@@ -760,7 +757,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.findIndex"><a class="viewcode-back" href="../index.html#underscore.underscore.findIndex">[docs]</a>	<span class="k">def</span> <span class="nf">findIndex</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Similar to *_.indexOf*, returns the first index where the predicate truth test passes; otherwise returns -1.</span>
+<span class="sd">		Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; def isPrime(n):</span>
@@ -779,7 +776,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.findLastIndex"><a class="viewcode-back" href="../index.html#underscore.underscore.findLastIndex">[docs]</a>	<span class="k">def</span> <span class="nf">findLastIndex</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Like *_.findIndex* but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.</span>
+<span class="sd">		Like :py:meth:`findIndex` but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.findLastIndex([4,6,5,7,12],isPrime)</span>
@@ -917,8 +914,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.wrap"><a class="viewcode-back" href="../index.html#underscore.underscore.wrap">[docs]</a>	<span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">wrapper</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Wraps the first **function** inside of the **wrapper** function, passing it as the first argument. This allows the wrapper to execute code before and after the function runs, adjust the arguments, or execute it conditionally.</span>
-<span class="sd">		The generated functions can have arguments and keywords, which will be forwarded to the **wrapper**.</span>
+<span class="sd">		Wraps the first **function** inside of the **wrapper** function, passing it as the first argument. This allows the wrapper to execute code before and after the function runs, adjust the arguments, or execute it conditionally. The generated functions can have arguments and keywords, which will be forwarded to the **wrapper**.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; func = lambda x: &quot;Hello: &quot; +x</span>
@@ -953,7 +949,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.compose"><a class="viewcode-back" href="../index.html#underscore.underscore.compose">[docs]</a>	<span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns the composition of a list of *functions*, where each function consumes the return value of the function that follows. In math terms, composing the functions ``f()``, ``g()``, and ``h()`` produces ``f(g(h()))``. The composition function can be invoked with arguments, which will be used for the arguments of the innermost function (``h()`` in this example).</span>
+<span class="sd">		Returns the composition of a list of **functions**, where each function consumes the return value of the function that follows. In math terms, composing the functions ``f()``, ``g()``, and ``h()`` produces ``f(g(h()))``. The composition function can be invoked with arguments, which will be used for the arguments of the innermost function (``h()`` in this example).</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; greet    = lambda name: &quot;hi: &quot; + name</span>
@@ -996,8 +992,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.mapObject"><a class="viewcode-back" href="../index.html#underscore.underscore.mapObject">[docs]</a>	<span class="k">def</span> <span class="nf">mapObject</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">iteratee</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Like *map*, but for objects (a.k.a. dictionaries). Transform the value of each property in turn.</span>
-<span class="sd">		The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
+		<span class="sd">&quot;&quot;&quot;Like *map*, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
 <span class="sd">		If **itereatee** is not set or is ``None``, a copy of **obj** is returned.</span>
 
 <span class="sd">		Example:</span>
@@ -1014,8 +1009,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.pairs"><a class="viewcode-back" href="../index.html#underscore.underscore.pairs">[docs]</a>	<span class="k">def</span> <span class="nf">pairs</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Convert an *obj* into a list of [key, value] pairs. If the value of **tuple** is set to ``True``,</span>
-<span class="sd">		an array of tuples is returned, instead of an array of (binary) arrays.</span>
+		<span class="sd">&quot;&quot;&quot;Convert an *obj* into a list of [key, value] pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.pairs({&#39;one&#39;:1, &#39;two&#39;:2, &#39;three&#39;:3})</span>
@@ -1161,7 +1155,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.propertyOf"><a class="viewcode-back" href="../index.html#underscore.underscore.propertyOf">[docs]</a>	<span class="k">def</span> <span class="nf">propertyOf</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Inverse of _.property. Takes an **obj** and returns a function which will return the value of a provided property. In effect, the functional equivalent of ``obj[key]`` where ``obj`` is fixed.</span>
+		<span class="sd">&quot;&quot;&quot;Inverse of :py:meth:`property`. Takes an **obj** and returns a function which will return the value of a provided property. In effect, the functional equivalent of ``obj[key]`` where ``obj`` is fixed.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; getValue = _.propertyOf(stooges[0])</span>

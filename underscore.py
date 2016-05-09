@@ -17,7 +17,6 @@ class underscore(object):
 	Some methods have *aliases*. This simply means that the same function has two different possible method names with identical behavior. The reason for having those is because different communities have different function names for the same functionalitys (e.g., “each” and “forEach”). In those cases the method description lists the aliases.
 	"""
 
-
 	@staticmethod
 	def _exec1(f, context, a1):
 		if isinstance(f, basestring):
@@ -177,7 +176,6 @@ class underscore(object):
 		"""
 		Looks through each value in the **list**, returning an array of all the values that contain all of the key-value pairs listed in **properties**.
 
-
 		Example:
 			>>> _.where(listOfPlays, {'author': "Shakespeare", 'year': 1611})
 			[{'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'},
@@ -202,7 +200,7 @@ class underscore(object):
 	@staticmethod
 	def reject(list, predicate, context = None):
 		"""
-		Returns the values in **list** without the elements that the truth test (**predicate**) passes. The opposite of *filter*.
+		Returns the values in **list** without the elements that the truth test (**predicate**) passes. The opposite of :py:meth:`filter`.
 
 		Example:
 			>>> _.reject([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)
@@ -256,7 +254,7 @@ class underscore(object):
 	@staticmethod
 	def pluck(list, propertyName):
 		"""
-		A convenient version of what is perhaps the most common use-case for *map*: extracting a list of property values from an array of dictionaries.
+		A convenient version of what is perhaps the most common use-case for :py:meth:`map`: extracting a list of property values from an array of dictionaries.
 
 		Example:
 			>>> _.pluck(stooges, 'name');
@@ -341,7 +339,7 @@ class underscore(object):
 	@staticmethod
 	def indexBy(list, iteratee, context = None):
 		"""
-		Given a **list**, and an **iteratee** function that returns a key for each element in the list (or a property name), returns an object with an index of each item. Just like *groupBy*, but for when you know your keys are unique.
+		Given a **list**, and an **iteratee** function that returns a key for each element in the list (or a property name), returns an object with an index of each item. Just like :py:meth:`groupBy`, but for when you know your keys are unique.
 
 		Example:
 			>>> _.indexBy(stooges, 'age')
@@ -355,7 +353,7 @@ class underscore(object):
 	@staticmethod
 	def countBy(list, iteratee, context = None):
 		"""
-		Sorts a **list** into groups and returns a count for the number of objects in each group. Similar to **groupBy**, but instead of returning a list of values, returns a count for the number of values in that group.
+		Sorts a **list** into groups and returns a count for the number of objects in each group. Similar to :py:meth:`groupBy`, but instead of returning a list of values, returns a count for the number of values in that group.
 
 		Example:
 			>>> _.countBy([1, 2, 3, 4, 5], lambda num: 'even' if num % 2 == 0 else 'odd')
@@ -395,7 +393,7 @@ class underscore(object):
 	@staticmethod
 	def toArray(lst):
 		"""
-		Creates a real Array from the **lst** (anything that can be iterated over). Useful for transmuting the arguments object. An alias to the built-in **list** function.
+		Creates a real array from the **lst** (anything that can be iterated over). Useful for transmuting the arguments object. An alias to the built-in **list** function.
 
 		Example:
 			>>> _.toArray(xrange(0,4))
@@ -498,7 +496,7 @@ class underscore(object):
 
 	@staticmethod
 	def flatten(array, shallow = False):
-		"""Flattens a nested **array** (the nesting can be to any depth). If you pass **shallow** with a value set to ``True``, the array will only be flattened a single level.
+		"""Flattens a nested **array** (the nesting can be to any depth). If you pass **shallow** with value ``True``, the array is only be flattened a single level.
 
 		Example:
 			>>> _.flatten([1, [2], [3, [[4]]]])
@@ -570,7 +568,7 @@ class underscore(object):
 	@staticmethod
 	def difference(array, *others):
 		"""
-		Similar to **without**, but returns the values from array that are not present in the other arrays.
+		Similar to :py:meth:`without`, but returns the values from array that are not present in the other arrays.
 
 		Example:
 			>>> _.difference([1, 2, 3, 4, 5], [5, 2, 10])
@@ -625,7 +623,6 @@ class underscore(object):
 	def zip(*arrays):
 		"""
 		Merges together the values of each of the **arrays** with the values at the corresponding position. Useful when you have separate data sources that are coordinated through matching array indexes. If the arguments are tuples, a tuple is returned, otherwise an array.
-
 
 		Example:
 			>>> _.zip(['moe', 'larry', 'curly'], [30, 40, 50], [True, False, False])
@@ -716,7 +713,7 @@ class underscore(object):
 	@staticmethod
 	def findIndex(array, predicate, context = None):
 		"""
-		Similar to *_.indexOf*, returns the first index where the predicate truth test passes; otherwise returns -1.
+		Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1.
 
 		Example:
 			>>> def isPrime(n):
@@ -735,7 +732,7 @@ class underscore(object):
 	@staticmethod
 	def findLastIndex(array, predicate, context = None):
 		"""
-		Like *_.findIndex* but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.
+		Like :py:meth:`findIndex` but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.
 
 		Example:
 			>>> _.findLastIndex([4,6,5,7,12],isPrime)
@@ -873,8 +870,7 @@ class underscore(object):
 	@staticmethod
 	def wrap(function, wrapper):
 		"""
-		Wraps the first **function** inside of the **wrapper** function, passing it as the first argument. This allows the wrapper to execute code before and after the function runs, adjust the arguments, or execute it conditionally.
-		The generated functions can have arguments and keywords, which will be forwarded to the **wrapper**.
+		Wraps the first **function** inside of the **wrapper** function, passing it as the first argument. This allows the wrapper to execute code before and after the function runs, adjust the arguments, or execute it conditionally. The generated functions can have arguments and keywords, which will be forwarded to the **wrapper**.
 
 		Example:
 			>>> func = lambda x: "Hello: " +x
@@ -909,7 +905,7 @@ class underscore(object):
 	@staticmethod
 	def compose(*functions):
 		"""
-		Returns the composition of a list of *functions*, where each function consumes the return value of the function that follows. In math terms, composing the functions ``f()``, ``g()``, and ``h()`` produces ``f(g(h()))``. The composition function can be invoked with arguments, which will be used for the arguments of the innermost function (``h()`` in this example).
+		Returns the composition of a list of **functions**, where each function consumes the return value of the function that follows. In math terms, composing the functions ``f()``, ``g()``, and ``h()`` produces ``f(g(h()))``. The composition function can be invoked with arguments, which will be used for the arguments of the innermost function (``h()`` in this example).
 
 		Example:
 			>>> greet    = lambda name: "hi: " + name
@@ -952,8 +948,7 @@ class underscore(object):
 
 	@staticmethod
 	def mapObject(obj, iteratee = None, context = None):
-		"""Like *map*, but for objects (a.k.a. dictionaries). Transform the value of each property in turn.
-		The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+		"""Like *map*, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 		If **itereatee** is not set or is ``None``, a copy of **obj** is returned.
 
 		Example:
@@ -970,8 +965,7 @@ class underscore(object):
 
 	@staticmethod
 	def pairs(obj, tuple = False):
-		"""Convert an *obj* into a list of [key, value] pairs. If the value of **tuple** is set to ``True``,
-		an array of tuples is returned, instead of an array of (binary) arrays.
+		"""Convert an *obj* into a list of [key, value] pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.
 
 		Example:
 			>>> _.pairs({'one':1, 'two':2, 'three':3})
@@ -1117,7 +1111,7 @@ class underscore(object):
 
 	@staticmethod
 	def propertyOf(obj):
-		"""Inverse of _.property. Takes an **obj** and returns a function which will return the value of a provided property. In effect, the functional equivalent of ``obj[key]`` where ``obj`` is fixed.
+		"""Inverse of :py:meth:`property`. Takes an **obj** and returns a function which will return the value of a provided property. In effect, the functional equivalent of ``obj[key]`` where ``obj`` is fixed.
 
 		Example:
 			>>> getValue = _.propertyOf(stooges[0])
