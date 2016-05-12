@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>underscore &mdash; Underscore for Python 0.9 documentation</title>
+    <title>underscore &mdash; Underscore for Python</title>
     
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/my.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.9',
+        VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,12 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Underscore for Python 0.9 documentation" href="../index.html" />
+    <link rel="top" title="Underscore for Python" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
   <body role="document">
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>Underscore for Python 0.9 documentation</span></a></h1>
+          <span>Underscore for Python</span></a></h1>
         <h2 class="heading"><span>underscore</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -50,15 +51,47 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">bisect</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="mf">1.0</span>
 
 <div class="viewcode-block" id="underscore"><a class="viewcode-back" href="../index.html#underscore.underscore">[docs]</a><span class="k">class</span> <span class="nc">underscore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	All (static) method below can be used directly, or as methods used on chaining without the first argument (which is fed via the previous step in the chain). When looking for a specific method, see the :ref:`genindex` to find the methods, or simply search in this page.</span>
+<span class="sd">	Methods usually have a usage example to make the description clearer. Conceptually, the following Python code precedes all examples::</span>
 
-<span class="sd">	Many methods have an **iteratee** (or **predicate**) and **context** arguments (with the latter defaulting to ``None``). In general, an **iteratee** is a (global) function, or a static method of a class, in which case a reference to that function is used as an **iteratee**, without a need for a **context** argument. However, if the **iteratee** is a method for a *class instance*, then that instance has to be made available for the callback, too. That is the role of the **context**: it is the reference to the class instance; in practice, its value will be used as ``self`` in the method invocation.</span>
+<span class="sd">	    from underscore import underscore as _</span>
+<span class="sd">	    listOfPlays = [</span>
+<span class="sd">	        {</span>
+<span class="sd">	            &quot;author&quot; : &quot;Shakespeare&quot;,</span>
+<span class="sd">	            &quot;year&quot;   : 1611,</span>
+<span class="sd">	            &quot;title&quot;  : &quot;The tempest&quot;</span>
+<span class="sd">	        },</span>
+<span class="sd">	        {</span>
+<span class="sd">	            &quot;author&quot; : &quot;Shakespeare&quot;,</span>
+<span class="sd">	            &quot;year&quot;   : 1611,</span>
+<span class="sd">	            &quot;title&quot;  : &quot;Cymbeline&quot;</span>
+<span class="sd">	        },</span>
+<span class="sd">	        {</span>
+<span class="sd">	            &quot;author&quot; : &quot;Shakespeare&quot;,</span>
+<span class="sd">	            &quot;year&quot;   : 1601,</span>
+<span class="sd">	            &quot;title&quot;  : &quot;Romeo and Juliet&quot;</span>
+<span class="sd">	        },</span>
+<span class="sd">	    ]</span>
+<span class="sd">	    stooges = [{&#39;name&#39;: &#39;moe&#39;,   &#39;age&#39;: 40},</span>
+<span class="sd">	               {&#39;name&#39;: &#39;larry&#39;, &#39;age&#39;: 50},</span>
+<span class="sd">	               {&#39;name&#39;: &#39;curly&#39;, &#39;age&#39;: 60}]</span>
+<span class="sd">	    def createApplication():</span>
+<span class="sd">	        print(&quot;created&quot;)</span>
 
-<span class="sd">	Some methods have *aliases*. This simply means that the same function has two different possible method names with identical behavior. The reason for having those is because different communities have different function names for the same functionalitys (e.g., “each” and “forEach”). In those cases the method description lists the aliases.</span>
+<span class="sd">	These structures are used in some of the examples and are listed here to avoid repeating their definition separately.</span>
+
+<span class="sd">	A further simplification of the examples is the usage of the ``*args`` idioms. Many “iteratee” arguments represent a function with 3-4 arguments, per definition of the underscore method, but the example uses only the first few. Instead of::</span>
+
+<span class="sd">		lambda name, index, list: ...</span>
+
+<span class="sd">	the abbreviation::</span>
+
+<span class="sd">		lambda name, *args: ...</span>
+
+<span class="sd">	is sometimes used.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="nd">@staticmethod</span>
@@ -112,10 +145,8 @@
 <span class="sd">		**Aliases**:</span>
 <span class="sd">			:py:meth:`each`, :py:meth:`forEach`</span>
 
-<span class="sd">		Iterates over a list of elements, yielding each in turn to an **iteratee** function. Each</span>
-<span class="sd">		invocation of **iteratee** is called with three arguments: if **list** is of list type,</span>
-<span class="sd">		then the arguments are ``(element, index, list)``; if it is of dictionary type</span>
-<span class="sd">		the arguments are ``(value, key, list``). Returns **list** for possible composition.</span>
+<span class="sd">		Iterates over a **list** of elements, yielding each in turn to an **iteratee** function. Each invocation of **iteratee** is called with three arguments: if **list** is of list type, then the arguments are ``(element, index, list)``; if it is of dictionary type</span>
+<span class="sd">		the arguments are ``(value, key, list``). Returns **list** for possible chaining.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; def pr(element, index, list):</span>
@@ -145,10 +176,10 @@
 <span class="sd">		**Aliases**:</span>
 <span class="sd">			:py:meth:`map`, :py:meth:`collect`</span>
 
-<span class="sd">		Produces a new array of values by mapping each value in **list** through a transformation function (**iteratee**). The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
+<span class="sd">		Produces a *new* array of values by mapping each value in **list** through a transformation function (**iteratee**). Similarly to :py:meth:`each`, the **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.map([1, 2, 3], lambda num, *args: num * 3)</span>
+<span class="sd">			&gt;&gt;&gt; _.map([1, 2, 3], lambda num, index, list: num * 3)</span>
 <span class="sd">			[3, 6, 9]</span>
 <span class="sd">			&gt;&gt;&gt; _.map({&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3}, lambda val, key, *args: val * 4)</span>
 <span class="sd">			[12, 8, 4]</span>
@@ -170,7 +201,7 @@
 <span class="sd">		**Aliases**:</span>
 <span class="sd">			:py:meth:`reduce`, :py:meth:`inject`</span>
 
-<span class="sd">		Reduce boils down a **list** of values into a single value. **memo** is the initial state of the reduction, and each successive step of should be returned by **iteratee**. The **iteratee** is passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
+<span class="sd">		Reduce boils down a **list** of values into a single value that is returned. **memo** is the initial state of the reduction, and each successive step of it should be returned by **iteratee**. The **iteratee** is passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
 
 <span class="sd">		If no memo is passed to the initial invocation of reduce, **iteratee** is not invoked on the first element of the list. The first element is instead passed as the ``memo`` in the invocation of the **iteratee** on the next element in the list.</span>
 
@@ -192,7 +223,7 @@
 <span class="sd">		Looks through each value in the **list**, returning the first one that passes a truth test (**predicate**), or ``None`` if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn&#39;t traverse the entire list.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.find([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)</span>
+<span class="sd">			&gt;&gt;&gt; _.find([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)</span>
 <span class="sd">			2</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
@@ -222,8 +253,7 @@
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.where(listOfPlays, {&#39;author&#39;: &quot;Shakespeare&quot;, &#39;year&#39;: 1611})</span>
-<span class="sd">			[{&#39;title&#39;: &#39;The tempest&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;},</span>
-<span class="sd">			 {&#39;title&#39;: &#39;Cymbeline&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}]</span>
+<span class="sd">			[{&#39;title&#39;: &#39;The tempest&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}, {&#39;title&#39;: &#39;Cymbeline&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_extends</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span> <span class="p">]</span>
 </div>
@@ -247,39 +277,37 @@
 <span class="sd">		Returns the values in **list** without the elements that the truth test (**predicate**) passes. The opposite of :py:meth:`filter`.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.reject([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)</span>
+<span class="sd">			&gt;&gt;&gt; _.reject([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)</span>
 <span class="sd">			[1, 3, 5]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">)]</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.every"><a class="viewcode-back" href="../index.html#underscore.underscore.every">[docs]</a>	<span class="k">def</span> <span class="nf">every</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="underscore.every"><a class="viewcode-back" href="../index.html#underscore.underscore.every">[docs]</a>	<span class="k">def</span> <span class="nf">every</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns true if all of the values in the **list** pass the **predicate** truth test.</span>
+<span class="sd">		Returns true if all of the values in the **list** pass the **predicate** truth test. The default predicate is the identity.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.every([True, 1, None, &#39;yes&#39;], _.identity)</span>
 <span class="sd">			False</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="n">predicate</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">predicate</span> <span class="o">=</span> <span class="n">underscore</span><span class="o">.</span><span class="n">identity</span>
 		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 				<span class="k">return</span> <span class="bp">False</span>
 		<span class="k">return</span> <span class="bp">True</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.some"><a class="viewcode-back" href="../index.html#underscore.underscore.some">[docs]</a>	<span class="k">def</span> <span class="nf">some</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="underscore.some"><a class="viewcode-back" href="../index.html#underscore.underscore.some">[docs]</a>	<span class="k">def</span> <span class="nf">some</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		**Aliases**:</span>
 <span class="sd">			:py:meth:`some`, :py:meth:`any`</span>
 
-<span class="sd">		Returns ``True`` if any of the values in the **list** pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.</span>
+<span class="sd">		Returns ``True`` if any of the values in the **list** pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.  The default predicate is the identity.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.some([None, 0, True, False])</span>
 <span class="sd">			True</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="n">predicate</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">predicate</span> <span class="o">=</span> <span class="n">underscore</span><span class="o">.</span><span class="n">identity</span>
 		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 				<span class="k">return</span> <span class="bp">True</span>
@@ -309,7 +337,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.max"><a class="viewcode-back" href="../index.html#underscore.underscore.max">[docs]</a>	<span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns the maximum value in **list**. If an **iteratee** function is provided, it will be used on each value to generate the criterion by which the value is ranked. ``float(&quot;inf&quot;)``` is returned if list is empty, so a guard may be required.</span>
+<span class="sd">		Returns the maximum value in **list**. If an **iteratee** function is provided, it will be used on each value to generate the criterion by which the value is ranked. ``float(&quot;inf&quot;)`` is returned if list is empty.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.max(stooges, lambda stooge: stooge[&#39;age&#39;])</span>
@@ -411,7 +439,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.shuffle"><a class="viewcode-back" href="../index.html#underscore.underscore.shuffle">[docs]</a>	<span class="k">def</span> <span class="nf">shuffle</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns a shuffled copy of the **list**.</span>
+<span class="sd">		Returns a (randomly) shuffled copy of the **list**.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.shuffle([1, 2, 3, 4, 5, 6])</span>
@@ -459,7 +487,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.partition"><a class="viewcode-back" href="../index.html#underscore.underscore.partition">[docs]</a>	<span class="k">def</span> <span class="nf">partition</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Split **list** into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy predicate. If **list** is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the &#39;yes&#39; and &#39;no&#39; order.</span>
+<span class="sd">		Split **list** into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy **predicate**. If **list** is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the &#39;yes&#39; and &#39;no&#39; order.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.partition([0, 1, 2, 3, 4, 5], lambda num: num % 2 != 0)</span>
@@ -504,7 +532,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.last"><a class="viewcode-back" href="../index.html#underscore.underscore.last">[docs]</a>	<span class="k">def</span> <span class="nf">last</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Returns the last element of an array. Passing **n** will return the last n elements of the array.</span>
+		<span class="sd">&quot;&quot;&quot;Returns the last element of **array**. Passing **n** will return the last n elements of the array.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.last([5, 4, 3, 2, 1])</span>
@@ -529,7 +557,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.compact"><a class="viewcode-back" href="../index.html#underscore.underscore.compact">[docs]</a>	<span class="k">def</span> <span class="nf">compact</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns a copy of the **array** with all falsy values removed. ``False``, ``None``, 0, &quot;&quot;, and ``NaN`` for floats are all falsy.</span>
+<span class="sd">		Returns a copy of the **array** with all falsy values removed. ``False``, ``None``, 0, &quot;&quot; (empty string), and ``NaN`` for floats are all falsy.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.compact([0, 1, False, 2, &#39;&#39;, 3])</span>
@@ -558,7 +586,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.without"><a class="viewcode-back" href="../index.html#underscore.underscore.without">[docs]</a>	<span class="k">def</span> <span class="nf">without</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Returns a copy of the **array** with all instances in  **values*** removed.</span>
+		<span class="sd">&quot;&quot;&quot;Returns a copy of the **array** with all instances in  ***values** removed.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.without([1, 2, 1, 0, 3, 1, 4], 0, 1)</span>
@@ -569,7 +597,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.union"><a class="viewcode-back" href="../index.html#underscore.underscore.union">[docs]</a>	<span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Computes the union of the passed-in **arrays**: the list of unique items, in order, that are present in one or more of the **arrays**.</span>
+<span class="sd">		Returns the union of the passed-in **arrays**: a list of unique items, in order, that are present in one or more of the **arrays**.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.union([1, 2, 3], [101, 2, 1, 10], [2, 1])</span>
@@ -590,7 +618,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.intersection"><a class="viewcode-back" href="../index.html#underscore.underscore.intersection">[docs]</a>	<span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Computes the list of values that are the intersection of all the **arrays**. Each value in the result is present in each of the **arrays**.</span>
+<span class="sd">		Returns the list of values that are the intersection of all the **arrays**. Each value in the result is present in each of the **arrays**.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.intersection([1, 2, 3], [101, 2, 1, 10], [2, 1])</span>
@@ -612,7 +640,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.difference"><a class="viewcode-back" href="../index.html#underscore.underscore.difference">[docs]</a>	<span class="k">def</span> <span class="nf">difference</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Similar to :py:meth:`without`, but returns the values from array that are not present in the other arrays.</span>
+<span class="sd">		Similar to :py:meth:`without`, but returns the values from **array** that are not present in the other arrays.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.difference([1, 2, 3, 4, 5], [5, 2, 10])</span>
@@ -637,7 +665,7 @@
 <span class="sd">		**Aliases**:</span>
 <span class="sd">			:py:meth:`uniq`, :py:meth:`unique`</span>
 
-<span class="sd">		Produces a duplicate-free version of the **array**, based on the *in* operator of Python&#39;s list. If you want to compute unique items after a transformation, pass an **iteratee** function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.</span>
+<span class="sd">		Returns a duplicate-free version of the **array**, based on the *in* operator of Python&#39;s list. If you want to compute unique items after a transformation, pass an **iteratee** function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.uniq([1, 2, 1, 3, 1, 4])</span>
@@ -683,7 +711,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.object"><a class="viewcode-back" href="../index.html#underscore.underscore.object">[docs]</a>	<span class="k">def</span> <span class="nf">object</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Converts arrays into dictionaries. Pass either a single list of [key, value] pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.</span>
+<span class="sd">		Converts arrays into a dictionary and return it. Pass either a single list of ``[key, value]`` pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.object([&#39;moe&#39;, &#39;larry&#39;, &#39;curly&#39;], [30, 40, 50])</span>
@@ -699,7 +727,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.indexOf"><a class="viewcode-back" href="../index.html#underscore.underscore.indexOf">[docs]</a>	<span class="k">def</span> <span class="nf">indexOf</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">isSorted</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns the index at which **value** can be found in the **array**, or -1 if value is not present in the **array**. If you&#39;re working with a large array, and you know that the array is already sorted, pass ``True`` for **isSorted** to use a faster binary search... or, pass a number as the third argument in order to look for the first matching value in the array after the given index.</span>
+<span class="sd">		Returns the index at which **value** can be found in the **array**, or -1 if value is not present in the **array**. If you&#39;re working with a large array, and you know that the array is already sorted, pass ``True`` for **isSorted** to use a faster binary search; or pass a number as the third argument in order to look for the first matching value in the array after the given index.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.indexOf([1, 2, 3, 1, 2, 3], 2)</span>
@@ -720,7 +748,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.lastIndexOf"><a class="viewcode-back" href="../index.html#underscore.underscore.lastIndexOf">[docs]</a>	<span class="k">def</span> <span class="nf">lastIndexOf</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">fromIndex</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns the index of the last occurrence of value in the **array**, or -1 if value is not present. Pass **fromIndex** to start your search at a given index.</span>
+<span class="sd">		Returns the index of the last occurrence of value in the **array**, or -1 if value is not present. Pass **fromIndex**, if not ``None``, to start your search at a given index.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.lastIndexOf([1, 2, 3, 1, 2, 3], 2)</span>
@@ -735,7 +763,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.sortedIndex"><a class="viewcode-back" href="../index.html#underscore.underscore.sortedIndex">[docs]</a>	<span class="k">def</span> <span class="nf">sortedIndex</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">iteratee</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Determine the index at which the **value** should be inserted into the **array** in order to maintain the list&#39;s sorted order. If an **iteratee** function is provided, it will be used to compute the sort ranking of each value, including the value you pass. The **iteratee** may also be the string name of the key to sort by.</span>
+<span class="sd">		Determine the index at which the **value** should be inserted into the **array** in order to maintain the list&#39;s sorted order. If an **iteratee** function is provided, it will be used to compute the sort ranking of each value, including the value you pass. The **iteratee** may also be the string, providing the name of the key to sort by.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.sortedIndex([10, 20, 30, 40, 50], 35)</span>
@@ -757,11 +785,11 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.findIndex"><a class="viewcode-back" href="../index.html#underscore.underscore.findIndex">[docs]</a>	<span class="k">def</span> <span class="nf">findIndex</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1.</span>
+<span class="sd">		Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1. (Note that the **isSorted** parameter of :py:meth:`indexOf` is not used in this case.)</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; def isPrime(n):</span>
-<span class="sd">			...</span>
+<span class="sd">			...     (— definition of the function)</span>
 <span class="sd">			...</span>
 <span class="sd">			&gt;&gt;&gt; _.findIndex([4, 6, 8, 12], isPrime)</span>
 <span class="sd">			-1</span>
@@ -816,7 +844,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.partial"><a class="viewcode-back" href="../index.html#underscore.underscore.partial">[docs]</a>	<span class="k">def</span> <span class="nf">partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Partially apply a function by filling in any number of its arguments and keywords. You may pass ``None`` in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.</span>
+<span class="sd">		Return a partially bounded version of the function **func** by fixing any number of its arguments and keywords. You may pass ``None`` in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; substract = lambda a, b: b-a</span>
@@ -859,7 +887,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.after"><a class="viewcode-back" href="../index.html#underscore.underscore.after">[docs]</a>	<span class="k">def</span> <span class="nf">after</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Creates a version of **func**, as a callable object, that will only be run after first being called **count** times. Useful for grouping asynchronous responses, where you want to be sure that all the async calls have finished, before proceeding.</span>
+<span class="sd">		Creates a version of **func**, as a callable object, that will only be run after first being called **count** times.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; delayInit = _.after(2,createApplication)</span>
@@ -992,7 +1020,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.mapObject"><a class="viewcode-back" href="../index.html#underscore.underscore.mapObject">[docs]</a>	<span class="k">def</span> <span class="nf">mapObject</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">iteratee</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Like *map*, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
+		<span class="sd">&quot;&quot;&quot;Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
 <span class="sd">		If **itereatee** is not set or is ``None``, a copy of **obj** is returned.</span>
 
 <span class="sd">		Example:</span>
@@ -1009,7 +1037,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.pairs"><a class="viewcode-back" href="../index.html#underscore.underscore.pairs">[docs]</a>	<span class="k">def</span> <span class="nf">pairs</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Convert an *obj* into a list of [key, value] pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.</span>
+		<span class="sd">&quot;&quot;&quot;Convert an **obj** into a list of ``[key, value]`` pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.pairs({&#39;one&#39;:1, &#39;two&#39;:2, &#39;three&#39;:3})</span>
@@ -1045,7 +1073,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.extend"><a class="viewcode-back" href="../index.html#underscore.underscore.extend">[docs]</a>	<span class="k">def</span> <span class="nf">extend</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Copy all of the properties in the source objects over to the **destination** object, and return the **destination** object. It&#39;s in-order, so the last source will override properties of the same name in previous arguments.  Returns **destination** (for possible chaining).</span>
+		<span class="sd">&quot;&quot;&quot;Copy all of the properties in the source objects of **sources** over to the **destination** object. It&#39;s in-order, so the last source will override properties of the same name in previous arguments.  Returns **destination** (for possible chaining).</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.extend({&#39;name&#39;: &#39;moe&#39;, age:&#39;40&#39;}, {&#39;age&#39;: 50}, {&#39;age&#39;:60, &#39;gender&#39;:&#39;male&#39;})</span>
@@ -1073,7 +1101,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.pick"><a class="viewcode-back" href="../index.html#underscore.underscore.pick">[docs]</a>	<span class="k">def</span> <span class="nf">pick</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">keys</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Return a copy of *obj*, filtered to only have values for the whitelisted keys (or array of valid keys). Alternatively, accepts a predicate indicating which keys to pick.</span>
+<span class="sd">		Return a copy of **obj**, filtered to only have values for the whitelisted **keys** (or array of valid keys). Alternatively, accepts a predicate indicating which keys to pick.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.pick({&#39;name&#39;: &#39;moe&#39;, &#39;age&#39;: 50, &#39;userid&#39;: &#39;moe1&#39;}, &#39;name&#39;, &#39;age&#39;)</span>
@@ -1094,7 +1122,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.omit"><a class="viewcode-back" href="../index.html#underscore.underscore.omit">[docs]</a>	<span class="k">def</span> <span class="nf">omit</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">keys</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Return a copy of **obj**, filtered to omit values for the blacklisted keys (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.</span>
+<span class="sd">		Return a copy of **obj**, filtered to omit values for the blacklisted **keys** (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.omit({&#39;name&#39;: &#39;moe&#39;, &#39;age&#39;: 50, &#39;userid&#39;: &#39;moe1&#39;}, &#39;name&#39;, &#39;age&#39;)</span>
@@ -1114,7 +1142,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.defaults"><a class="viewcode-back" href="../index.html#underscore.underscore.defaults">[docs]</a>	<span class="k">def</span> <span class="nf">defaults</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">defaults</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Fill in undefined properties in **obj** with the first value present in the following list of defaults objects. Return **obj** (for possible chaining)</span>
+		<span class="sd">&quot;&quot;&quot;Fill in undefined properties in **obj** with the first value present in the following list of **defaults** objects. Return **obj** (for possible chaining)</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; iceCream = {&#39;flavor&#39;: &quot;chocolate&quot;}</span>
@@ -1137,12 +1165,12 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.has"><a class="viewcode-back" href="../index.html#underscore.underscore.has">[docs]</a>	<span class="k">def</span> <span class="nf">has</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Does the object contain the given key? Alias to built in dictionary method&quot;&quot;&quot;</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if the object contain the given key, ``False`` otherwise. Alias to built in dictionary method&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.property"><a class="viewcode-back" href="../index.html#underscore.underscore.property">[docs]</a>	<span class="k">def</span> <span class="nf">property</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Returns a function that will itself return the key property of any passed-in object.</span>
+		<span class="sd">&quot;&quot;&quot;Returns a function that will itself return the **key** property of any passed-in object.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; getName = _.property(&#39;name&#39;)</span>
@@ -1166,7 +1194,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.matcher"><a class="viewcode-back" href="../index.html#underscore.underscore.matcher">[docs]</a>	<span class="k">def</span> <span class="nf">matcher</span><span class="p">(</span><span class="n">attrs</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Returns a predicate function that will tell you if a passed object contains all of the key/value properties present in **attrs**.</span>
+		<span class="sd">&quot;&quot;&quot;Returns a predicate function that will tell if a passed object contains all of the key/value properties present in **attrs**.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.filter(stooges, _.matcher({&#39;age&#39;:60}))</span>
@@ -1181,7 +1209,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isMatch"><a class="viewcode-back" href="../index.html#underscore.underscore.isMatch">[docs]</a>	<span class="k">def</span> <span class="nf">isMatch</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Tells you if the keys and values in **properties** are contained in **obj**.</span>
+		<span class="sd">&quot;&quot;&quot;Returns ``True`` if the keys and values in **properties** are contained in **obj**, ``False`` otherwise.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; stooge = {&#39;name&#39;: &#39;moe&#39;, &#39;age&#39;: 40}</span>
@@ -1192,76 +1220,93 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isEqual"><a class="viewcode-back" href="../index.html#underscore.underscore.isEqual">[docs]</a>	<span class="k">def</span> <span class="nf">isEqual</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Performs an optimized deep comparison between the two objects, to determine if they should be considered equal.&quot;&quot;&quot;</span>
+		<span class="sd">&quot;&quot;&quot;Performs an optimized deep comparison between **obj** and **other**, returns ``True`` if they are equal, ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">obj</span> <span class="o">==</span> <span class="n">other</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isEmpty"><a class="viewcode-back" href="../index.html#underscore.underscore.isEmpty">[docs]</a>	<span class="k">def</span> <span class="nf">isEmpty</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Returns true if an enumerable object contains no values (no enumerable own-properties). For strings and array-like objects the function checks if the length property is 0.&quot;&quot;&quot;</span>
+		<span class="sd">&quot;&quot;&quot;Returns ``True`` if an enumerable object contains no values (no enumerable own-properties), ``False`` otherwise. For strings and array-like objects the function checks if the length property is 0.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isArray"><a class="viewcode-back" href="../index.html#underscore.underscore.isArray">[docs]</a>	<span class="k">def</span> <span class="nf">isArray</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is an Array (i.e., List), ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ListType</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isTuple"><a class="viewcode-back" href="../index.html#underscore.underscore.isTuple">[docs]</a>	<span class="k">def</span> <span class="nf">isTuple</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is an Tuple, ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">TupleType</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isObject"><a class="viewcode-back" href="../index.html#underscore.underscore.isObject">[docs]</a>	<span class="k">def</span> <span class="nf">isObject</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is an “Object” (i.e., Dictonary), ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">DictType</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isFunction"><a class="viewcode-back" href="../index.html#underscore.underscore.isFunction">[docs]</a>	<span class="k">def</span> <span class="nf">isFunction</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is a function or a method, ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FunctionType</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">MethodType</span>
 </div>
 	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="underscore.isCallable"><a class="viewcode-back" href="../index.html#underscore.underscore.isCallable">[docs]</a>	<span class="k">def</span> <span class="nf">isCallable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is callable, ``False`` otherwise. Note that this is a more general form of test than :py:meth:`isFunction`&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;__call__&#39;</span><span class="p">)</span>
+</div>
+	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isString"><a class="viewcode-back" href="../index.html#underscore.underscore.isString">[docs]</a>	<span class="k">def</span> <span class="nf">isString</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is a string, ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">)</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.isNumber"><a class="viewcode-back" href="../index.html#underscore.underscore.isNumber">[docs]</a>	<span class="k">def</span> <span class="nf">isNumber</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">IntType</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span>
+<div class="viewcode-block" id="underscore.isNumber"><a class="viewcode-back" href="../index.html#underscore.underscore.isNumber">[docs]</a>	<span class="k">def</span> <span class="nf">isNumber</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is a number (float or integer), ``False`` otherwise.&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">IntType</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.isFinite"><a class="viewcode-back" href="../index.html#underscore.underscore.isFinite">[docs]</a>	<span class="k">def</span> <span class="nf">isFinite</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">IntType</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+<div class="viewcode-block" id="underscore.isFinite"><a class="viewcode-back" href="../index.html#underscore.underscore.isFinite">[docs]</a>	<span class="k">def</span> <span class="nf">isFinite</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is number with a finite value, ``False`` otherwise.&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">IntType</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.isBoolean"><a class="viewcode-back" href="../index.html#underscore.underscore.isBoolean">[docs]</a>	<span class="k">def</span> <span class="nf">isBoolean</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">BooleanType</span>
+<div class="viewcode-block" id="underscore.isNaN"><a class="viewcode-back" href="../index.html#underscore.underscore.isNaN">[docs]</a>	<span class="k">def</span> <span class="nf">isNaN</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is a float with ``NaN`` as value, ``False`` otherwise.&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.isError"><a class="viewcode-back" href="../index.html#underscore.underscore.isError">[docs]</a>	<span class="k">def</span> <span class="nf">isError</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-		<span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span>
+<div class="viewcode-block" id="underscore.isBoolean"><a class="viewcode-back" href="../index.html#underscore.underscore.isBoolean">[docs]</a>	<span class="k">def</span> <span class="nf">isBoolean</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is a Boolean, ``False`` otherwise.&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">BooleanType</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.isNaN"><a class="viewcode-back" href="../index.html#underscore.underscore.isNaN">[docs]</a>	<span class="k">def</span> <span class="nf">isNaN</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<div class="viewcode-block" id="underscore.isError"><a class="viewcode-back" href="../index.html#underscore.underscore.isError">[docs]</a>	<span class="k">def</span> <span class="nf">isError</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is an Exception, ``False`` otherwise.&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.isNone"><a class="viewcode-back" href="../index.html#underscore.underscore.isNone">[docs]</a>	<span class="k">def</span> <span class="nf">isNone</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-		<span class="k">return</span> <span class="nb">object</span> <span class="ow">is</span> <span class="bp">None</span>
+<div class="viewcode-block" id="underscore.isNone"><a class="viewcode-back" href="../index.html#underscore.underscore.isNone">[docs]</a>	<span class="k">def</span> <span class="nf">isNone</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is ``None``, ``False`` otherwise.&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">obj</span> <span class="ow">is</span> <span class="bp">None</span>
 
 	<span class="c">###############################################################################</span>
 	<span class="c">#                              Utility Functions                              #</span>
 	<span class="c">###############################################################################</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.identity"><a class="viewcode-back" href="../index.html#underscore.underscore.identity">[docs]</a>	<span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Returns the same value that is used as the argument. In math: ``f(x) = x``. This function looks useless, but can be used as a default iteratee.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="underscore.identity"><a class="viewcode-back" href="../index.html#underscore.underscore.identity">[docs]</a>	<span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns the same value that is used as the first argument (and ignore everything else). In math: ``f(x) = x``. This function looks useless, but can be used when debugging other underscore methods.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">x</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.constant"><a class="viewcode-back" href="../index.html#underscore.underscore.constant">[docs]</a>	<span class="k">def</span> <span class="nf">constant</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Creates a function that returns the same **value**.</span>
+<span class="sd">		Returns a function that always returns the same **value**.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt; stooge = {&#39;name&#39;: &#39;moe&#39;}</span>
-<span class="sd">			&gt;&gt; stooge == _.constant(stooge)()</span>
-<span class="sd">			True</span>
+<span class="sd">			&gt;&gt;&gt; stooge = {&#39;name&#39;: &#39;moe&#39; }</span>
+<span class="sd">			&gt;&gt;&gt; const = _.constant(stooge)</span>
+<span class="sd">			&gt;&gt;&gt; const()</span>
+<span class="sd">			{&#39;name&#39;: &#39;moe&#39; }</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">value</span>
 </div>
@@ -1285,36 +1330,22 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.uniqueId"><a class="viewcode-back" href="../index.html#underscore.underscore.uniqueId">[docs]</a>	<span class="k">def</span> <span class="nf">uniqueId</span><span class="p">(</span><span class="n">prefix</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Generate a globally-unique id. If prefix is passed, the id will be appended to it.</span>
-<span class="sd">		The method relies on the ``uuid.uuid1()``` library function, i.e., is based on the host ID and the current time.</span>
+<span class="sd">		Returns a globally-unique id as a string. If **prefix** is passed, the id will be appended to it. The method relies on the ``uuid.uuid1()``` library function, i.e., is based on the host ID and the current time.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="kn">import</span> <span class="nn">uuid</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.now"><a class="viewcode-back" href="../index.html#underscore.underscore.now">[docs]</a>	<span class="k">def</span> <span class="nf">now</span><span class="p">():</span>
+		<span class="sd">&quot;&quot;&quot;Returns an integer timestamp for the current time&quot;&quot;&quot;</span>
 		<span class="kn">import</span> <span class="nn">time</span>
 		<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-
-	<span class="c">###############################################################################</span>
-	<span class="c">#                                   Aliases                                   #</span>
-	<span class="c">###############################################################################</span>
-
-	<span class="c"># Aliases to some of the core method names</span></div>
-	<span class="n">forEach</span> <span class="o">=</span> <span class="n">each</span>
-	<span class="n">collect</span> <span class="o">=</span> <span class="nb">map</span>
-	<span class="n">inject</span>  <span class="o">=</span> <span class="nb">reduce</span>
-	<span class="n">detect</span>  <span class="o">=</span> <span class="n">find</span>
-	<span class="n">select</span>  <span class="o">=</span> <span class="nb">filter</span>
-	<span class="nb">any</span>     <span class="o">=</span> <span class="n">some</span>
-	<span class="n">include</span> <span class="o">=</span> <span class="n">contains</span>
-	<span class="n">unique</span>  <span class="o">=</span> <span class="n">uniq</span>
 
 	<span class="c">###############################################################################</span>
 	<span class="c">#                                    Chaining                                 #</span>
 	<span class="c">###############################################################################</span>
 
-	<span class="c"># Chaining is done by creating an instance of underscore, and catching all method requests...</span>
+	<span class="c"># Chaining is done by creating an instance of underscore, and catching all method requests...</span></div>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">current_value</span> <span class="o">=</span> <span class="n">val</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">chaining_on</span>   <span class="o">=</span> <span class="bp">True</span>
@@ -1382,11 +1413,23 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">underscore</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-</div></div>
+	<span class="c">###############################################################################</span>
+	<span class="c">#                                   Aliases                                   #</span>
+	<span class="c">###############################################################################</span>
+
+	<span class="c"># Aliases to some of the core method names</span></div>
+	<span class="n">forEach</span> <span class="o">=</span> <span class="n">each</span>
+	<span class="n">collect</span> <span class="o">=</span> <span class="nb">map</span>
+	<span class="n">inject</span>  <span class="o">=</span> <span class="nb">reduce</span>
+	<span class="n">detect</span>  <span class="o">=</span> <span class="n">find</span>
+	<span class="n">select</span>  <span class="o">=</span> <span class="nb">filter</span>
+	<span class="nb">any</span>     <span class="o">=</span> <span class="n">some</span>
+	<span class="n">include</span> <span class="o">=</span> <span class="n">contains</span>
+	<span class="n">unique</span>  <span class="o">=</span> <span class="n">uniq</span>
+
+</div>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-	<span class="k">def</span> <span class="nf">pr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-		<span class="k">print</span> <span class="s">&quot;intermediate: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">a</span>
-	<span class="k">print</span> <span class="n">underscore</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">200</span><span class="p">])</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tap</span><span class="p">(</span><span class="n">pr</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+	<span class="k">pass</span>
 </pre></div>
 
       </div>
@@ -1399,7 +1442,8 @@
       </div>
 
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2016, Ivan Herman.
+        &copy; Copyright Copyright (c) 2016 W3C® (MIT, ERCIM, Keio, Beihang).
+      Last updated on 12 May, 2016.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>

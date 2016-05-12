@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Underscore for Python &mdash; Underscore for Python 0.9 documentation</title>
+    <title>Introduction &mdash; Underscore for Python</title>
     
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/my.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.9',
+        VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,12 +24,12 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Underscore for Python 0.9 documentation" href="#" /> 
+    <link rel="top" title="Underscore for Python" href="#" /> 
   </head>
   <body role="document">
       <div class="header" role="banner"><h1 class="heading"><a href="#">
-          <span>Underscore for Python 0.9 documentation</span></a></h1>
-        <h2 class="heading"><span>Underscore for Python</span></h2>
+          <span>Underscore for Python</span></a></h1>
+        <h2 class="heading"><span>Introduction</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
       
@@ -40,10 +41,10 @@
       <div class="content">
         
         
-  <div class="section" id="underscore-for-python">
-<h1>Underscore for Python<a class="headerlink" href="#underscore-for-python" title="Permalink to this headline">¶</a></h1>
-<p>This is a Python adaptation of the <a class="reference external" href="http://underscorejs.org/">Underscore.js</a>  JavaScript library. Most of the method definitions have been taken over, following essentially the same definition, order or arguments, etc. Some changes to the Python style and environment was nevertheless necessary, and some of the original functions, closely related to JavaScript and Web Application development (e.g., function related to DOM nodes or HTML escaping) have been skipped.</p>
-<p>The typical approach for using the library is:</p>
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>This is a Python adaptation of the <a class="reference external" href="http://underscorejs.org/">Underscore.js</a>  JavaScript library. Most of the method definitions have been taken over, following, whenever possible, the same definition, order or arguments, etc. Some changes to the Python style and environment was nevertheless necessary, and some of the functions, closely related to JavaScript and Web Application development (e.g., function related to DOM nodes or HTML escaping), have been skipped.</p>
+<p>A typical approach for using the library can be:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">underscore</span> <span class="kn">import</span> <span class="n">underscore</span> <span class="k">as</span> <span class="n">_</span>
 </pre></div>
 </div>
@@ -51,25 +52,37 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>This is the idiom used throughout this document.</p>
 <div class="section" id="chaining">
 <h2>Chaining<a class="headerlink" href="#chaining" title="Permalink to this headline">¶</a></h2>
 <p>Underscore methods usually return a suitable value to be included in another method’s input. Ie, it is possible to combine two methods as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">200</span><span class="p">],</span><span class="k">lambda</span> <span class="n">num</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>I.e., the output of the <code class="docutils literal"><span class="pre">filter</span></code> method is used as an argument in <code class="docutils literal"><span class="pre">map</span></code>. This may become fairly unreadable, though. An alternative is to use <em>chaining</em>:</p>
+<p>I.e., the output of the <code class="docutils literal"><span class="pre">filter</span></code> method is used as an argument in <code class="docutils literal"><span class="pre">map</span></code>. This may become fairly unreadable if several steps are involved, though (and having several steps is typical to the functional programming style that underscore is meant for). An alternative is to use <em>chaining</em>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">_</span><span class="o">.</span><span class="n">chain</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">200</span><span class="p">])</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">num</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">_.chain</span></code> method returns a wrapper object around the argument. Calling underscore methods, without the first argument, on this object means invoking the full-blown method with the wrapped object value as a first argument. Each call returns the wrapper with the newly computer value, until the <code class="docutils literal"><span class="pre">value</span></code> method is called. In usage terms, this means that each underscore method is invoked with the value generated in the previous element of the chain as the first argument of the method.</p>
-<p>In fact, the call on <code class="docutils literal"><span class="pre">_.chain</span></code> is superfluous. Creating an underscore <em>instance</em> is sufficient; <code class="docutils literal"><span class="pre">_.chain</span></code> is just a functional equivalent. I.e., the following is equivalent to the previous example:</p>
+<p>The <code class="docutils literal"><span class="pre">chain</span></code> method returns a wrapper object around the argument. Calling underscore methods, without the first argument, on this object means invoking the full-blown method with the wrapped object value as a first argument. Each call returns the wrapper with the newly computed value, until the <code class="docutils literal"><span class="pre">value</span></code> method is called. In usage terms, this means that each underscore method is invoked with the value generated by the previous element of the chain as the first argument of the method.</p>
+<p>In fact, the call on <code class="docutils literal"><span class="pre">chain</span></code> is not really necessary. Creating an underscore <em>instance</em> is sufficient; <code class="docutils literal"><span class="pre">chain</span></code> is just a functional equivalent. I.e., the following is equivalent to the previous example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">_</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">200</span><span class="p">])</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">num</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>(Python’s indentation-based syntax makes it a bit less appealing to break the chains over several lines in the source than in javascript, because the <code class="docutils literal"><span class="pre">\</span></code> character must be used at the end of the line. Oh well…)</p>
 </div>
 <div class="section" id="method-definitions">
 <h2>Method definitions<a class="headerlink" href="#method-definitions" title="Permalink to this headline">¶</a></h2>
-<p>Most of the methods have an example of usage to make the description clearer. Conceptually, the following Python code precedes all examples:</p>
+<p>All (static) method below can be used directly or as methods used on a chain without the first argument (which is fed via the previous step in the chain). When looking for a specific method, see the <a class="reference internal" href="genindex.html"><span>Index</span></a> to find the methods, or simply search in this page.</p>
+<p>Many methods have an <strong>iteratee</strong> (or <strong>predicate</strong>) and <strong>context</strong> arguments (with the latter defaulting to <code class="docutils literal"><span class="pre">None</span></code>). In general, an <strong>iteratee</strong> is a (global) function, or a static method of a class, in which case a reference to that function is used as an <strong>iteratee</strong> without a need of a <strong>context</strong> argument. However, if the <strong>iteratee</strong> is a method for a <em>class instance</em>, then that instance has to be made available for the callback, too. That is the role of the <strong>context</strong>: it is the reference to the class instance, i.e., its value will be used as <code class="docutils literal"><span class="pre">self</span></code> in the method invocation.</p>
+<p>Some methods have <em>aliases</em>. This simply means that the same function has two different method names with completely identical behavior. The reason for having those is because different communities have traditionally different function names for the same functionalities (e.g., “each” and “forEach”). In those cases the method description lists the aliases.</p>
+</div>
+</div>
+<div class="section" id="module-underscore">
+<span id="detailed-method-descriptions"></span><h1>Detailed method descriptions<a class="headerlink" href="#module-underscore" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="underscore.underscore">
+<em class="property">class </em><code class="descclassname">underscore.</code><code class="descname">underscore</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Methods usually have a usage example to make the description clearer. Conceptually, the following Python code precedes all examples:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">underscore</span> <span class="kn">import</span> <span class="n">underscore</span> <span class="k">as</span> <span class="n">_</span>
 <span class="n">listOfPlays</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
@@ -95,14 +108,16 @@
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;created&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="module-underscore">
-<span id="detailed-description-of-the-methods"></span><h3>Detailed description of the methods<a class="headerlink" href="#module-underscore" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
-<dt id="underscore.underscore">
-<em class="property">class </em><code class="descclassname">underscore.</code><code class="descname">underscore</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore" title="Permalink to this definition">¶</a></dt>
-<dd><p>All (static) method below can be used directly, or as methods used on chaining without the first argument (which is fed via the previous step in the chain). When looking for a specific method, see the <a class="reference internal" href="genindex.html"><span>Index</span></a> to find the methods, or simply search in this page.</p>
-<p>Many methods have an <strong>iteratee</strong> (or <strong>predicate</strong>) and <strong>context</strong> arguments (with the latter defaulting to <code class="docutils literal"><span class="pre">None</span></code>). In general, an <strong>iteratee</strong> is a (global) function, or a static method of a class, in which case a reference to that function is used as an <strong>iteratee</strong>, without a need for a <strong>context</strong> argument. However, if the <strong>iteratee</strong> is a method for a <em>class instance</em>, then that instance has to be made available for the callback, too. That is the role of the <strong>context</strong>: it is the reference to the class instance; in practice, its value will be used as <code class="docutils literal"><span class="pre">self</span></code> in the method invocation.</p>
-<p>Some methods have <em>aliases</em>. This simply means that the same function has two different possible method names with identical behavior. The reason for having those is because different communities have different function names for the same functionalitys (e.g., “each” and “forEach”). In those cases the method description lists the aliases.</p>
+<p>These structures are used in some of the examples and are listed here to avoid repeating their definition separately.</p>
+<p>A further simplification of the examples is the usage of the <code class="docutils literal"><span class="pre">*args</span></code> idioms. Many “iteratee” arguments represent a function with 3-4 arguments, per definition of the underscore method, but the example uses only the first few. Instead of:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">lambda</span> <span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">list</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>the abbreviation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">lambda</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>is sometimes used.</p>
 <dl class="staticmethod">
 <dt id="underscore.underscore.each">
 <em class="property">static </em><code class="descname">each</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.each"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.each" title="Permalink to this definition">¶</a></dt>
@@ -110,10 +125,8 @@
 <dt><strong>Aliases</strong>:</dt>
 <dd><a class="reference internal" href="#underscore.underscore.each" title="underscore.underscore.each"><code class="xref py py-meth docutils literal"><span class="pre">each()</span></code></a>, <a class="reference internal" href="#underscore.underscore.forEach" title="underscore.underscore.forEach"><code class="xref py py-meth docutils literal"><span class="pre">forEach()</span></code></a></dd>
 </dl>
-<p>Iterates over a list of elements, yielding each in turn to an <strong>iteratee</strong> function. Each
-invocation of <strong>iteratee</strong> is called with three arguments: if <strong>list</strong> is of list type,
-then the arguments are <code class="docutils literal"><span class="pre">(element,</span> <span class="pre">index,</span> <span class="pre">list)</span></code>; if it is of dictionary type
-the arguments are <code class="docutils literal"><span class="pre">(value,</span> <span class="pre">key,</span> <span class="pre">list</span></code>). Returns <strong>list</strong> for possible composition.</p>
+<p>Iterates over a <strong>list</strong> of elements, yielding each in turn to an <strong>iteratee</strong> function. Each invocation of <strong>iteratee</strong> is called with three arguments: if <strong>list</strong> is of list type, then the arguments are <code class="docutils literal"><span class="pre">(element,</span> <span class="pre">index,</span> <span class="pre">list)</span></code>; if it is of dictionary type
+the arguments are <code class="docutils literal"><span class="pre">(value,</span> <span class="pre">key,</span> <span class="pre">list</span></code>). Returns <strong>list</strong> for possible chaining.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -139,10 +152,10 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dt><strong>Aliases</strong>:</dt>
 <dd><a class="reference internal" href="#underscore.underscore.map" title="underscore.underscore.map"><code class="xref py py-meth docutils literal"><span class="pre">map()</span></code></a>, <a class="reference internal" href="#underscore.underscore.collect" title="underscore.underscore.collect"><code class="xref py py-meth docutils literal"><span class="pre">collect()</span></code></a></dd>
 </dl>
-<p>Produces a new array of values by mapping each value in <strong>list</strong> through a transformation function (<strong>iteratee</strong>). The <strong>iteratee</strong> is passed three arguments: the <code class="docutils literal"><span class="pre">value</span></code>, then the <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
+<p>Produces a <em>new</em> array of values by mapping each value in <strong>list</strong> through a transformation function (<strong>iteratee</strong>). Similarly to <a class="reference internal" href="#underscore.underscore.each" title="underscore.underscore.each"><code class="xref py py-meth docutils literal"><span class="pre">each()</span></code></a>, the <strong>iteratee</strong> is passed three arguments: the <code class="docutils literal"><span class="pre">value</span></code>, then the <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
 <dl class="docutils">
 <dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">list</span><span class="p">:</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
 <span class="go">[3, 6, 9]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;two&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;three&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">val</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">val</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
 <span class="go">[12, 8, 4]</span>
@@ -161,7 +174,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dt><strong>Aliases</strong>:</dt>
 <dd><a class="reference internal" href="#underscore.underscore.reduce" title="underscore.underscore.reduce"><code class="xref py py-meth docutils literal"><span class="pre">reduce()</span></code></a>, <a class="reference internal" href="#underscore.underscore.inject" title="underscore.underscore.inject"><code class="xref py py-meth docutils literal"><span class="pre">inject()</span></code></a></dd>
 </dl>
-<p>Reduce boils down a <strong>list</strong> of values into a single value. <strong>memo</strong> is the initial state of the reduction, and each successive step of should be returned by <strong>iteratee</strong>. The <strong>iteratee</strong> is passed four arguments: <code class="docutils literal"><span class="pre">memo</span></code> (ie, the current state of reduction), then the <code class="docutils literal"><span class="pre">value</span></code> and <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
+<p>Reduce boils down a <strong>list</strong> of values into a single value that is returned. <strong>memo</strong> is the initial state of the reduction, and each successive step of it should be returned by <strong>iteratee</strong>. The <strong>iteratee</strong> is passed four arguments: <code class="docutils literal"><span class="pre">memo</span></code> (ie, the current state of reduction), then the <code class="docutils literal"><span class="pre">value</span></code> and <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
 <p>If no memo is passed to the initial invocation of reduce, <strong>iteratee</strong> is not invoked on the first element of the list. The first element is instead passed as the <code class="docutils literal"><span class="pre">memo</span></code> in the invocation of the <strong>iteratee</strong> on the next element in the list.</p>
 <dl class="docutils">
 <dt>Example:</dt>
@@ -183,7 +196,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <p>Looks through each value in the <strong>list</strong>, returning the first one that passes a truth test (<strong>predicate</strong>), or <code class="docutils literal"><span class="pre">None</span></code> if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn&#8217;t traverse the entire list.</p>
 <dl class="docutils">
 <dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">find</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">find</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 <span class="go">2</span>
 </pre></div>
 </div>
@@ -216,8 +229,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">listOfPlays</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;author&#39;</span><span class="p">:</span> <span class="s">&quot;Shakespeare&quot;</span><span class="p">,</span> <span class="s">&#39;year&#39;</span><span class="p">:</span> <span class="mi">1611</span><span class="p">})</span>
-<span class="go">[{&#39;title&#39;: &#39;The tempest&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;},</span>
-<span class="go"> {&#39;title&#39;: &#39;Cymbeline&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}]</span>
+<span class="go">[{&#39;title&#39;: &#39;The tempest&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}, {&#39;title&#39;: &#39;Cymbeline&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}]</span>
 </pre></div>
 </div>
 </dd>
@@ -244,7 +256,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dd><p>Returns the values in <strong>list</strong> without the elements that the truth test (<strong>predicate</strong>) passes. The opposite of <a class="reference internal" href="#underscore.underscore.filter" title="underscore.underscore.filter"><code class="xref py py-meth docutils literal"><span class="pre">filter()</span></code></a>.</p>
 <dl class="docutils">
 <dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">reject</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">reject</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 <span class="go">[1, 3, 5]</span>
 </pre></div>
 </div>
@@ -254,8 +266,8 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.every">
-<em class="property">static </em><code class="descname">every</code><span class="sig-paren">(</span><em>list</em>, <em>predicate=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.every"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.every" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns true if all of the values in the <strong>list</strong> pass the <strong>predicate</strong> truth test.</p>
+<em class="property">static </em><code class="descname">every</code><span class="sig-paren">(</span><em>list</em>, <em>predicate=&lt;function &lt;lambda&gt;&gt;</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.every"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.every" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if all of the values in the <strong>list</strong> pass the <strong>predicate</strong> truth test. The default predicate is the identity.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">every</span><span class="p">([</span><span class="bp">True</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;yes&#39;</span><span class="p">],</span> <span class="n">_</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span>
@@ -268,12 +280,12 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.some">
-<em class="property">static </em><code class="descname">some</code><span class="sig-paren">(</span><em>list</em>, <em>predicate=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.some"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.some" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">some</code><span class="sig-paren">(</span><em>list</em>, <em>predicate=&lt;function &lt;lambda&gt;&gt;</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.some"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.some" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt><strong>Aliases</strong>:</dt>
 <dd><a class="reference internal" href="#underscore.underscore.some" title="underscore.underscore.some"><code class="xref py py-meth docutils literal"><span class="pre">some()</span></code></a>, <a class="reference internal" href="#underscore.underscore.any" title="underscore.underscore.any"><code class="xref py py-meth docutils literal"><span class="pre">any()</span></code></a></dd>
 </dl>
-<p>Returns <code class="docutils literal"><span class="pre">True</span></code> if any of the values in the <strong>list</strong> pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.</p>
+<p>Returns <code class="docutils literal"><span class="pre">True</span></code> if any of the values in the <strong>list</strong> pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.  The default predicate is the identity.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">some</span><span class="p">([</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">])</span>
@@ -311,7 +323,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.max">
 <em class="property">static </em><code class="descname">max</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.max"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.max" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the maximum value in <strong>list</strong>. If an <strong>iteratee</strong> function is provided, it will be used on each value to generate the criterion by which the value is ranked. <code class="docutils literal"><span class="pre">float(&quot;inf&quot;)`</span></code> is returned if list is empty, so a guard may be required.</p>
+<dd><p>Returns the maximum value in <strong>list</strong>. If an <strong>iteratee</strong> function is provided, it will be used on each value to generate the criterion by which the value is ranked. <code class="docutils literal"><span class="pre">float(&quot;inf&quot;)</span></code> is returned if list is empty.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">stooges</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">stooge</span><span class="p">:</span> <span class="n">stooge</span><span class="p">[</span><span class="s">&#39;age&#39;</span><span class="p">])</span>
@@ -400,7 +412,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.shuffle">
 <em class="property">static </em><code class="descname">shuffle</code><span class="sig-paren">(</span><em>list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.shuffle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.shuffle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a shuffled copy of the <strong>list</strong>.</p>
+<dd><p>Returns a (randomly) shuffled copy of the <strong>list</strong>.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">shuffle</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
@@ -458,7 +470,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.partition">
 <em class="property">static </em><code class="descname">partition</code><span class="sig-paren">(</span><em>list</em>, <em>predicate</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.partition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.partition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split <strong>list</strong> into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy predicate. If <strong>list</strong> is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the &#8216;yes&#8217; and &#8216;no&#8217; order.</p>
+<dd><p>Split <strong>list</strong> into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy <strong>predicate</strong>. If <strong>list</strong> is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the &#8216;yes&#8217; and &#8216;no&#8217; order.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">partition</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
@@ -504,7 +516,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.last">
 <em class="property">static </em><code class="descname">last</code><span class="sig-paren">(</span><em>array</em>, <em>n=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.last"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.last" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the last element of an array. Passing <strong>n</strong> will return the last n elements of the array.</p>
+<dd><p>Returns the last element of <strong>array</strong>. Passing <strong>n</strong> will return the last n elements of the array.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">last</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
@@ -536,7 +548,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.compact">
 <em class="property">static </em><code class="descname">compact</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.compact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.compact" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a copy of the <strong>array</strong> with all falsy values removed. <code class="docutils literal"><span class="pre">False</span></code>, <code class="docutils literal"><span class="pre">None</span></code>, 0, &#8220;&#8221;, and <code class="docutils literal"><span class="pre">NaN</span></code> for floats are all falsy.</p>
+<dd><p>Returns a copy of the <strong>array</strong> with all falsy values removed. <code class="docutils literal"><span class="pre">False</span></code>, <code class="docutils literal"><span class="pre">None</span></code>, 0, &#8220;&#8221; (empty string), and <code class="docutils literal"><span class="pre">NaN</span></code> for floats are all falsy.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">compact</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
@@ -566,7 +578,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.without">
 <em class="property">static </em><code class="descname">without</code><span class="sig-paren">(</span><em>array</em>, <em>*values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.without"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.without" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a copy of the <strong>array</strong> with all instances in  <strong>values*</strong> removed.</p>
+<dd><p>Returns a copy of the <strong>array</strong> with all instances in  <strong>*values</strong> removed.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">without</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -580,7 +592,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.union">
 <em class="property">static </em><code class="descname">union</code><span class="sig-paren">(</span><em>*arrays</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.union" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the union of the passed-in <strong>arrays</strong>: the list of unique items, in order, that are present in one or more of the <strong>arrays</strong>.</p>
+<dd><p>Returns the union of the passed-in <strong>arrays</strong>: a list of unique items, in order, that are present in one or more of the <strong>arrays</strong>.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">union</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
@@ -594,7 +606,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.intersection">
 <em class="property">static </em><code class="descname">intersection</code><span class="sig-paren">(</span><em>*arrays</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.intersection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the list of values that are the intersection of all the <strong>arrays</strong>. Each value in the result is present in each of the <strong>arrays</strong>.</p>
+<dd><p>Returns the list of values that are the intersection of all the <strong>arrays</strong>. Each value in the result is present in each of the <strong>arrays</strong>.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">intersection</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
@@ -608,7 +620,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.difference">
 <em class="property">static </em><code class="descname">difference</code><span class="sig-paren">(</span><em>array</em>, <em>*others</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.difference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Similar to <a class="reference internal" href="#underscore.underscore.without" title="underscore.underscore.without"><code class="xref py py-meth docutils literal"><span class="pre">without()</span></code></a>, but returns the values from array that are not present in the other arrays.</p>
+<dd><p>Similar to <a class="reference internal" href="#underscore.underscore.without" title="underscore.underscore.without"><code class="xref py py-meth docutils literal"><span class="pre">without()</span></code></a>, but returns the values from <strong>array</strong> that are not present in the other arrays.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">difference</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
@@ -626,7 +638,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dt><strong>Aliases</strong>:</dt>
 <dd><a class="reference internal" href="#underscore.underscore.uniq" title="underscore.underscore.uniq"><code class="xref py py-meth docutils literal"><span class="pre">uniq()</span></code></a>, <a class="reference internal" href="#underscore.underscore.unique" title="underscore.underscore.unique"><code class="xref py py-meth docutils literal"><span class="pre">unique()</span></code></a></dd>
 </dl>
-<p>Produces a duplicate-free version of the <strong>array</strong>, based on the <em>in</em> operator of Python&#8217;s list. If you want to compute unique items after a transformation, pass an <strong>iteratee</strong> function. If you know in advance that the array is sorted, passing <code class="docutils literal"><span class="pre">True</span></code> for <strong>isSorted</strong> will run a much faster algorithm.</p>
+<p>Returns a duplicate-free version of the <strong>array</strong>, based on the <em>in</em> operator of Python&#8217;s list. If you want to compute unique items after a transformation, pass an <strong>iteratee</strong> function. If you know in advance that the array is sorted, passing <code class="docutils literal"><span class="pre">True</span></code> for <strong>isSorted</strong> will run a much faster algorithm.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">uniq</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
@@ -656,7 +668,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.object">
 <em class="property">static </em><code class="descname">object</code><span class="sig-paren">(</span><em>list</em>, <em>values=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts arrays into dictionaries. Pass either a single list of [key, value] pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.</p>
+<dd><p>Converts arrays into a dictionary and return it. Pass either a single list of <code class="docutils literal"><span class="pre">[key,</span> <span class="pre">value]</span></code> pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">object</span><span class="p">([</span><span class="s">&#39;moe&#39;</span><span class="p">,</span> <span class="s">&#39;larry&#39;</span><span class="p">,</span> <span class="s">&#39;curly&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
@@ -672,7 +684,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.indexOf">
 <em class="property">static </em><code class="descname">indexOf</code><span class="sig-paren">(</span><em>array</em>, <em>value</em>, <em>isSorted=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.indexOf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.indexOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the index at which <strong>value</strong> can be found in the <strong>array</strong>, or -1 if value is not present in the <strong>array</strong>. If you&#8217;re working with a large array, and you know that the array is already sorted, pass <code class="docutils literal"><span class="pre">True</span></code> for <strong>isSorted</strong> to use a faster binary search... or, pass a number as the third argument in order to look for the first matching value in the array after the given index.</p>
+<dd><p>Returns the index at which <strong>value</strong> can be found in the <strong>array</strong>, or -1 if value is not present in the <strong>array</strong>. If you&#8217;re working with a large array, and you know that the array is already sorted, pass <code class="docutils literal"><span class="pre">True</span></code> for <strong>isSorted</strong> to use a faster binary search; or pass a number as the third argument in order to look for the first matching value in the array after the given index.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">indexOf</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
@@ -686,7 +698,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.lastIndexOf">
 <em class="property">static </em><code class="descname">lastIndexOf</code><span class="sig-paren">(</span><em>array</em>, <em>value</em>, <em>fromIndex=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.lastIndexOf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.lastIndexOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the index of the last occurrence of value in the <strong>array</strong>, or -1 if value is not present. Pass <strong>fromIndex</strong> to start your search at a given index.</p>
+<dd><p>Returns the index of the last occurrence of value in the <strong>array</strong>, or -1 if value is not present. Pass <strong>fromIndex</strong>, if not <code class="docutils literal"><span class="pre">None</span></code>, to start your search at a given index.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">lastIndexOf</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
@@ -700,7 +712,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.sortedIndex">
 <em class="property">static </em><code class="descname">sortedIndex</code><span class="sig-paren">(</span><em>array</em>, <em>value</em>, <em>iteratee=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.sortedIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.sortedIndex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine the index at which the <strong>value</strong> should be inserted into the <strong>array</strong> in order to maintain the list&#8217;s sorted order. If an <strong>iteratee</strong> function is provided, it will be used to compute the sort ranking of each value, including the value you pass. The <strong>iteratee</strong> may also be the string name of the key to sort by.</p>
+<dd><p>Determine the index at which the <strong>value</strong> should be inserted into the <strong>array</strong> in order to maintain the list&#8217;s sorted order. If an <strong>iteratee</strong> function is provided, it will be used to compute the sort ranking of each value, including the value you pass. The <strong>iteratee</strong> may also be the string, providing the name of the key to sort by.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">sortedIndex</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="mi">35</span><span class="p">)</span>
@@ -717,16 +729,16 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.findIndex">
 <em class="property">static </em><code class="descname">findIndex</code><span class="sig-paren">(</span><em>array</em>, <em>predicate</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.findIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.findIndex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Similar to <a class="reference internal" href="#underscore.underscore.indexOf" title="underscore.underscore.indexOf"><code class="xref py py-meth docutils literal"><span class="pre">indexOf()</span></code></a>, returns the first index where the predicate truth test passes; otherwise returns -1.</p>
+<dd><p>Similar to <a class="reference internal" href="#underscore.underscore.indexOf" title="underscore.underscore.indexOf"><code class="xref py py-meth docutils literal"><span class="pre">indexOf()</span></code></a>, returns the first index where the predicate truth test passes; otherwise returns -1. (Note that the <strong>isSorted</strong> parameter of <a class="reference internal" href="#underscore.underscore.indexOf" title="underscore.underscore.indexOf"><code class="xref py py-meth docutils literal"><span class="pre">indexOf()</span></code></a> is not used in this case.)</p>
 <dl class="docutils">
 <dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">isPrime</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">findIndex</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="n">isPrime</span><span class="p">)</span>
-<span class="go">-1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">findIndex</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="n">isPrime</span><span class="p">)</span>
-<span class="go">2</span>
+<dd><div class="first last highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; def isPrime(n):
+...     (— definition of the function)
+...
+&gt;&gt;&gt; _.findIndex([4, 6, 8, 12], isPrime)
+-1
+&gt;&gt;&gt; _.findIndex([4, 6, 7, 12], isPrime)
+2
 </pre></div>
 </div>
 </dd>
@@ -774,7 +786,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.partial">
 <em class="property">static </em><code class="descname">partial</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.partial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partially apply a function by filling in any number of its arguments and keywords. You may pass <code class="docutils literal"><span class="pre">None</span></code> in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.</p>
+<dd><p>Return a partially bounded version of the function <strong>func</strong> by fixing any number of its arguments and keywords. You may pass <code class="docutils literal"><span class="pre">None</span></code> in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">substract</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">b</span><span class="o">-</span><span class="n">a</span>
@@ -810,7 +822,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.after">
 <em class="property">static </em><code class="descname">after</code><span class="sig-paren">(</span><em>count</em>, <em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.after"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.after" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a version of <strong>func</strong>, as a callable object, that will only be run after first being called <strong>count</strong> times. Useful for grouping asynchronous responses, where you want to be sure that all the async calls have finished, before proceeding.</p>
+<dd><p>Creates a version of <strong>func</strong>, as a callable object, that will only be run after first being called <strong>count</strong> times.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">delayInit</span> <span class="o">=</span> <span class="n">_</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">createApplication</span><span class="p">)</span>
@@ -934,7 +946,7 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 <dl class="staticmethod">
 <dt id="underscore.underscore.mapObject">
 <em class="property">static </em><code class="descname">mapObject</code><span class="sig-paren">(</span><em>obj</em>, <em>iteratee=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.mapObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.mapObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Like <em>map</em>, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The <strong>iteratee</strong> is passed three arguments: the <code class="docutils literal"><span class="pre">value</span></code>, then the <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.
+<dd><p>Like <a class="reference internal" href="#underscore.underscore.map" title="underscore.underscore.map"><code class="xref py py-meth docutils literal"><span class="pre">map()</span></code></a>, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The <strong>iteratee</strong> is passed three arguments: the <code class="docutils literal"><span class="pre">value</span></code>, then the <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.
 If <strong>itereatee</strong> is not set or is <code class="docutils literal"><span class="pre">None</span></code>, a copy of <strong>obj</strong> is returned.</p>
 <dl class="docutils">
 <dt>Example:</dt>
@@ -951,7 +963,7 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.pairs">
 <em class="property">static </em><code class="descname">pairs</code><span class="sig-paren">(</span><em>obj</em>, <em>tuple=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.pairs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.pairs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert an <em>obj</em> into a list of [key, value] pairs. If the value of <strong>tuple</strong> is set to <code class="docutils literal"><span class="pre">True</span></code>, an array of tuples is returned, instead of an array of (binary) arrays.</p>
+<dd><p>Convert an <strong>obj</strong> into a list of <code class="docutils literal"><span class="pre">[key,</span> <span class="pre">value]</span></code> pairs. If the value of <strong>tuple</strong> is set to <code class="docutils literal"><span class="pre">True</span></code>, an array of tuples is returned, instead of an array of (binary) arrays.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">pairs</span><span class="p">({</span><span class="s">&#39;one&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;two&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;three&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">})</span>
@@ -995,7 +1007,7 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.extend">
 <em class="property">static </em><code class="descname">extend</code><span class="sig-paren">(</span><em>destination</em>, <em>*sources</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.extend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy all of the properties in the source objects over to the <strong>destination</strong> object, and return the <strong>destination</strong> object. It&#8217;s in-order, so the last source will override properties of the same name in previous arguments.  Returns <strong>destination</strong> (for possible chaining).</p>
+<dd><p>Copy all of the properties in the source objects of <strong>sources</strong> over to the <strong>destination</strong> object. It&#8217;s in-order, so the last source will override properties of the same name in previous arguments.  Returns <strong>destination</strong> (for possible chaining).</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">extend</span><span class="p">({</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;moe&#39;</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="s">&#39;40&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;age&#39;</span><span class="p">:</span><span class="mi">60</span><span class="p">,</span> <span class="s">&#39;gender&#39;</span><span class="p">:</span><span class="s">&#39;male&#39;</span><span class="p">})</span>
@@ -1023,7 +1035,7 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.pick">
 <em class="property">static </em><code class="descname">pick</code><span class="sig-paren">(</span><em>obj</em>, <em>*keys</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.pick" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of <em>obj</em>, filtered to only have values for the whitelisted keys (or array of valid keys). Alternatively, accepts a predicate indicating which keys to pick.</p>
+<dd><p>Return a copy of <strong>obj</strong>, filtered to only have values for the whitelisted <strong>keys</strong> (or array of valid keys). Alternatively, accepts a predicate indicating which keys to pick.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">pick</span><span class="p">({</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;moe&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s">&#39;userid&#39;</span><span class="p">:</span> <span class="s">&#39;moe1&#39;</span><span class="p">},</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">)</span>
@@ -1042,7 +1054,7 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.omit">
 <em class="property">static </em><code class="descname">omit</code><span class="sig-paren">(</span><em>obj</em>, <em>*keys</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.omit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.omit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of <strong>obj</strong>, filtered to omit values for the blacklisted keys (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.</p>
+<dd><p>Return a copy of <strong>obj</strong>, filtered to omit values for the blacklisted <strong>keys</strong> (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">omit</span><span class="p">({</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;moe&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s">&#39;userid&#39;</span><span class="p">:</span> <span class="s">&#39;moe1&#39;</span><span class="p">},</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">)</span>
@@ -1061,7 +1073,7 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.defaults">
 <em class="property">static </em><code class="descname">defaults</code><span class="sig-paren">(</span><em>obj</em>, <em>*defaults</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.defaults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.defaults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill in undefined properties in <strong>obj</strong> with the first value present in the following list of defaults objects. Return <strong>obj</strong> (for possible chaining)</p>
+<dd><p>Fill in undefined properties in <strong>obj</strong> with the first value present in the following list of <strong>defaults</strong> objects. Return <strong>obj</strong> (for possible chaining)</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">iceCream</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;flavor&#39;</span><span class="p">:</span> <span class="s">&quot;chocolate&quot;</span><span class="p">}</span>
@@ -1082,13 +1094,13 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.has">
 <em class="property">static </em><code class="descname">has</code><span class="sig-paren">(</span><em>obj</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.has"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.has" title="Permalink to this definition">¶</a></dt>
-<dd><p>Does the object contain the given key? Alias to built in dictionary method</p>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if the object contain the given key, <code class="docutils literal"><span class="pre">False</span></code> otherwise. Alias to built in dictionary method</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.property">
 <em class="property">static </em><code class="descname">property</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.property" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a function that will itself return the key property of any passed-in object.</p>
+<dd><p>Returns a function that will itself return the <strong>key</strong> property of any passed-in object.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">getName</span> <span class="o">=</span> <span class="n">_</span><span class="o">.</span><span class="n">property</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
@@ -1120,7 +1132,7 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.matcher">
 <em class="property">static </em><code class="descname">matcher</code><span class="sig-paren">(</span><em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.matcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.matcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a predicate function that will tell you if a passed object contains all of the key/value properties present in <strong>attrs</strong>.</p>
+<dd><p>Returns a predicate function that will tell if a passed object contains all of the key/value properties present in <strong>attrs</strong>.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">stooges</span><span class="p">,</span> <span class="n">_</span><span class="o">.</span><span class="n">matcher</span><span class="p">({</span><span class="s">&#39;age&#39;</span><span class="p">:</span><span class="mi">60</span><span class="p">}))</span>
@@ -1134,7 +1146,7 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.isMatch">
 <em class="property">static </em><code class="descname">isMatch</code><span class="sig-paren">(</span><em>obj</em>, <em>properties</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isMatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isMatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tells you if the keys and values in <strong>properties</strong> are contained in <strong>obj</strong>.</p>
+<dd><p>Returns <code class="docutils literal"><span class="pre">True</span></code> if the keys and values in <strong>properties</strong> are contained in <strong>obj</strong>, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
 <dl class="docutils">
 <dt>Example:</dt>
 <dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">stooge</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;moe&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
@@ -1149,85 +1161,106 @@ If <strong>itereatee</strong> is not set or is <code class="docutils literal"><s
 <dl class="staticmethod">
 <dt id="underscore.underscore.isEqual">
 <em class="property">static </em><code class="descname">isEqual</code><span class="sig-paren">(</span><em>obj</em>, <em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isEqual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isEqual" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs an optimized deep comparison between the two objects, to determine if they should be considered equal.</p>
+<dd><p>Performs an optimized deep comparison between <strong>obj</strong> and <strong>other</strong>, returns <code class="docutils literal"><span class="pre">True</span></code> if they are equal, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isEmpty">
 <em class="property">static </em><code class="descname">isEmpty</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isEmpty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isEmpty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns true if an enumerable object contains no values (no enumerable own-properties). For strings and array-like objects the function checks if the length property is 0.</p>
+<dd><p>Returns <code class="docutils literal"><span class="pre">True</span></code> if an enumerable object contains no values (no enumerable own-properties), <code class="docutils literal"><span class="pre">False</span></code> otherwise. For strings and array-like objects the function checks if the length property is 0.</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isArray">
 <em class="property">static </em><code class="descname">isArray</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isArray" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is an Array (i.e., List), <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isTuple">
 <em class="property">static </em><code class="descname">isTuple</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isTuple" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is an Tuple, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isObject">
 <em class="property">static </em><code class="descname">isObject</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isObject" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is an “Object” (i.e., Dictonary), <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isFunction">
 <em class="property">static </em><code class="descname">isFunction</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isFunction" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is a function or a method, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.isCallable">
+<em class="property">static </em><code class="descname">isCallable</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isCallable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isCallable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is callable, <code class="docutils literal"><span class="pre">False</span></code> otherwise. Note that this is a more general form of test than <a class="reference internal" href="#underscore.underscore.isFunction" title="underscore.underscore.isFunction"><code class="xref py py-meth docutils literal"><span class="pre">isFunction()</span></code></a></p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isString">
 <em class="property">static </em><code class="descname">isString</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isString" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is a string, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isNumber">
-<em class="property">static </em><code class="descname">isNumber</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isNumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isNumber" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">isNumber</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isNumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is a number (float or integer), <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isFinite">
-<em class="property">static </em><code class="descname">isFinite</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isFinite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isFinite" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.isBoolean">
-<em class="property">static </em><code class="descname">isBoolean</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isBoolean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isBoolean" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.isError">
-<em class="property">static </em><code class="descname">isError</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isError" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">isFinite</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isFinite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isFinite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is number with a finite value, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isNaN">
-<em class="property">static </em><code class="descname">isNaN</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isNaN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isNaN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">isNaN</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isNaN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isNaN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is a float with <code class="docutils literal"><span class="pre">NaN</span></code> as value, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.isBoolean">
+<em class="property">static </em><code class="descname">isBoolean</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isBoolean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isBoolean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is a Boolean, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.isError">
+<em class="property">static </em><code class="descname">isError</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is an Exception, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.isNone">
-<em class="property">static </em><code class="descname">isNone</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isNone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isNone" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">isNone</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.isNone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.isNone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal"><span class="pre">True</span></code> if <strong>obj</strong> is <code class="docutils literal"><span class="pre">None</span></code>, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.identity">
-<em class="property">static </em><code class="descname">identity</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.identity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the same value that is used as the argument. In math: <code class="docutils literal"><span class="pre">f(x)</span> <span class="pre">=</span> <span class="pre">x</span></code>. This function looks useless, but can be used as a default iteratee.</p>
+<em class="property">static </em><code class="descname">identity</code><span class="sig-paren">(</span><em>x</em>, <em>*args</em>, <em>**keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the same value that is used as the first argument (and ignore everything else). In math: <code class="docutils literal"><span class="pre">f(x)</span> <span class="pre">=</span> <span class="pre">x</span></code>. This function looks useless, but can be used when debugging other underscore methods.</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.constant">
 <em class="property">static </em><code class="descname">constant</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.constant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a function that returns the same <strong>value</strong>.</p>
+<dd><p>Returns a function that always returns the same <strong>value</strong>.</p>
 <dl class="docutils">
 <dt>Example:</dt>
-<dd>&gt;&gt; stooge = {&#8216;name&#8217;: &#8216;moe&#8217;}
-&gt;&gt; stooge == _.constant(stooge)()
-True</dd>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">stooge</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;moe&#39;</span> <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">const</span> <span class="o">=</span> <span class="n">_</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">stooge</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="p">()</span>
+<span class="go">{&#39;name&#39;: &#39;moe&#39; }</span>
+</pre></div>
+</div>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1252,165 +1285,13 @@ True</dd>
 <dl class="staticmethod">
 <dt id="underscore.underscore.uniqueId">
 <em class="property">static </em><code class="descname">uniqueId</code><span class="sig-paren">(</span><em>prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.uniqueId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.uniqueId" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a globally-unique id. If prefix is passed, the id will be appended to it.
-The method relies on the <code class="docutils literal"><span class="pre">uuid.uuid1()`</span></code> library function, i.e., is based on the host ID and the current time.</p>
+<dd><p>Returns a globally-unique id as a string. If <strong>prefix</strong> is passed, the id will be appended to it. The method relies on the <code class="docutils literal"><span class="pre">uuid.uuid1()`</span></code> library function, i.e., is based on the host ID and the current time.</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="underscore.underscore.now">
 <em class="property">static </em><code class="descname">now</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/underscore.html#underscore.now"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#underscore.underscore.now" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.forEach">
-<em class="property">static </em><code class="descname">forEach</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.forEach" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.each" title="underscore.underscore.each"><code class="xref py py-meth docutils literal"><span class="pre">each()</span></code></a>, <a class="reference internal" href="#underscore.underscore.forEach" title="underscore.underscore.forEach"><code class="xref py py-meth docutils literal"><span class="pre">forEach()</span></code></a></dd>
-</dl>
-<p>Iterates over a list of elements, yielding each in turn to an <strong>iteratee</strong> function. Each
-invocation of <strong>iteratee</strong> is called with three arguments: if <strong>list</strong> is of list type,
-then the arguments are <code class="docutils literal"><span class="pre">(element,</span> <span class="pre">index,</span> <span class="pre">list)</span></code>; if it is of dictionary type
-the arguments are <code class="docutils literal"><span class="pre">(value,</span> <span class="pre">key,</span> <span class="pre">list</span></code>). Returns <strong>list</strong> for possible composition.</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="k">print</span> <span class="n">element</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">each</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">pr</span><span class="p">)</span>
-<span class="go">1</span>
-<span class="go">2</span>
-<span class="go">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">each</span><span class="p">({</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s">&#39;two&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s">&#39;three&#39;</span><span class="p">:</span> <span class="mi">33</span><span class="p">},</span> <span class="n">pr</span><span class="p">)</span>
-<span class="go">33</span>
-<span class="go">22</span>
-<span class="go">11</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.collect">
-<em class="property">static </em><code class="descname">collect</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.collect" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.map" title="underscore.underscore.map"><code class="xref py py-meth docutils literal"><span class="pre">map()</span></code></a>, <a class="reference internal" href="#underscore.underscore.collect" title="underscore.underscore.collect"><code class="xref py py-meth docutils literal"><span class="pre">collect()</span></code></a></dd>
-</dl>
-<p>Produces a new array of values by mapping each value in <strong>list</strong> through a transformation function (<strong>iteratee</strong>). The <strong>iteratee</strong> is passed three arguments: the <code class="docutils literal"><span class="pre">value</span></code>, then the <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
-<span class="go">[3, 6, 9]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;two&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;three&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">val</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">val</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
-<span class="go">[12, 8, 4]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">_</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
-<span class="go">[1, 3]</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.inject">
-<em class="property">static </em><code class="descname">inject</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee</em>, <em>memo=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.inject" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.reduce" title="underscore.underscore.reduce"><code class="xref py py-meth docutils literal"><span class="pre">reduce()</span></code></a>, <a class="reference internal" href="#underscore.underscore.inject" title="underscore.underscore.inject"><code class="xref py py-meth docutils literal"><span class="pre">inject()</span></code></a></dd>
-</dl>
-<p>Reduce boils down a <strong>list</strong> of values into a single value. <strong>memo</strong> is the initial state of the reduction, and each successive step of should be returned by <strong>iteratee</strong>. The <strong>iteratee</strong> is passed four arguments: <code class="docutils literal"><span class="pre">memo</span></code> (ie, the current state of reduction), then the <code class="docutils literal"><span class="pre">value</span></code> and <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
-<p>If no memo is passed to the initial invocation of reduce, <strong>iteratee</strong> is not invoked on the first element of the list. The first element is instead passed as the <code class="docutils literal"><span class="pre">memo</span></code> in the invocation of the <strong>iteratee</strong> on the next element in the list.</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">reduce</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">memo</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">memo</span> <span class="o">+</span> <span class="n">num</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="go">6</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.detect">
-<em class="property">static </em><code class="descname">detect</code><span class="sig-paren">(</span><em>list</em>, <em>predicate</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.detect" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.find" title="underscore.underscore.find"><code class="xref py py-meth docutils literal"><span class="pre">find()</span></code></a>, <a class="reference internal" href="#underscore.underscore.detect" title="underscore.underscore.detect"><code class="xref py py-meth docutils literal"><span class="pre">detect()</span></code></a></dd>
-</dl>
-<p>Looks through each value in the <strong>list</strong>, returning the first one that passes a truth test (<strong>predicate</strong>), or <code class="docutils literal"><span class="pre">None</span></code> if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn&#8217;t traverse the entire list.</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">find</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-<span class="go">2</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.select">
-<em class="property">static </em><code class="descname">select</code><span class="sig-paren">(</span><em>list</em>, <em>predicate</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.select" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.filter" title="underscore.underscore.filter"><code class="xref py py-meth docutils literal"><span class="pre">filter()</span></code></a>, <a class="reference internal" href="#underscore.underscore.select" title="underscore.underscore.select"><code class="xref py py-meth docutils literal"><span class="pre">select()</span></code></a></dd>
-</dl>
-<p>Looks through each value in the <strong>list</strong>, returning an array of all the values that pass a truth test (<strong>predicate</strong>).</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-<span class="go">[2, 4, 6]</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.any">
-<em class="property">static </em><code class="descname">any</code><span class="sig-paren">(</span><em>list</em>, <em>predicate=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.any" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.some" title="underscore.underscore.some"><code class="xref py py-meth docutils literal"><span class="pre">some()</span></code></a>, <a class="reference internal" href="#underscore.underscore.any" title="underscore.underscore.any"><code class="xref py py-meth docutils literal"><span class="pre">any()</span></code></a></dd>
-</dl>
-<p>Returns <code class="docutils literal"><span class="pre">True</span></code> if any of the values in the <strong>list</strong> pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">some</span><span class="p">([</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">])</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.include">
-<em class="property">static </em><code class="descname">include</code><span class="sig-paren">(</span><em>list</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.include" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.contains" title="underscore.underscore.contains"><code class="xref py py-meth docutils literal"><span class="pre">contains()</span></code></a>, <a class="reference internal" href="#underscore.underscore.include" title="underscore.underscore.include"><code class="xref py py-meth docutils literal"><span class="pre">include()</span></code></a></dd>
-</dl>
-<p>Returns <code class="docutils literal"><span class="pre">True</span></code> if the value is present in the list.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="underscore.underscore.unique">
-<em class="property">static </em><code class="descname">unique</code><span class="sig-paren">(</span><em>array</em>, <em>iteratee=None</em>, <em>context=None</em>, <em>isSorted=False</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.unique" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><strong>Aliases</strong>:</dt>
-<dd><a class="reference internal" href="#underscore.underscore.uniq" title="underscore.underscore.uniq"><code class="xref py py-meth docutils literal"><span class="pre">uniq()</span></code></a>, <a class="reference internal" href="#underscore.underscore.unique" title="underscore.underscore.unique"><code class="xref py py-meth docutils literal"><span class="pre">unique()</span></code></a></dd>
-</dl>
-<p>Produces a duplicate-free version of the <strong>array</strong>, based on the <em>in</em> operator of Python&#8217;s list. If you want to compute unique items after a transformation, pass an <strong>iteratee</strong> function. If you know in advance that the array is sorted, passing <code class="docutils literal"><span class="pre">True</span></code> for <strong>isSorted</strong> will run a much faster algorithm.</p>
-<dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">uniq</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
-<span class="go">[1, 2, 3, 4]</span>
-</pre></div>
-</div>
-</dd>
-</dl>
+<dd><p>Returns an integer timestamp for the current time</p>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -1439,10 +1320,158 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
 </dl>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="underscore.underscore.forEach">
+<em class="property">static </em><code class="descname">forEach</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.forEach" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.each" title="underscore.underscore.each"><code class="xref py py-meth docutils literal"><span class="pre">each()</span></code></a>, <a class="reference internal" href="#underscore.underscore.forEach" title="underscore.underscore.forEach"><code class="xref py py-meth docutils literal"><span class="pre">forEach()</span></code></a></dd>
+</dl>
+<p>Iterates over a <strong>list</strong> of elements, yielding each in turn to an <strong>iteratee</strong> function. Each invocation of <strong>iteratee</strong> is called with three arguments: if <strong>list</strong> is of list type, then the arguments are <code class="docutils literal"><span class="pre">(element,</span> <span class="pre">index,</span> <span class="pre">list)</span></code>; if it is of dictionary type
+the arguments are <code class="docutils literal"><span class="pre">(value,</span> <span class="pre">key,</span> <span class="pre">list</span></code>). Returns <strong>list</strong> for possible chaining.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="n">element</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">each</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">pr</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="go">2</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">each</span><span class="p">({</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s">&#39;two&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s">&#39;three&#39;</span><span class="p">:</span> <span class="mi">33</span><span class="p">},</span> <span class="n">pr</span><span class="p">)</span>
+<span class="go">33</span>
+<span class="go">22</span>
+<span class="go">11</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="underscore.underscore.collect">
+<em class="property">static </em><code class="descname">collect</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.collect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.map" title="underscore.underscore.map"><code class="xref py py-meth docutils literal"><span class="pre">map()</span></code></a>, <a class="reference internal" href="#underscore.underscore.collect" title="underscore.underscore.collect"><code class="xref py py-meth docutils literal"><span class="pre">collect()</span></code></a></dd>
+</dl>
+<p>Produces a <em>new</em> array of values by mapping each value in <strong>list</strong> through a transformation function (<strong>iteratee</strong>). Similarly to <a class="reference internal" href="#underscore.underscore.each" title="underscore.underscore.each"><code class="xref py py-meth docutils literal"><span class="pre">each()</span></code></a>, the <strong>iteratee</strong> is passed three arguments: the <code class="docutils literal"><span class="pre">value</span></code>, then the <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">list</span><span class="p">:</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">[3, 6, 9]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;two&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;three&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">val</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">val</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">[12, 8, 4]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">map</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">_</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+<span class="go">[1, 3]</span>
+</pre></div>
 </div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.inject">
+<em class="property">static </em><code class="descname">inject</code><span class="sig-paren">(</span><em>list</em>, <em>iteratee</em>, <em>memo=None</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.inject" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.reduce" title="underscore.underscore.reduce"><code class="xref py py-meth docutils literal"><span class="pre">reduce()</span></code></a>, <a class="reference internal" href="#underscore.underscore.inject" title="underscore.underscore.inject"><code class="xref py py-meth docutils literal"><span class="pre">inject()</span></code></a></dd>
+</dl>
+<p>Reduce boils down a <strong>list</strong> of values into a single value that is returned. <strong>memo</strong> is the initial state of the reduction, and each successive step of it should be returned by <strong>iteratee</strong>. The <strong>iteratee</strong> is passed four arguments: <code class="docutils literal"><span class="pre">memo</span></code> (ie, the current state of reduction), then the <code class="docutils literal"><span class="pre">value</span></code> and <code class="docutils literal"><span class="pre">index</span></code> (or <code class="docutils literal"><span class="pre">key</span></code>) of the iteration, and finally a reference to the entire list.</p>
+<p>If no memo is passed to the initial invocation of reduce, <strong>iteratee</strong> is not invoked on the first element of the list. The first element is instead passed as the <code class="docutils literal"><span class="pre">memo</span></code> in the invocation of the <strong>iteratee</strong> on the next element in the list.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">reduce</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">memo</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">memo</span> <span class="o">+</span> <span class="n">num</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">6</span>
+</pre></div>
 </div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.detect">
+<em class="property">static </em><code class="descname">detect</code><span class="sig-paren">(</span><em>list</em>, <em>predicate</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.detect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.find" title="underscore.underscore.find"><code class="xref py py-meth docutils literal"><span class="pre">find()</span></code></a>, <a class="reference internal" href="#underscore.underscore.detect" title="underscore.underscore.detect"><code class="xref py py-meth docutils literal"><span class="pre">detect()</span></code></a></dd>
+</dl>
+<p>Looks through each value in the <strong>list</strong>, returning the first one that passes a truth test (<strong>predicate</strong>), or <code class="docutils literal"><span class="pre">None</span></code> if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn&#8217;t traverse the entire list.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">find</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.select">
+<em class="property">static </em><code class="descname">select</code><span class="sig-paren">(</span><em>list</em>, <em>predicate</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.select" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.filter" title="underscore.underscore.filter"><code class="xref py py-meth docutils literal"><span class="pre">filter()</span></code></a>, <a class="reference internal" href="#underscore.underscore.select" title="underscore.underscore.select"><code class="xref py py-meth docutils literal"><span class="pre">select()</span></code></a></dd>
+</dl>
+<p>Looks through each value in the <strong>list</strong>, returning an array of all the values that pass a truth test (<strong>predicate</strong>).</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">num</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">[2, 4, 6]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.any">
+<em class="property">static </em><code class="descname">any</code><span class="sig-paren">(</span><em>list</em>, <em>predicate=&lt;function &lt;lambda&gt;&gt;</em>, <em>context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.any" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.some" title="underscore.underscore.some"><code class="xref py py-meth docutils literal"><span class="pre">some()</span></code></a>, <a class="reference internal" href="#underscore.underscore.any" title="underscore.underscore.any"><code class="xref py py-meth docutils literal"><span class="pre">any()</span></code></a></dd>
+</dl>
+<p>Returns <code class="docutils literal"><span class="pre">True</span></code> if any of the values in the <strong>list</strong> pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.  The default predicate is the identity.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">some</span><span class="p">([</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.include">
+<em class="property">static </em><code class="descname">include</code><span class="sig-paren">(</span><em>list</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.include" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.contains" title="underscore.underscore.contains"><code class="xref py py-meth docutils literal"><span class="pre">contains()</span></code></a>, <a class="reference internal" href="#underscore.underscore.include" title="underscore.underscore.include"><code class="xref py py-meth docutils literal"><span class="pre">include()</span></code></a></dd>
+</dl>
+<p>Returns <code class="docutils literal"><span class="pre">True</span></code> if the value is present in the list.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="underscore.underscore.unique">
+<em class="property">static </em><code class="descname">unique</code><span class="sig-paren">(</span><em>array</em>, <em>iteratee=None</em>, <em>context=None</em>, <em>isSorted=False</em><span class="sig-paren">)</span><a class="headerlink" href="#underscore.underscore.unique" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Aliases</strong>:</dt>
+<dd><a class="reference internal" href="#underscore.underscore.uniq" title="underscore.underscore.uniq"><code class="xref py py-meth docutils literal"><span class="pre">uniq()</span></code></a>, <a class="reference internal" href="#underscore.underscore.unique" title="underscore.underscore.unique"><code class="xref py py-meth docutils literal"><span class="pre">unique()</span></code></a></dd>
+</dl>
+<p>Returns a duplicate-free version of the <strong>array</strong>, based on the <em>in</em> operator of Python&#8217;s list. If you want to compute unique items after a transformation, pass an <strong>iteratee</strong> function. If you know in advance that the array is sorted, passing <code class="docutils literal"><span class="pre">True</span></code> for <strong>isSorted</strong> will run a much faster algorithm.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="o">.</span><span class="n">uniq</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">[1, 2, 3, 4]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -1456,7 +1485,8 @@ the arguments are <code class="docutils literal"><span class="pre">(value,</span
       </div>
 
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2016, Ivan Herman.
+        &copy; Copyright Copyright (c) 2016 W3C® (MIT, ERCIM, Keio, Beihang).
+      Last updated on 12 May, 2016.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>

@@ -6,15 +6,47 @@ import random
 import math
 import bisect
 
-__version__ = 0.9
+__version__ = 1.0
 
 class underscore(object):
 	"""
-	All (static) method below can be used directly, or as methods used on chaining without the first argument (which is fed via the previous step in the chain). When looking for a specific method, see the :ref:`genindex` to find the methods, or simply search in this page.
+	Methods usually have a usage example to make the description clearer. Conceptually, the following Python code precedes all examples::
 
-	Many methods have an **iteratee** (or **predicate**) and **context** arguments (with the latter defaulting to ``None``). In general, an **iteratee** is a (global) function, or a static method of a class, in which case a reference to that function is used as an **iteratee**, without a need for a **context** argument. However, if the **iteratee** is a method for a *class instance*, then that instance has to be made available for the callback, too. That is the role of the **context**: it is the reference to the class instance; in practice, its value will be used as ``self`` in the method invocation.
+	    from underscore import underscore as _
+	    listOfPlays = [
+	        {
+	            "author" : "Shakespeare",
+	            "year"   : 1611,
+	            "title"  : "The tempest"
+	        },
+	        {
+	            "author" : "Shakespeare",
+	            "year"   : 1611,
+	            "title"  : "Cymbeline"
+	        },
+	        {
+	            "author" : "Shakespeare",
+	            "year"   : 1601,
+	            "title"  : "Romeo and Juliet"
+	        },
+	    ]
+	    stooges = [{'name': 'moe',   'age': 40},
+	               {'name': 'larry', 'age': 50},
+	               {'name': 'curly', 'age': 60}]
+	    def createApplication():
+	        print("created")
 
-	Some methods have *aliases*. This simply means that the same function has two different possible method names with identical behavior. The reason for having those is because different communities have different function names for the same functionalitys (e.g., “each” and “forEach”). In those cases the method description lists the aliases.
+	These structures are used in some of the examples and are listed here to avoid repeating their definition separately.
+
+	A further simplification of the examples is the usage of the ``*args`` idioms. Many “iteratee” arguments represent a function with 3-4 arguments, per definition of the underscore method, but the example uses only the first few. Instead of::
+
+		lambda name, index, list: ...
+
+	the abbreviation::
+
+		lambda name, *args: ...
+
+	is sometimes used.
 	"""
 
 	@staticmethod
@@ -68,10 +100,8 @@ class underscore(object):
 		**Aliases**:
 			:py:meth:`each`, :py:meth:`forEach`
 
-		Iterates over a list of elements, yielding each in turn to an **iteratee** function. Each
-		invocation of **iteratee** is called with three arguments: if **list** is of list type,
-		then the arguments are ``(element, index, list)``; if it is of dictionary type
-		the arguments are ``(value, key, list``). Returns **list** for possible composition.
+		Iterates over a **list** of elements, yielding each in turn to an **iteratee** function. Each invocation of **iteratee** is called with three arguments: if **list** is of list type, then the arguments are ``(element, index, list)``; if it is of dictionary type
+		the arguments are ``(value, key, list``). Returns **list** for possible chaining.
 
 		Example:
 			>>> def pr(element, index, list):
@@ -101,10 +131,10 @@ class underscore(object):
 		**Aliases**:
 			:py:meth:`map`, :py:meth:`collect`
 
-		Produces a new array of values by mapping each value in **list** through a transformation function (**iteratee**). The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+		Produces a *new* array of values by mapping each value in **list** through a transformation function (**iteratee**). Similarly to :py:meth:`each`, the **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 
 		Example:
-			>>> _.map([1, 2, 3], lambda num, *args: num * 3)
+			>>> _.map([1, 2, 3], lambda num, index, list: num * 3)
 			[3, 6, 9]
 			>>> _.map({'one': 1, 'two': 2, 'three': 3}, lambda val, key, *args: val * 4)
 			[12, 8, 4]
@@ -126,7 +156,7 @@ class underscore(object):
 		**Aliases**:
 			:py:meth:`reduce`, :py:meth:`inject`
 
-		Reduce boils down a **list** of values into a single value. **memo** is the initial state of the reduction, and each successive step of should be returned by **iteratee**. The **iteratee** is passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+		Reduce boils down a **list** of values into a single value that is returned. **memo** is the initial state of the reduction, and each successive step of it should be returned by **iteratee**. The **iteratee** is passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 
 		If no memo is passed to the initial invocation of reduce, **iteratee** is not invoked on the first element of the list. The first element is instead passed as the ``memo`` in the invocation of the **iteratee** on the next element in the list.
 
@@ -148,7 +178,7 @@ class underscore(object):
 		Looks through each value in the **list**, returning the first one that passes a truth test (**predicate**), or ``None`` if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn't traverse the entire list.
 
 		Example:
-			>>> _.find([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)
+			>>> _.find([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)
 			2
 		"""
 		for x in list:
@@ -178,8 +208,7 @@ class underscore(object):
 
 		Example:
 			>>> _.where(listOfPlays, {'author': "Shakespeare", 'year': 1611})
-			[{'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'},
-			 {'title': 'Cymbeline', 'year': 1611, 'author': 'Shakespeare'}]
+			[{'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'}, {'title': 'Cymbeline', 'year': 1611, 'author': 'Shakespeare'}]
 		"""
 		return [ x for x in list if underscore._extends(x, properties) ]
 
@@ -203,39 +232,37 @@ class underscore(object):
 		Returns the values in **list** without the elements that the truth test (**predicate**) passes. The opposite of :py:meth:`filter`.
 
 		Example:
-			>>> _.reject([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)
+			>>> _.reject([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)
 			[1, 3, 5]
 		"""
 		return [ x for x in list if not underscore._exec1(predicate, context, x)]
 
 	@staticmethod
-	def every(list, predicate = None, context = None):
+	def every(list, predicate = lambda x:x, context = None):
 		"""
-		Returns true if all of the values in the **list** pass the **predicate** truth test.
+		Returns true if all of the values in the **list** pass the **predicate** truth test. The default predicate is the identity.
 
 		Example:
 			>>> _.every([True, 1, None, 'yes'], _.identity)
 			False
 		"""
-		if predicate is None: predicate = underscore.identity
 		for x in list:
 			if not underscore._exec1(predicate, context, x):
 				return False
 		return True
 
 	@staticmethod
-	def some(list, predicate = None, context = None):
+	def some(list, predicate = lambda x:x, context = None):
 		"""
 		**Aliases**:
 			:py:meth:`some`, :py:meth:`any`
 
-		Returns ``True`` if any of the values in the **list** pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.
+		Returns ``True`` if any of the values in the **list** pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.  The default predicate is the identity.
 
 		Example:
 			>>> _.some([None, 0, True, False])
 			True
 		"""
-		if predicate is None: predicate = underscore.identity
 		for x in list:
 			if underscore._exec1(predicate, context, x):
 				return True
@@ -265,7 +292,7 @@ class underscore(object):
 	@staticmethod
 	def max(list, iteratee = None, context = None):
 		"""
-		Returns the maximum value in **list**. If an **iteratee** function is provided, it will be used on each value to generate the criterion by which the value is ranked. ``float("inf")``` is returned if list is empty, so a guard may be required.
+		Returns the maximum value in **list**. If an **iteratee** function is provided, it will be used on each value to generate the criterion by which the value is ranked. ``float("inf")`` is returned if list is empty.
 
 		Example:
 			>>> _.max(stooges, lambda stooge: stooge['age'])
@@ -367,7 +394,7 @@ class underscore(object):
 	@staticmethod
 	def shuffle(list):
 		"""
-		Returns a shuffled copy of the **list**.
+		Returns a (randomly) shuffled copy of the **list**.
 
 		Example:
 			>>> _.shuffle([1, 2, 3, 4, 5, 6])
@@ -415,7 +442,7 @@ class underscore(object):
 	@staticmethod
 	def partition(list, predicate, context = None):
 		"""
-		Split **list** into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy predicate. If **list** is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the 'yes' and 'no' order.
+		Split **list** into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy **predicate**. If **list** is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the 'yes' and 'no' order.
 
 		Example:
 			>>> _.partition([0, 1, 2, 3, 4, 5], lambda num: num % 2 != 0)
@@ -460,7 +487,7 @@ class underscore(object):
 
 	@staticmethod
 	def last(array, n = None):
-		"""Returns the last element of an array. Passing **n** will return the last n elements of the array.
+		"""Returns the last element of **array**. Passing **n** will return the last n elements of the array.
 
 		Example:
 			>>> _.last([5, 4, 3, 2, 1])
@@ -485,7 +512,7 @@ class underscore(object):
 	@staticmethod
 	def compact(array):
 		"""
-		Returns a copy of the **array** with all falsy values removed. ``False``, ``None``, 0, "", and ``NaN`` for floats are all falsy.
+		Returns a copy of the **array** with all falsy values removed. ``False``, ``None``, 0, "" (empty string), and ``NaN`` for floats are all falsy.
 
 		Example:
 			>>> _.compact([0, 1, False, 2, '', 3])
@@ -514,7 +541,7 @@ class underscore(object):
 
 	@staticmethod
 	def without(array, *values):
-		"""Returns a copy of the **array** with all instances in  **values*** removed.
+		"""Returns a copy of the **array** with all instances in  ***values** removed.
 
 		Example:
 			>>> _.without([1, 2, 1, 0, 3, 1, 4], 0, 1)
@@ -525,7 +552,7 @@ class underscore(object):
 	@staticmethod
 	def union(*arrays):
 		"""
-		Computes the union of the passed-in **arrays**: the list of unique items, in order, that are present in one or more of the **arrays**.
+		Returns the union of the passed-in **arrays**: a list of unique items, in order, that are present in one or more of the **arrays**.
 
 		Example:
 			>>> _.union([1, 2, 3], [101, 2, 1, 10], [2, 1])
@@ -546,7 +573,7 @@ class underscore(object):
 	@staticmethod
 	def intersection(*arrays):
 		"""
-		Computes the list of values that are the intersection of all the **arrays**. Each value in the result is present in each of the **arrays**.
+		Returns the list of values that are the intersection of all the **arrays**. Each value in the result is present in each of the **arrays**.
 
 		Example:
 			>>> _.intersection([1, 2, 3], [101, 2, 1, 10], [2, 1])
@@ -568,7 +595,7 @@ class underscore(object):
 	@staticmethod
 	def difference(array, *others):
 		"""
-		Similar to :py:meth:`without`, but returns the values from array that are not present in the other arrays.
+		Similar to :py:meth:`without`, but returns the values from **array** that are not present in the other arrays.
 
 		Example:
 			>>> _.difference([1, 2, 3, 4, 5], [5, 2, 10])
@@ -593,7 +620,7 @@ class underscore(object):
 		**Aliases**:
 			:py:meth:`uniq`, :py:meth:`unique`
 
-		Produces a duplicate-free version of the **array**, based on the *in* operator of Python's list. If you want to compute unique items after a transformation, pass an **iteratee** function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.
+		Returns a duplicate-free version of the **array**, based on the *in* operator of Python's list. If you want to compute unique items after a transformation, pass an **iteratee** function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.
 
 		Example:
 			>>> _.uniq([1, 2, 1, 3, 1, 4])
@@ -639,7 +666,7 @@ class underscore(object):
 	@staticmethod
 	def object(list, values = None):
 		"""
-		Converts arrays into dictionaries. Pass either a single list of [key, value] pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.
+		Converts arrays into a dictionary and return it. Pass either a single list of ``[key, value]`` pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.
 
 		Example:
 			>>> _.object(['moe', 'larry', 'curly'], [30, 40, 50])
@@ -655,7 +682,7 @@ class underscore(object):
 	@staticmethod
 	def indexOf(array, value, isSorted = False):
 		"""
-		Returns the index at which **value** can be found in the **array**, or -1 if value is not present in the **array**. If you're working with a large array, and you know that the array is already sorted, pass ``True`` for **isSorted** to use a faster binary search... or, pass a number as the third argument in order to look for the first matching value in the array after the given index.
+		Returns the index at which **value** can be found in the **array**, or -1 if value is not present in the **array**. If you're working with a large array, and you know that the array is already sorted, pass ``True`` for **isSorted** to use a faster binary search; or pass a number as the third argument in order to look for the first matching value in the array after the given index.
 
 		Example:
 			>>> _.indexOf([1, 2, 3, 1, 2, 3], 2)
@@ -676,7 +703,7 @@ class underscore(object):
 	@staticmethod
 	def lastIndexOf(array, value, fromIndex = None):
 		"""
-		Returns the index of the last occurrence of value in the **array**, or -1 if value is not present. Pass **fromIndex** to start your search at a given index.
+		Returns the index of the last occurrence of value in the **array**, or -1 if value is not present. Pass **fromIndex**, if not ``None``, to start your search at a given index.
 
 		Example:
 			>>> _.lastIndexOf([1, 2, 3, 1, 2, 3], 2)
@@ -691,7 +718,7 @@ class underscore(object):
 	@staticmethod
 	def sortedIndex(array, value, iteratee = None, context = None):
 		"""
-		Determine the index at which the **value** should be inserted into the **array** in order to maintain the list's sorted order. If an **iteratee** function is provided, it will be used to compute the sort ranking of each value, including the value you pass. The **iteratee** may also be the string name of the key to sort by.
+		Determine the index at which the **value** should be inserted into the **array** in order to maintain the list's sorted order. If an **iteratee** function is provided, it will be used to compute the sort ranking of each value, including the value you pass. The **iteratee** may also be the string, providing the name of the key to sort by.
 
 		Example:
 			>>> _.sortedIndex([10, 20, 30, 40, 50], 35)
@@ -713,11 +740,11 @@ class underscore(object):
 	@staticmethod
 	def findIndex(array, predicate, context = None):
 		"""
-		Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1.
+		Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1. (Note that the **isSorted** parameter of :py:meth:`indexOf` is not used in this case.)
 
 		Example:
 			>>> def isPrime(n):
-			...
+			...     (— definition of the function)
 			...
 			>>> _.findIndex([4, 6, 8, 12], isPrime)
 			-1
@@ -772,7 +799,7 @@ class underscore(object):
 	@staticmethod
 	def partial(func, *args, **keywords):
 		"""
-		Partially apply a function by filling in any number of its arguments and keywords. You may pass ``None`` in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.
+		Return a partially bounded version of the function **func** by fixing any number of its arguments and keywords. You may pass ``None`` in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.
 
 		Example:
 			>>> substract = lambda a, b: b-a
@@ -815,7 +842,7 @@ class underscore(object):
 	@staticmethod
 	def after(count, func):
 		"""
-		Creates a version of **func**, as a callable object, that will only be run after first being called **count** times. Useful for grouping asynchronous responses, where you want to be sure that all the async calls have finished, before proceeding.
+		Creates a version of **func**, as a callable object, that will only be run after first being called **count** times.
 
 		Example:
 			>>> delayInit = _.after(2,createApplication)
@@ -948,7 +975,7 @@ class underscore(object):
 
 	@staticmethod
 	def mapObject(obj, iteratee = None, context = None):
-		"""Like *map*, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+		"""Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 		If **itereatee** is not set or is ``None``, a copy of **obj** is returned.
 
 		Example:
@@ -965,7 +992,7 @@ class underscore(object):
 
 	@staticmethod
 	def pairs(obj, tuple = False):
-		"""Convert an *obj* into a list of [key, value] pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.
+		"""Convert an **obj** into a list of ``[key, value]`` pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.
 
 		Example:
 			>>> _.pairs({'one':1, 'two':2, 'three':3})
@@ -1001,7 +1028,7 @@ class underscore(object):
 
 	@staticmethod
 	def extend(destination, *sources):
-		"""Copy all of the properties in the source objects over to the **destination** object, and return the **destination** object. It's in-order, so the last source will override properties of the same name in previous arguments.  Returns **destination** (for possible chaining).
+		"""Copy all of the properties in the source objects of **sources** over to the **destination** object. It's in-order, so the last source will override properties of the same name in previous arguments.  Returns **destination** (for possible chaining).
 
 		Example:
 			>>> _.extend({'name': 'moe', age:'40'}, {'age': 50}, {'age':60, 'gender':'male'})
@@ -1029,7 +1056,7 @@ class underscore(object):
 	@staticmethod
 	def pick(obj, *keys):
 		"""
-		Return a copy of *obj*, filtered to only have values for the whitelisted keys (or array of valid keys). Alternatively, accepts a predicate indicating which keys to pick.
+		Return a copy of **obj**, filtered to only have values for the whitelisted **keys** (or array of valid keys). Alternatively, accepts a predicate indicating which keys to pick.
 
 		Example:
 			>>> _.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, 'name', 'age')
@@ -1050,7 +1077,7 @@ class underscore(object):
 	@staticmethod
 	def omit(obj, *keys):
 		"""
-		Return a copy of **obj**, filtered to omit values for the blacklisted keys (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.
+		Return a copy of **obj**, filtered to omit values for the blacklisted **keys** (or array of valid keys). Alternatively accepts a predicate indicating which keys to pick.
 
 		Example:
 			>>> _.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, 'name', 'age')
@@ -1070,7 +1097,7 @@ class underscore(object):
 
 	@staticmethod
 	def defaults(obj, *defaults):
-		"""Fill in undefined properties in **obj** with the first value present in the following list of defaults objects. Return **obj** (for possible chaining)
+		"""Fill in undefined properties in **obj** with the first value present in the following list of **defaults** objects. Return **obj** (for possible chaining)
 
 		Example:
 			>>> iceCream = {'flavor': "chocolate"}
@@ -1093,12 +1120,12 @@ class underscore(object):
 
 	@staticmethod
 	def has(obj,key):
-		"""Does the object contain the given key? Alias to built in dictionary method"""
+		"""Return ``True`` if the object contain the given key, ``False`` otherwise. Alias to built in dictionary method"""
 		return key in obj
 
 	@staticmethod
 	def property(key):
-		"""Returns a function that will itself return the key property of any passed-in object.
+		"""Returns a function that will itself return the **key** property of any passed-in object.
 
 		Example:
 			>>> getName = _.property('name')
@@ -1122,7 +1149,7 @@ class underscore(object):
 
 	@staticmethod
 	def matcher(attrs):
-		"""Returns a predicate function that will tell you if a passed object contains all of the key/value properties present in **attrs**.
+		"""Returns a predicate function that will tell if a passed object contains all of the key/value properties present in **attrs**.
 
 		Example:
 			>>> _.filter(stooges, _.matcher({'age':60}))
@@ -1137,7 +1164,7 @@ class underscore(object):
 
 	@staticmethod
 	def isMatch(obj, properties):
-		"""Tells you if the keys and values in **properties** are contained in **obj**.
+		"""Returns ``True`` if the keys and values in **properties** are contained in **obj**, ``False`` otherwise.
 
 		Example:
 			>>> stooge = {'name': 'moe', 'age': 40}
@@ -1148,76 +1175,93 @@ class underscore(object):
 
 	@staticmethod
 	def isEqual(obj,other):
-		"""Performs an optimized deep comparison between the two objects, to determine if they should be considered equal."""
+		"""Performs an optimized deep comparison between **obj** and **other**, returns ``True`` if they are equal, ``False`` otherwise."""
 		return obj == other
 
 	@staticmethod
 	def isEmpty(obj):
-		"""Returns true if an enumerable object contains no values (no enumerable own-properties). For strings and array-like objects the function checks if the length property is 0."""
+		"""Returns ``True`` if an enumerable object contains no values (no enumerable own-properties), ``False`` otherwise. For strings and array-like objects the function checks if the length property is 0."""
 		return len(obj) == 0
 
 	@staticmethod
 	def isArray(obj):
+		"""Return ``True`` if **obj** is an Array (i.e., List), ``False`` otherwise."""
 		return type(obj) is ListType
 
 	@staticmethod
 	def isTuple(obj):
+		"""Return ``True`` if **obj** is an Tuple, ``False`` otherwise."""
 		return type(obj) is TupleType
 
 	@staticmethod
 	def isObject(obj):
+		"""Return ``True`` if **obj** is an “Object” (i.e., Dictonary), ``False`` otherwise."""
 		return type(obj) is DictType
 
 	@staticmethod
 	def isFunction(obj):
+		"""Return ``True`` if **obj** is a function or a method, ``False`` otherwise."""
 		return type(obj) is FunctionType or type(obj) is MethodType
 
 	@staticmethod
+	def isCallable(obj):
+		"""Return ``True`` if **obj** is callable, ``False`` otherwise. Note that this is a more general form of test than :py:meth:`isFunction`"""
+		return hasattr(obj, '__call__')
+
+	@staticmethod
 	def isString(obj):
+		"""Return ``True`` if **obj** is a string, ``False`` otherwise."""
 		return isinstance(obj, basestring)
 
 	@staticmethod
-	def isNumber(val):
-		return type(val) is IntType or type(val) is FloatType
+	def isNumber(obj):
+		"""Return ``True`` if **obj** is a number (float or integer), ``False`` otherwise."""
+		return type(obj) is IntType or type(obj) is FloatType
 
 	@staticmethod
-	def isFinite(val):
-		return type(val) is IntType or (type(val) is FloatType and not math.isnan(val))
+	def isFinite(obj):
+		"""Return ``True`` if **obj** is number with a finite value, ``False`` otherwise."""
+		return type(obj) is IntType or (type(obj) is FloatType and not math.isinf(obj))
 
 	@staticmethod
-	def isBoolean(val):
-		return type(val) is BooleanType
+	def isNaN(obj):
+		"""Return ``True`` if **obj** is a float with ``NaN`` as value, ``False`` otherwise."""
+		return type(obj) is FloatType and math.isnan(obj)
 
 	@staticmethod
-	def isError(val):
-		return isinstance(val, Exception)
+	def isBoolean(obj):
+		"""Return ``True`` if **obj** is a Boolean, ``False`` otherwise."""
+		return type(obj) is BooleanType
 
 	@staticmethod
-	def isNaN(object):
-		return type(val) is FloatType and math.isnan(val)
+	def isError(obj):
+		"""Return ``True`` if **obj** is an Exception, ``False`` otherwise."""
+		return isinstance(obj, Exception)
 
 	@staticmethod
-	def isNone(object):
-		return object is None
+	def isNone(obj):
+		"""Return ``True`` if **obj** is ``None``, ``False`` otherwise."""
+		return obj is None
 
 	###############################################################################
 	#                              Utility Functions                              #
 	###############################################################################
 
 	@staticmethod
-	def identity(x):
-		"""Returns the same value that is used as the argument. In math: ``f(x) = x``. This function looks useless, but can be used as a default iteratee."""
+	def identity(x, *args, **keywords):
+		"""Returns the same value that is used as the first argument (and ignore everything else). In math: ``f(x) = x``. This function looks useless, but can be used when debugging other underscore methods."""
 		return x
 
 	@staticmethod
 	def constant(value):
 		"""
-		Creates a function that returns the same **value**.
+		Returns a function that always returns the same **value**.
 
 		Example:
-			>> stooge = {'name': 'moe'}
-			>> stooge == _.constant(stooge)()
-			True
+			>>> stooge = {'name': 'moe' }
+			>>> const = _.constant(stooge)
+			>>> const()
+			{'name': 'moe' }
 		"""
 		return lambda *args: value
 
@@ -1241,30 +1285,16 @@ class underscore(object):
 	@staticmethod
 	def uniqueId(prefix = None):
 		"""
-		Generate a globally-unique id. If prefix is passed, the id will be appended to it.
-		The method relies on the ``uuid.uuid1()``` library function, i.e., is based on the host ID and the current time.
+		Returns a globally-unique id as a string. If **prefix** is passed, the id will be appended to it. The method relies on the ``uuid.uuid1()``` library function, i.e., is based on the host ID and the current time.
 		"""
 		import uuid
 		return str(prefix) + str(uuid.uuid1()) if prefix is not None else str(uuid.uuid1())
 
 	@staticmethod
 	def now():
+		"""Returns an integer timestamp for the current time"""
 		import time
 		return int(time.time())
-
-	###############################################################################
-	#                                   Aliases                                   #
-	###############################################################################
-
-	# Aliases to some of the core method names
-	forEach = each
-	collect = map
-	inject  = reduce
-	detect  = find
-	select  = filter
-	any     = some
-	include = contains
-	unique  = uniq
 
 	###############################################################################
 	#                                    Chaining                                 #
@@ -1338,8 +1368,20 @@ class underscore(object):
 		"""
 		return underscore(obj)
 
+	###############################################################################
+	#                                   Aliases                                   #
+	###############################################################################
+
+	# Aliases to some of the core method names
+	forEach = each
+	collect = map
+	inject  = reduce
+	detect  = find
+	select  = filter
+	any     = some
+	include = contains
+	unique  = uniq
+
 
 if __name__ == '__main__':
-	def pr(a):
-		print "intermediate: %s" % a
-	print underscore([1,2,3,200]).filter(lambda x: x % 2 ==0).tap(pr).map(lambda x, *a: x*x).value()
+	pass
