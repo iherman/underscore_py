@@ -43,8 +43,8 @@
         
         
   <h1>Source code for underscore</h1><div class="highlight"><pre>
-<span class="c">#!/usr/bin/env python</span>
-<span class="c"># coding=utf-8</span>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding=utf-8</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">random</span>
@@ -53,6 +53,8 @@
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="mf">1.0</span>
 
+
+<span class="c1"># noinspection PyCallByClass,PyShadowingBuiltins,PyPep8,PyPep8,PyPep8</span>
 <div class="viewcode-block" id="underscore"><a class="viewcode-back" href="../index.html#underscore.underscore">[docs]</a><span class="k">class</span> <span class="nc">underscore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Methods usually have a usage example to make the description clearer. Conceptually, the following Python code precedes all examples::</span>
@@ -125,8 +127,8 @@
 			<span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a4</span><span class="p">)</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">_extends</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span> <span class="p">:</span>
-		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">DictType</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">DictType</span><span class="p">)</span> <span class="p">:</span>
+	<span class="k">def</span> <span class="nf">_extends</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ext</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">DictType</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">DictType</span><span class="p">):</span>
 			<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ext</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span> <span class="ow">or</span> <span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">ext</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
 					<span class="k">return</span> <span class="bp">False</span>
@@ -139,6 +141,7 @@
 		<span class="n">i</span> <span class="o">=</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect_left</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">i</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
 
+	<span class="c1"># noinspection PyPep8,PyPep8</span>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.each"><a class="viewcode-back" href="../index.html#underscore.underscore.each">[docs]</a>	<span class="k">def</span> <span class="nf">each</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -147,6 +150,9 @@
 
 <span class="sd">		Iterates over a **list** of elements, yielding each in turn to an **iteratee** function. Each invocation of **iteratee** is called with three arguments: if **list** is of list type, then the arguments are ``(element, index, list)``; if it is of dictionary type</span>
 <span class="sd">		the arguments are ``(value, key, list``). Returns **list** for possible chaining.</span>
+
+<span class="sd">		The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked with ``None`` for the second and third</span>
+<span class="sd">		argument. In that case the return value of the method is also ``None``; i.e., no chaining is possible.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; def pr(element, index, list):</span>
@@ -165,11 +171,17 @@
 		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">ListType</span><span class="p">):</span>
 			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)):</span>
 				<span class="n">underscore</span><span class="o">.</span><span class="n">_exec3</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+			<span class="k">return</span> <span class="nb">list</span>
 		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">DictType</span><span class="p">):</span>
 			<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
 				<span class="n">underscore</span><span class="o">.</span><span class="n">_exec3</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-		<span class="k">return</span> <span class="nb">list</span>
-</div>
+			<span class="k">return</span> <span class="nb">list</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+				<span class="n">underscore</span><span class="o">.</span><span class="n">_exec3</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+			<span class="k">return</span> <span class="bp">None</span>
+
+	<span class="c1"># noinspection PyPep8,PyPep8</span></div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.map"><a class="viewcode-back" href="../index.html#underscore.underscore.map">[docs]</a>	<span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -178,12 +190,15 @@
 
 <span class="sd">		Produces a *new* array of values by mapping each value in **list** through a transformation function (**iteratee**). Similarly to :py:meth:`each`, the **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
 
+<span class="sd">		The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked with ``None`` for the second and third</span>
+<span class="sd">		argument.</span>
+
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.map([1, 2, 3], lambda num, index, list: num * 3)</span>
 <span class="sd">			[3, 6, 9]</span>
 <span class="sd">			&gt;&gt;&gt; _.map({&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3}, lambda val, key, *args: val * 4)</span>
 <span class="sd">			[12, 8, 4]</span>
-<span class="sd">			&gt;&gt;&gt; _.map([[1, 2], [3, 4]], lambda a, *args: _.first(a));</span>
+<span class="sd">			&gt;&gt;&gt; _.map([[1, 2], [3, 4]], lambda a, *args: _.first(a))</span>
 <span class="sd">			[1, 3]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="n">iteratee</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -193,8 +208,9 @@
 		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">DictType</span><span class="p">):</span>
 			<span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec3</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="nb">list</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="nb">list</span>
-</div>
+			<span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">value</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec3</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span> <span class="nb">list</span><span class="p">)</span>
+
+	<span class="c1"># noinspection PyPep8,PyPep8</span></div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.reduce"><a class="viewcode-back" href="../index.html#underscore.underscore.reduce">[docs]</a>	<span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">iteratee</span><span class="p">,</span> <span class="n">memo</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -210,10 +226,13 @@
 <span class="sd">			6</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">ListType</span><span class="p">):</span>
-			<span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">,</span><span class="n">i</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec4</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)),</span> <span class="n">memo</span><span class="p">)</span>
+			<span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec4</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)),</span> <span class="n">memo</span><span class="p">)</span>
 		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">DictType</span><span class="p">):</span>
-			<span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">,</span><span class="n">i</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec4</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)),</span> <span class="n">memo</span><span class="p">)</span>
-</div>
+			<span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec4</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)),</span> <span class="n">memo</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">value</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec3</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span> <span class="nb">list</span><span class="p">)</span>
+
+	<span class="c1"># noinspection PyPep8</span></div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.find"><a class="viewcode-back" href="../index.html#underscore.underscore.find">[docs]</a>	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -230,7 +249,6 @@
 			<span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 				<span class="k">return</span> <span class="n">x</span>
 		<span class="k">return</span> <span class="bp">None</span>
-
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.filter"><a class="viewcode-back" href="../index.html#underscore.underscore.filter">[docs]</a>	<span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
@@ -244,7 +262,7 @@
 <span class="sd">			&gt;&gt;&gt; _.filter([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)</span>
 <span class="sd">			[2, 4, 6]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">)]</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.where"><a class="viewcode-back" href="../index.html#underscore.underscore.where">[docs]</a>	<span class="k">def</span> <span class="nf">where</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
@@ -255,7 +273,7 @@
 <span class="sd">			&gt;&gt;&gt; _.where(listOfPlays, {&#39;author&#39;: &quot;Shakespeare&quot;, &#39;year&#39;: 1611})</span>
 <span class="sd">			[{&#39;title&#39;: &#39;The tempest&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}, {&#39;title&#39;: &#39;Cymbeline&#39;, &#39;year&#39;: 1611, &#39;author&#39;: &#39;Shakespeare&#39;}]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_extends</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span> <span class="p">]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_extends</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">properties</span><span class="p">)]</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.findWhere"><a class="viewcode-back" href="../index.html#underscore.underscore.findWhere">[docs]</a>	<span class="k">def</span> <span class="nf">findWhere</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
@@ -280,10 +298,10 @@
 <span class="sd">			&gt;&gt;&gt; _.reject([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)</span>
 <span class="sd">			[1, 3, 5]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">)]</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.every"><a class="viewcode-back" href="../index.html#underscore.underscore.every">[docs]</a>	<span class="k">def</span> <span class="nf">every</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="underscore.every"><a class="viewcode-back" href="../index.html#underscore.underscore.every">[docs]</a>	<span class="k">def</span> <span class="nf">every</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Returns true if all of the values in the **list** pass the **predicate** truth test. The default predicate is the identity.</span>
 
@@ -297,7 +315,7 @@
 		<span class="k">return</span> <span class="bp">True</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.some"><a class="viewcode-back" href="../index.html#underscore.underscore.some">[docs]</a>	<span class="k">def</span> <span class="nf">some</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="underscore.some"><a class="viewcode-back" href="../index.html#underscore.underscore.some">[docs]</a>	<span class="k">def</span> <span class="nf">some</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">predicate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		**Aliases**:</span>
 <span class="sd">			:py:meth:`some`, :py:meth:`any`</span>
@@ -329,7 +347,7 @@
 <span class="sd">		A convenient version of what is perhaps the most common use-case for :py:meth:`map`: extracting a list of property values from an array of dictionaries.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.pluck(stooges, &#39;name&#39;);</span>
+<span class="sd">			&gt;&gt;&gt; _.pluck(stooges, &#39;name&#39;)</span>
 <span class="sd">			[&#39;moe&#39;, &#39;larry&#39;, &#39;curly&#39;]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="n">propertyName</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">]</span>
@@ -344,8 +362,8 @@
 <span class="sd">			{&#39;age&#39;: 60, &#39;name&#39;: &#39;curly&#39;}</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">list</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-			<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s">&quot;inf&quot;</span><span class="p">)</span>
-		<span class="k">if</span> <span class="n">iteratee</span> <span class="ow">is</span> <span class="bp">None</span> <span class="p">:</span>
+			<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">iteratee</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
 			<span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
@@ -360,8 +378,8 @@
 <span class="sd">			{&#39;age&#39;: 40, &#39;name&#39;: &#39;moe&#39;}</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">list</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-			<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s">&quot;-inf&quot;</span><span class="p">)</span>
-		<span class="k">if</span> <span class="n">iteratee</span> <span class="ow">is</span> <span class="bp">None</span> <span class="p">:</span>
+			<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">iteratee</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
 			<span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
@@ -445,9 +463,9 @@
 <span class="sd">			&gt;&gt;&gt; _.shuffle([1, 2, 3, 4, 5, 6])</span>
 <span class="sd">			[6, 4, 5, 2, 1, 3]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="n">indeces</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span> <span class="p">]</span>
-		<span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">indeces</span><span class="p">);</span>
-		<span class="k">return</span> <span class="p">[</span> <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indeces</span> <span class="p">]</span>
+		<span class="n">indeces</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">))]</span>
+		<span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">indeces</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indeces</span><span class="p">]</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.sample"><a class="viewcode-back" href="../index.html#underscore.underscore.sample">[docs]</a>	<span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
@@ -500,11 +518,11 @@
 				<span class="n">yes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 			<span class="k">else</span><span class="p">:</span>
 				<span class="n">no</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-		<span class="k">return</span> <span class="p">(</span><span class="n">yes</span><span class="p">,</span> <span class="n">no</span><span class="p">)</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="ow">is</span> <span class="n">TupleType</span> <span class="k">else</span> <span class="p">[</span><span class="n">yes</span><span class="p">,</span><span class="n">no</span><span class="p">]</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">yes</span><span class="p">,</span> <span class="n">no</span><span class="p">)</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="ow">is</span> <span class="n">TupleType</span> <span class="k">else</span> <span class="p">[</span><span class="n">yes</span><span class="p">,</span> <span class="n">no</span><span class="p">]</span>
 
-	<span class="c">###############################################################################</span>
-	<span class="c">#                                Array Functions                              #</span>
-	<span class="c">###############################################################################</span>
+	<span class="c1">###############################################################################</span>
+	<span class="c1">#                                Array Functions                              #</span>
+	<span class="c1">###############################################################################</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.first"><a class="viewcode-back" href="../index.html#underscore.underscore.first">[docs]</a>	<span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
@@ -553,7 +571,8 @@
 <span class="sd">			[2, 1]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">array</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span>
-</div>
+
+	<span class="c1"># noinspection PyShadowingNames</span></div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.compact"><a class="viewcode-back" href="../index.html#underscore.underscore.compact">[docs]</a>	<span class="k">def</span> <span class="nf">compact</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -563,7 +582,7 @@
 <span class="sd">			&gt;&gt;&gt; _.compact([0, 1, False, 2, &#39;&#39;, 3])</span>
 <span class="sd">			[1, 2, 3]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="n">falsy</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">x</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+		<span class="n">falsy</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">x</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FloatType</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 		<span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span> <span class="k">if</span> <span class="n">falsy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">True</span><span class="p">]</span>
 </div>
 	<span class="nd">@staticmethod</span>
@@ -577,7 +596,7 @@
 <span class="sd">			[1, 2, 3, [[4]]]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span> <span class="p">:</span>
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
 			<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ListType</span><span class="p">:</span>
 				<span class="n">retval</span> <span class="o">+=</span>  <span class="n">x</span> <span class="k">if</span> <span class="n">shallow</span> <span class="k">else</span> <span class="n">underscore</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 			<span class="k">else</span><span class="p">:</span>
@@ -607,7 +626,7 @@
 			<span class="k">return</span> <span class="p">[]</span>
 		<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrays</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 			<span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-		<span class="k">else</span> <span class="p">:</span>
+		<span class="k">else</span><span class="p">:</span>
 			<span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrays</span><span class="p">:</span>
 				<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
@@ -628,7 +647,7 @@
 			<span class="k">return</span> <span class="p">[]</span>
 		<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrays</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 			<span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-		<span class="k">else</span> <span class="p">:</span>
+		<span class="k">else</span><span class="p">:</span>
 			<span class="n">curr</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 			<span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
@@ -648,17 +667,18 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">others</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span><span class="p">]</span>
-		<span class="k">else</span> <span class="p">:</span>
+		<span class="k">else</span><span class="p">:</span>
 			<span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
-				<span class="n">tobeadded</span> <span class="o">=</span> <span class="bp">True</span>
+				<span class="n">to_be_added</span> <span class="o">=</span> <span class="bp">True</span>
 				<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
 					<span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
-						<span class="n">tobeadded</span> <span class="o">=</span> <span class="bp">False</span>
+						<span class="n">to_be_added</span> <span class="o">=</span> <span class="bp">False</span>
 						<span class="k">break</span>
 				<span class="k">if</span> <span class="n">tobeadded</span><span class="p">:</span> <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">retval</span>
-</div>
+
+	<span class="c1"># noinspection PyShadowingNames,PyShadowingNames</span></div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.uniq"><a class="viewcode-back" href="../index.html#underscore.underscore.uniq">[docs]</a>	<span class="k">def</span> <span class="nf">uniq</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">iteratee</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">isSorted</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -703,7 +723,7 @@
 <span class="sd">			[(&#39;moe&#39;, 30, True), (&#39;larry&#39;, 40, False), (&#39;curly&#39;, 50, False)]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="n">TupleType</span> <span class="p">:</span>
+		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="n">TupleType</span><span class="p">:</span>
 			<span class="k">return</span> <span class="n">zipped</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">zipped</span><span class="p">)</span>
@@ -720,9 +740,9 @@
 <span class="sd">			{&#39;larry&#39;: 40, &#39;curly&#39;: 50, &#39;moe&#39;: 30}</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-			<span class="k">return</span> <span class="p">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">}</span>
+			<span class="k">return</span> <span class="p">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">}</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="p">{</span><span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)))}</span>
+			<span class="k">return</span> <span class="p">{</span><span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)))}</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.indexOf"><a class="viewcode-back" href="../index.html#underscore.underscore.indexOf">[docs]</a>	<span class="k">def</span> <span class="nf">indexOf</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">isSorted</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
@@ -733,15 +753,15 @@
 <span class="sd">			&gt;&gt;&gt; _.indexOf([1, 2, 3, 1, 2, 3], 2)</span>
 <span class="sd">			1</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="c"># I could have relied on findIndex, but this is way simpler. Actually, I could have</span>
-		<span class="c"># also used the built-in facility, but the lastIndexOf cannot be done that way, so</span>
-		<span class="c"># I kept this for the sake of symmetry, but also to use bisect for large arrays</span>
+		<span class="c1"># I could have relied on findIndex, but this is way simpler. Actually, I could have</span>
+		<span class="c1"># also used the built-in facility, but the lastIndexOf cannot be done that way, so</span>
+		<span class="c1"># I kept this for the sake of symmetry, but also to use bisect for large arrays</span>
 		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">isSorted</span><span class="p">)</span> <span class="ow">is</span> <span class="n">BooleanType</span> <span class="ow">and</span> <span class="n">isSorted</span><span class="p">:</span>
 			<span class="k">return</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_index_sorted</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="n">start</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">isSorted</span><span class="p">)</span> <span class="ow">is</span> <span class="n">BooleanType</span> <span class="ow">and</span> <span class="n">isSorted</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">isSorted</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">IntType</span> <span class="k">else</span> <span class="n">isSorted</span>
 			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)):</span>
-				<span class="k">if</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span> <span class="p">:</span>
+				<span class="k">if</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
 					<span class="k">return</span> <span class="n">i</span>
 			<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
 </div>
@@ -756,7 +776,7 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">start</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="k">if</span> <span class="n">fromIndex</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">fromIndex</span>
 		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">start</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-			<span class="k">if</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span> <span class="p">:</span>
+			<span class="k">if</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
 				<span class="k">return</span> <span class="n">i</span>
 		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
 </div>
@@ -772,13 +792,13 @@
 <span class="sd">			&gt;&gt;&gt; _.sortedIndex(stooges2, {&#39;name&#39;: &#39;larry&#39;, &#39;age&#39;: 50}, &#39;age&#39;)</span>
 <span class="sd">			1</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="c"># The version with a real iteratee is inefficient for larger arrays.</span>
-		<span class="c"># Ideally, the bisect module should be rewritten to use the iteratee directly. T.B.D.</span>
+		<span class="c1"># The version with a real iteratee is inefficient for larger arrays.</span>
+		<span class="c1"># Ideally, the bisect module should be rewritten to use the iteratee directly. T.B.D.</span>
 		<span class="k">if</span> <span class="n">iteratee</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
 			<span class="n">a</span> <span class="o">=</span> <span class="n">array</span>
 			<span class="n">v</span> <span class="o">=</span> <span class="n">value</span>
-		<span class="k">else</span> <span class="p">:</span>
-			<span class="n">a</span> <span class="o">=</span> <span class="p">[</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span> <span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span><span class="p">]</span>
 			<span class="n">v</span> <span class="o">=</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect_left</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 </div>
@@ -807,10 +827,10 @@
 <span class="sd">		Like :py:meth:`findIndex` but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.findLastIndex([4,6,5,7,12],isPrime)</span>
+<span class="sd">			&gt;&gt;&gt; _.findLastIndex([4, 6, 5, 7, 12],isPrime)</span>
 <span class="sd">			3</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 			<span class="k">if</span> <span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
 				<span class="k">return</span> <span class="n">i</span>
 		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
@@ -824,22 +844,21 @@
 <span class="sd">		* **start**, **end**: like before but starting at **start** instead of 0</span>
 <span class="sd">		* **start**, **end**, **step**: like before, but stepping with **step** instead of 1. **step** can also be negative</span>
 
-<span class="sd">		This is just an alias to Pyhton&#39;s built-in **range** function.</span>
+<span class="sd">		This is just an alias to Python&#39;s built-in **range** function.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.range(10)</span>
 <span class="sd">			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
-<span class="sd">			&gt;&gt;&gt; _.range(3,10)</span>
+<span class="sd">			&gt;&gt;&gt; _.range(3, 10)</span>
 <span class="sd">			[3, 4, 5, 6, 7, 8, 9]</span>
-<span class="sd">			&gt;&gt;&gt; _.range(3,10,2)</span>
+<span class="sd">			&gt;&gt;&gt; _.range(3, 10, 2)</span>
 <span class="sd">			[3, 5, 7, 9]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
-	<span class="c">###############################################################################</span>
-	<span class="c">#                             Function Functions                              #</span>
-	<span class="c">###############################################################################</span>
-
+	<span class="c1">###############################################################################</span>
+	<span class="c1">#                             Function Functions                              #</span>
+	<span class="c1">###############################################################################</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.partial"><a class="viewcode-back" href="../index.html#underscore.underscore.partial">[docs]</a>	<span class="k">def</span> <span class="nf">partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
@@ -847,7 +866,7 @@
 <span class="sd">		Return a partially bounded version of the function **func** by fixing any number of its arguments and keywords. You may pass ``None`` in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; substract = lambda a, b: b-a</span>
+<span class="sd">			&gt;&gt;&gt; substract = lambda a, b: b - a</span>
 <span class="sd">			&gt;&gt;&gt; sub5 = _.partial(substract, 5)</span>
 <span class="sd">			&gt;&gt;&gt; sub5(20)</span>
 <span class="sd">			15</span>
@@ -855,19 +874,19 @@
 <span class="sd">			&gt;&gt;&gt; subFrom20(5)</span>
 <span class="sd">			15</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+		<span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 			<span class="n">retval</span> <span class="o">=</span> <span class="p">()</span>
-			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)):</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)):</span>
 				<span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
 					<span class="n">retval</span> <span class="o">+=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
 					<span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 				<span class="k">else</span><span class="p">:</span>
 					<span class="n">retval</span> <span class="o">+=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
 			<span class="k">return</span> <span class="n">retval</span> <span class="o">+</span> <span class="n">b</span>
-		<span class="k">def</span> <span class="nf">newfunc</span><span class="p">(</span><span class="o">*</span><span class="n">fargs</span><span class="p">,</span><span class="o">**</span><span class="n">fkeywords</span><span class="p">):</span>
+		<span class="k">def</span> <span class="nf">newfunc</span><span class="p">(</span><span class="o">*</span><span class="n">fargs</span><span class="p">,</span> <span class="o">**</span><span class="n">fkeywords</span><span class="p">):</span>
 			<span class="n">newkeywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 			<span class="n">newkeywords</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fkeywords</span><span class="p">)</span>
-			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">combine</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="n">fargs</span><span class="p">)),</span> <span class="o">**</span><span class="n">newkeywords</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">combine</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">fargs</span><span class="p">)),</span> <span class="o">**</span><span class="n">newkeywords</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">newfunc</span>
 </div>
 	<span class="nd">@staticmethod</span>
@@ -890,18 +909,19 @@
 <span class="sd">		Creates a version of **func**, as a callable object, that will only be run after first being called **count** times.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; delayInit = _.after(2,createApplication)</span>
+<span class="sd">			&gt;&gt;&gt; delayInit = _.after(2, createApplication)</span>
 <span class="sd">			&gt;&gt;&gt; delayInit()</span>
 <span class="sd">			&gt;&gt;&gt; delayInit()</span>
 <span class="sd">			&gt;&gt;&gt; delayInit()</span>
 <span class="sd">			created</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">class</span> <span class="nc">_after</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-			<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">count</span>  <span class="o">=</span> <span class="n">count</span>
+			<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_count</span><span class="p">,</span> <span class="n">after_func</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">count</span>  <span class="o">=</span> <span class="n">after_count</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">called</span> <span class="o">=</span> <span class="mi">0</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">func</span>   <span class="o">=</span> <span class="n">func</span>
-			<span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">func</span>   <span class="o">=</span> <span class="n">after_func</span>
+
+			<span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
 				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">called</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">:</span>
 					<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
 				<span class="k">else</span><span class="p">:</span>
@@ -925,12 +945,13 @@
 <span class="sd">			&gt;&gt;&gt;</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">class</span> <span class="nc">_before</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-			<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">count</span>  <span class="o">=</span> <span class="n">count</span>
+			<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">before_count</span><span class="p">,</span> <span class="n">before_func</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">count</span>  <span class="o">=</span> <span class="n">before_count</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">called</span> <span class="o">=</span> <span class="mi">0</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">retval</span> <span class="o">=</span> <span class="bp">None</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">func</span>   <span class="o">=</span> <span class="n">func</span>
-			<span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">func</span>   <span class="o">=</span> <span class="n">before_func</span>
+
+			<span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
 				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">called</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">:</span>
 					<span class="bp">self</span><span class="o">.</span><span class="n">retval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
 					<span class="bp">self</span><span class="o">.</span><span class="n">called</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -958,7 +979,7 @@
 <span class="sd">			before, Hello: name, after</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">def</span> <span class="nf">ff</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
-			<span class="k">return</span><span class="p">(</span><span class="n">wrapper</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">))</span>
+			<span class="k">return</span> <span class="n">wrapper</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">ff</span>
 </div>
 	<span class="nd">@staticmethod</span>
@@ -966,13 +987,13 @@
 		<span class="sd">&quot;&quot;&quot;Returns a new negated version of the **predicate** function (invoked with the arguments).</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; test = lambda x,y: x and y</span>
+<span class="sd">			&gt;&gt;&gt; test = lambda x, y: x and y</span>
 <span class="sd">			&gt;&gt;&gt; _.negate(test,False,True)</span>
 <span class="sd">			True</span>
 <span class="sd">			&gt;&gt;&gt; _.negate(test,True,True)</span>
 <span class="sd">			False</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="ow">not</span> <span class="n">predicate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="s">&#39;__call__&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="ow">not</span> <span class="n">predicate</span>
+		<span class="k">return</span> <span class="ow">not</span> <span class="n">predicate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="ow">not</span> <span class="n">predicate</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.compose"><a class="viewcode-back" href="../index.html#underscore.underscore.compose">[docs]</a>	<span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
@@ -988,22 +1009,22 @@
 <span class="sd">			&gt;&gt;&gt;</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">def</span> <span class="nf">ff</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
-			<span class="n">nextarg</span> <span class="o">=</span> <span class="n">functions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
-			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">functions</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+			<span class="n">nextarg</span> <span class="o">=</span> <span class="n">functions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">functions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 				<span class="n">nextarg</span> <span class="o">=</span> <span class="n">functions</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">nextarg</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">nextarg</span>
 		<span class="k">return</span> <span class="n">ff</span>
 
-	<span class="c">###############################################################################</span>
-	<span class="c">#                       Object (dictionary) Functions                         #</span>
-	<span class="c">###############################################################################</span>
+	<span class="c1">###############################################################################</span>
+	<span class="c1">#                       Object (dictionary) Functions                         #</span>
+	<span class="c1">###############################################################################</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.keys"><a class="viewcode-back" href="../index.html#underscore.underscore.keys">[docs]</a>	<span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Retrieve all the names of the **object**&#39;s own enumerable properties. Alias of the built-in Python method.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.keys({&#39;one&#39;:1, &#39;two&#39;:2, &#39;three&#39;:3})</span>
+<span class="sd">			&gt;&gt;&gt; _.keys({&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3})</span>
 <span class="sd">			[&#39;three&#39;, &#39;two&#39;, &#39;one&#39;]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -1013,7 +1034,7 @@
 		<span class="sd">&quot;&quot;&quot;Retrieve all the names of the object&#39;s own enumerable properties. Alias of the built-in Python method.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.values({&#39;one&#39;:1, &#39;two&#39;:2, &#39;three&#39;:3})</span>
+<span class="sd">			&gt;&gt;&gt; _.values({&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3})</span>
 <span class="sd">			[3,2,1]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
@@ -1021,7 +1042,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.mapObject"><a class="viewcode-back" href="../index.html#underscore.underscore.mapObject">[docs]</a>	<span class="k">def</span> <span class="nf">mapObject</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">iteratee</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.</span>
-<span class="sd">		If **itereatee** is not set or is ``None``, a copy of **obj** is returned.</span>
+<span class="sd">		If **iteratee** is not set or is ``None``, a copy of **obj** is returned.</span>
 
 <span class="sd">		Example:</span>
 <span class="sd">			&gt;&gt;&gt; _.mapObject({&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3})</span>
@@ -1040,12 +1061,12 @@
 		<span class="sd">&quot;&quot;&quot;Convert an **obj** into a list of ``[key, value]`` pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.pairs({&#39;one&#39;:1, &#39;two&#39;:2, &#39;three&#39;:3})</span>
+<span class="sd">			&gt;&gt;&gt; _.pairs({&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3})</span>
 <span class="sd">			[[&#39;three&#39;, 3], [&#39;two&#39;, 2], [&#39;one&#39;, 1]]</span>
-<span class="sd">			&gt;&gt;&gt; _.pairs({&#39;one&#39;:1, &#39;two&#39;:2, &#39;three&#39;:3}, tuple = True)</span>
+<span class="sd">			&gt;&gt;&gt; _.pairs({&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3}, tuple = True)</span>
 <span class="sd">			[(&#39;three&#39;, 3), (&#39;two&#39;, 2), (&#39;one&#39;, 1)]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">tuple</span> <span class="k">else</span> <span class="n">underscore</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span><span class="n">obj</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+		<span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">tuple</span> <span class="k">else</span> <span class="n">underscore</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">obj</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.invert"><a class="viewcode-back" href="../index.html#underscore.underscore.invert">[docs]</a>	<span class="k">def</span> <span class="nf">invert</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -1055,7 +1076,7 @@
 <span class="sd">			&gt;&gt;&gt; _.invert({&quot;Moe&quot;: &quot;Moses&quot;, &quot;Larry&quot;: &quot;Louis&quot;, &quot;Curly&quot;: &quot;Jerome&quot;})</span>
 <span class="sd">			{&#39;Louis&#39;: &#39;Larry&#39;, &#39;Moses&#39;: &#39;Moe&#39;, &#39;Jerome&#39;: &#39;Curly&#39;}</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="p">{</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">()}</span>
+		<span class="k">return</span> <span class="p">{</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">()}</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.findKey"><a class="viewcode-back" href="../index.html#underscore.underscore.findKey">[docs]</a>	<span class="k">def</span> <span class="nf">findKey</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
@@ -1076,7 +1097,7 @@
 		<span class="sd">&quot;&quot;&quot;Copy all of the properties in the source objects of **sources** over to the **destination** object. It&#39;s in-order, so the last source will override properties of the same name in previous arguments.  Returns **destination** (for possible chaining).</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.extend({&#39;name&#39;: &#39;moe&#39;, age:&#39;40&#39;}, {&#39;age&#39;: 50}, {&#39;age&#39;:60, &#39;gender&#39;:&#39;male&#39;})</span>
+<span class="sd">			&gt;&gt;&gt; _.extend({&#39;name&#39;: &#39;moe&#39;, age: &#39;40&#39;}, {&#39;age&#39;: 50}, {&#39;age&#39;: 60, &#39;gender&#39;: &#39;male&#39;})</span>
 <span class="sd">			{&#39;gender&#39;: &#39;male&#39;, &#39;age&#39;: 60, &#39;name&#39;: &#39;moe&#39;}</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
@@ -1089,7 +1110,7 @@
 		<span class="sd">&quot;&quot;&quot;Like **extend**, but only copies *own* properties over to the destination object. Return **destination** (for possible chaining).</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.extendOwn({&#39;name&#39;: &#39;moe&#39;, age:&#39;40&#39;}, {&#39;age&#39;: 50}, {&#39;age&#39;:60, &#39;gender&#39;:&#39;male&#39;})</span>
+<span class="sd">			&gt;&gt;&gt; _.extendOwn({&#39;name&#39;: &#39;moe&#39;, age: &#39;40&#39;}, {&#39;age&#39;: 50}, {&#39;age&#39;: 60, &#39;gender&#39;: &#39;male&#39;})</span>
 <span class="sd">			{&#39;age&#39;: 60, &#39;name&#39;: &#39;moe&#39;}</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
@@ -1114,10 +1135,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">return</span> <span class="p">{}</span>
-		<span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;__call__&#39;</span><span class="p">):</span>
-			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="n">obj</span><span class="p">)}</span>
+		<span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="n">obj</span><span class="p">)}</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
+			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.omit"><a class="viewcode-back" href="../index.html#underscore.underscore.omit">[docs]</a>	<span class="k">def</span> <span class="nf">omit</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">keys</span><span class="p">):</span>
@@ -1135,10 +1156,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">return</span> <span class="p">{}</span>
-		<span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;__call__&#39;</span><span class="p">):</span>
-			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="n">obj</span><span class="p">)}</span>
+		<span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="n">obj</span><span class="p">)}</span>
 		<span class="k">else</span> <span class="p">:</span>
-			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
+			<span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.defaults"><a class="viewcode-back" href="../index.html#underscore.underscore.defaults">[docs]</a>	<span class="k">def</span> <span class="nf">defaults</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">defaults</span><span class="p">):</span>
@@ -1160,11 +1181,10 @@
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Create a shallow-copied clone of the provided plain **obj**. Any nested objects or arrays will be copied by reference, not duplicated.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span><span class="n">obj</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">}</span>
-
+		<span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">obj</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.has"><a class="viewcode-back" href="../index.html#underscore.underscore.has">[docs]</a>	<span class="k">def</span> <span class="nf">has</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="underscore.has"><a class="viewcode-back" href="../index.html#underscore.underscore.has">[docs]</a>	<span class="k">def</span> <span class="nf">has</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Return ``True`` if the object contain the given key, ``False`` otherwise. Alias to built in dictionary method&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span>
 </div>
@@ -1197,7 +1217,7 @@
 		<span class="sd">&quot;&quot;&quot;Returns a predicate function that will tell if a passed object contains all of the key/value properties present in **attrs**.</span>
 
 <span class="sd">		Example:</span>
-<span class="sd">			&gt;&gt;&gt; _.filter(stooges, _.matcher({&#39;age&#39;:60}))</span>
+<span class="sd">			&gt;&gt;&gt; _.filter(stooges, _.matcher({&#39;age&#39;: 60}))</span>
 <span class="sd">			[{&#39;age&#39;: 60, &#39;name&#39;: &#39;curly&#39;}]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -1219,7 +1239,7 @@
 		<span class="k">return</span> <span class="n">underscore</span><span class="o">.</span><span class="n">matcher</span><span class="p">(</span><span class="n">properties</span><span class="p">)(</span><span class="n">obj</span><span class="p">)</span>
 </div>
 	<span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="underscore.isEqual"><a class="viewcode-back" href="../index.html#underscore.underscore.isEqual">[docs]</a>	<span class="k">def</span> <span class="nf">isEqual</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="underscore.isEqual"><a class="viewcode-back" href="../index.html#underscore.underscore.isEqual">[docs]</a>	<span class="k">def</span> <span class="nf">isEqual</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Performs an optimized deep comparison between **obj** and **other**, returns ``True`` if they are equal, ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">obj</span> <span class="o">==</span> <span class="n">other</span>
 </div>
@@ -1240,7 +1260,7 @@
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isObject"><a class="viewcode-back" href="../index.html#underscore.underscore.isObject">[docs]</a>	<span class="k">def</span> <span class="nf">isObject</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is an “Object” (i.e., Dictonary), ``False`` otherwise.&quot;&quot;&quot;</span>
+		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is an “Object” (i.e., Dictionary), ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="n">DictType</span>
 </div>
 	<span class="nd">@staticmethod</span>
@@ -1251,7 +1271,7 @@
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isCallable"><a class="viewcode-back" href="../index.html#underscore.underscore.isCallable">[docs]</a>	<span class="k">def</span> <span class="nf">isCallable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is callable, ``False`` otherwise. Note that this is a more general form of test than :py:meth:`isFunction`&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;__call__&#39;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">)</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.isString"><a class="viewcode-back" href="../index.html#underscore.underscore.isString">[docs]</a>	<span class="k">def</span> <span class="nf">isString</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -1288,9 +1308,9 @@
 		<span class="sd">&quot;&quot;&quot;Return ``True`` if **obj** is ``None``, ``False`` otherwise.&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">obj</span> <span class="ow">is</span> <span class="bp">None</span>
 
-	<span class="c">###############################################################################</span>
-	<span class="c">#                              Utility Functions                              #</span>
-	<span class="c">###############################################################################</span>
+	<span class="c1">###############################################################################</span>
+	<span class="c1">#                              Utility Functions                              #</span>
+	<span class="c1">###############################################################################</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.identity"><a class="viewcode-back" href="../index.html#underscore.underscore.identity">[docs]</a>	<span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
@@ -1306,7 +1326,7 @@
 <span class="sd">			&gt;&gt;&gt; stooge = {&#39;name&#39;: &#39;moe&#39; }</span>
 <span class="sd">			&gt;&gt;&gt; const = _.constant(stooge)</span>
 <span class="sd">			&gt;&gt;&gt; const()</span>
-<span class="sd">			{&#39;name&#39;: &#39;moe&#39; }</span>
+<span class="sd">			{&#39;name&#39;: &#39;moe&#39;}</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">value</span>
 </div>
@@ -1320,17 +1340,17 @@
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Invokes the given **iteratee** function **n** times. Each invocation of **iteratee** is called with an index argument. Produces an array of the returned values.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="p">[</span><span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">underscore</span><span class="o">.</span><span class="n">_exec1</span><span class="p">(</span><span class="n">iteratee</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)]</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.random"><a class="viewcode-back" href="../index.html#underscore.underscore.random">[docs]</a>	<span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Returns a random integer between **min** and **max**, inclusive. If you only pass one argument, it will return a number between 0 and that number.&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">min</span><span class="p">)</span> <span class="k">if</span> <span class="nb">max</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">)</span> <span class="k">if</span> <span class="nb">max</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
 </div>
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.uniqueId"><a class="viewcode-back" href="../index.html#underscore.underscore.uniqueId">[docs]</a>	<span class="k">def</span> <span class="nf">uniqueId</span><span class="p">(</span><span class="n">prefix</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns a globally-unique id as a string. If **prefix** is passed, the id will be appended to it. The method relies on the ``uuid.uuid1()``` library function, i.e., is based on the host ID and the current time.</span>
+<span class="sd">		Returns a globally-unique id as a string. If **prefix** is passed, the id will be appended to it. The method relies on the ``uuid.uuid1()`` library function, i.e., is based on the host ID and the current time.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="kn">import</span> <span class="nn">uuid</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
@@ -1341,57 +1361,58 @@
 		<span class="kn">import</span> <span class="nn">time</span>
 		<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
 
-	<span class="c">###############################################################################</span>
-	<span class="c">#                                    Chaining                                 #</span>
-	<span class="c">###############################################################################</span>
+	<span class="c1">###############################################################################</span>
+	<span class="c1">#                                    Chaining                                 #</span>
+	<span class="c1">###############################################################################</span>
 
-	<span class="c"># Chaining is done by creating an instance of underscore, and catching all method requests...</span></div>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+	<span class="c1"># Chaining is done by creating an instance of underscore, and catching all method requests...</span></div>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">current_value</span> <span class="o">=</span> <span class="n">val</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">chaining_on</span>   <span class="o">=</span> <span class="bp">True</span>
 
-	<span class="c"># This method catches **all** attribute dereferencing attempts. This means that any access to the local variables</span>
-	<span class="c"># must be done through the superclass and through the special attributes. A bit convoluted, but does the job...</span>
-	<span class="k">def</span> <span class="nf">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-		<span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;value&quot;</span><span class="p">:</span>
+	<span class="c1"># This method catches **all** attribute dereference attempts. This means that any access to the local variables</span>
+	<span class="c1"># must be done through the superclass and through the special attributes. A bit convoluted, but does the job...</span>
+	<span class="k">def</span> <span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span>
+			<span class="c1"># noinspection PyCallByClass</span>
 			<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
-				<span class="c">#</span>
-				<span class="c"># i.e.:</span>
-				<span class="c"># self.chaining_on = True</span>
-				<span class="c"># return self.current_value</span>
-				<span class="c">#</span>
-				<span class="nb">object</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;chaining_on&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-				<span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;current_value&#39;</span><span class="p">)</span>
+				<span class="c1">#</span>
+				<span class="c1"># i.e.:</span>
+				<span class="c1"># self.chaining_on = True</span>
+				<span class="c1"># return self.current_value</span>
+				<span class="c1">#</span>
+				<span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;chaining_on&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+				<span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;current_value&#39;</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">func</span>
-		<span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;tap&quot;</span><span class="p">:</span>
+		<span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;tap&quot;</span><span class="p">:</span>
 			<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-				<span class="c">#</span>
-				<span class="c"># i.e.:</span>
-				<span class="c"># f(self.current_value)</span>
-				<span class="c"># return self</span>
-				<span class="c">#</span>
-				<span class="n">f</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;current_value&#39;</span><span class="p">))</span>
+				<span class="c1">#</span>
+				<span class="c1"># i.e.:</span>
+				<span class="c1"># f(self.current_value)</span>
+				<span class="c1"># return self</span>
+				<span class="c1">#</span>
+				<span class="n">f</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;current_value&#39;</span><span class="p">))</span>
 				<span class="k">return</span> <span class="bp">self</span>
 			<span class="k">return</span> <span class="n">func</span>
-		<span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;__module__&quot;</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;__doc__&quot;</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">underscore</span><span class="o">.</span><span class="n">__dict__</span><span class="p">:</span>
+		<span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__module__&quot;</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__doc__&quot;</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">underscore</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="nb">object</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;chaining_on&#39;</span><span class="p">):</span>
+		<span class="k">elif</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;chaining_on&#39;</span><span class="p">):</span>
 			<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-				<span class="c">#</span>
-				<span class="c"># I.e. (approximately)</span>
-				<span class="c"># self.current_value = underscore.`name`(self.current_value,*args)</span>
-				<span class="c"># return self</span>
-				<span class="c">#</span>
-				<span class="nb">object</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;current_value&#39;</span><span class="p">,</span> <span class="n">underscore</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">__func__</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;current_value&#39;</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+				<span class="c1">#</span>
+				<span class="c1"># I.e. (approximately)</span>
+				<span class="c1"># self.current_value = underscore.`name`(self.current_value,*args)</span>
+				<span class="c1"># return self</span>
+				<span class="c1">#</span>
+				<span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;current_value&#39;</span><span class="p">,</span> <span class="n">underscore</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="vm">__func__</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;current_value&#39;</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
 				<span class="k">return</span> <span class="bp">self</span>
 			<span class="k">return</span> <span class="n">func</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Chained value already retreived, no more chaining&quot;</span><span class="p">)</span>
+			<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Chained value already retrieved, no more chaining&quot;</span><span class="p">)</span>
 
 	<span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="underscore.chain"><a class="viewcode-back" href="../index.html#underscore.underscore.chain">[docs]</a>	<span class="k">def</span> <span class="nf">chain</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Returns a wrapper object for chaining; see the separate description on chaining. The returned object has, beyond the static underscore methods, to instance methods:</span>
+<span class="sd">		Returns a wrapper object for chaining; see the separate description on chaining. The returned object has, beyond the static underscore methods, the additional instance methods:</span>
 
 <span class="sd">		**value()**</span>
 <span class="sd">		 	Extract the value of the wrapper object. A call to value means that no more chaining is possible.</span>
@@ -1400,24 +1421,24 @@
 <span class="sd">			Execute the function **func** on the value of the wrapped object; the object itself is returned, and can be used for further chaining. This can be used to &#39;tap into&#39; the chain.</span>
 
 <span class="sd">		Examples:</span>
-<span class="sd">			&gt;&gt;&gt; _.chain(stooges).sortBy(&#39;age&#39;).map(lambda st,*args: &quot;%s is %s&quot; % (st[&#39;name&#39;],st[&#39;age&#39;])).first().value()</span>
+<span class="sd">			&gt;&gt;&gt; _.chain(stooges).sortBy(&#39;age&#39;).map(lambda st, *args: &quot;%s is %s&quot; % (st[&#39;name&#39;], st[&#39;age&#39;])).first().value()</span>
 <span class="sd">			moe is 40</span>
 <span class="sd">			&gt;&gt;&gt; def pr(a):</span>
 <span class="sd">			...		print &quot;intermediate: %s&quot; % a</span>
 <span class="sd">			...</span>
-<span class="sd">			&gt;&gt;&gt; _.chain([1,2,3,200]).filter(lambda num,*args: num % 2 == 0).map(lambda x,*args: x*x).value()</span>
+<span class="sd">			&gt;&gt;&gt; _.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).map(lambda x, *args: x*x).value()</span>
 <span class="sd">			[4, 40000]</span>
-<span class="sd">			&gt;&gt;&gt; _.chain([1,2,3,200]).filter(lambda num,*args: num % 2 == 0).tap(pr).map(lambda x,*args: x*x).value()</span>
+<span class="sd">			&gt;&gt;&gt; _.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).tap(pr).map(lambda x, *args: x*x).value()</span>
 <span class="sd">			intermediate: [2, 200]</span>
 <span class="sd">			[4, 40000]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">underscore</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-	<span class="c">###############################################################################</span>
-	<span class="c">#                                   Aliases                                   #</span>
-	<span class="c">###############################################################################</span>
+	<span class="c1">###############################################################################</span>
+	<span class="c1">#                                   Aliases                                   #</span>
+	<span class="c1">###############################################################################</span>
 
-	<span class="c"># Aliases to some of the core method names</span></div>
+	<span class="c1"># Aliases to some of the core method names</span></div>
 	<span class="n">forEach</span> <span class="o">=</span> <span class="n">each</span>
 	<span class="n">collect</span> <span class="o">=</span> <span class="nb">map</span>
 	<span class="n">inject</span>  <span class="o">=</span> <span class="nb">reduce</span>
@@ -1428,7 +1449,7 @@
 	<span class="n">unique</span>  <span class="o">=</span> <span class="n">uniq</span>
 
 </div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
 	<span class="k">pass</span>
 </pre></div>
 
@@ -1443,7 +1464,7 @@
 
     <div class="footer" role="contentinfo">
         &copy; Copyright Copyright (c) 2016 W3C® (MIT, ERCIM, Keio, Beihang).
-      Last updated on 12 May, 2016.
+      Last updated on 21 Jun, 2016.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>

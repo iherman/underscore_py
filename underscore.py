@@ -8,6 +8,8 @@ import bisect
 
 __version__ = 1.0
 
+
+# noinspection PyCallByClass,PyShadowingBuiltins,PyPep8,PyPep8,PyPep8
 class underscore(object):
 	"""
 	Methods usually have a usage example to make the description clearer. Conceptually, the following Python code precedes all examples::
@@ -80,8 +82,8 @@ class underscore(object):
 			return f(context, a1, a2, a3, a4)
 
 	@staticmethod
-	def _extends( obj, ext) :
-		if isinstance(obj,DictType) and isinstance(ext, DictType) :
+	def _extends(obj, ext):
+		if isinstance(obj, DictType) and isinstance(ext, DictType):
 			for key in ext:
 				if key not in obj or obj[key] != ext[key]:
 					return False
@@ -94,6 +96,7 @@ class underscore(object):
 		i = bisect.bisect_left(a, x)
 		return i if i != len(a) and a[i] == x else -1
 
+	# noinspection PyPep8,PyPep8
 	@staticmethod
 	def each(list, iteratee, context = None):
 		"""
@@ -102,6 +105,9 @@ class underscore(object):
 
 		Iterates over a **list** of elements, yielding each in turn to an **iteratee** function. Each invocation of **iteratee** is called with three arguments: if **list** is of list type, then the arguments are ``(element, index, list)``; if it is of dictionary type
 		the arguments are ``(value, key, list``). Returns **list** for possible chaining.
+
+		The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked with ``None`` for the second and third
+		argument. In that case the return value of the method is also ``None``; i.e., no chaining is possible.
 
 		Example:
 			>>> def pr(element, index, list):
@@ -120,11 +126,17 @@ class underscore(object):
 		elif isinstance(list, ListType):
 			for i in xrange(0, len(list)):
 				underscore._exec3(iteratee, context, list[i], i, list)
+			return list
 		elif isinstance(list, DictType):
 			for key in list:
 				underscore._exec3(iteratee, context, list[key], key, list)
-		return list
+			return list
+		else:
+			for value in list:
+				underscore._exec3(iteratee, context, value, None, None)
+			return None
 
+	# noinspection PyPep8,PyPep8
 	@staticmethod
 	def map(list, iteratee, context = None):
 		"""
@@ -133,12 +145,15 @@ class underscore(object):
 
 		Produces a *new* array of values by mapping each value in **list** through a transformation function (**iteratee**). Similarly to :py:meth:`each`, the **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 
+		The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked with ``None`` for the second and third
+		argument.
+
 		Example:
 			>>> _.map([1, 2, 3], lambda num, index, list: num * 3)
 			[3, 6, 9]
 			>>> _.map({'one': 1, 'two': 2, 'three': 3}, lambda val, key, *args: val * 4)
 			[12, 8, 4]
-			>>> _.map([[1, 2], [3, 4]], lambda a, *args: _.first(a));
+			>>> _.map([[1, 2], [3, 4]], lambda a, *args: _.first(a))
 			[1, 3]
 		"""
 		if iteratee is None:
@@ -148,8 +163,9 @@ class underscore(object):
 		elif isinstance(list, DictType):
 			return map(lambda key: underscore._exec3(iteratee, context, list[key], key, list), list.keys())
 		else:
-			return list
+			return map(lambda value: underscore._exec3(iteratee, context, value, None, None), list)
 
+	# noinspection PyPep8,PyPep8
 	@staticmethod
 	def reduce(list, iteratee, memo = None, context = None):
 		"""
@@ -165,10 +181,13 @@ class underscore(object):
 			6
 		"""
 		if isinstance(list, ListType):
-			return reduce(lambda m,i: underscore._exec4(iteratee, context, m, list[i], i, list), xrange(0, len(list)), memo)
+			return reduce(lambda m, i: underscore._exec4(iteratee, context, m, list[i], i, list), xrange(0, len(list)), memo)
 		elif isinstance(list, DictType):
-			return reduce(lambda m,i: underscore._exec4(iteratee, context, m, list[key], key, list), xrange(0, len(list)), memo)
+			return reduce(lambda m, i: underscore._exec4(iteratee, context, m, list[key], key, list), xrange(0, len(list)), memo)
+		else:
+			return map(lambda value: underscore._exec3(iteratee, context, value, None, None), list)
 
+	# noinspection PyPep8
 	@staticmethod
 	def find(list, predicate, context = None):
 		"""
@@ -186,7 +205,6 @@ class underscore(object):
 				return x
 		return None
 
-
 	@staticmethod
 	def filter(list, predicate, context = None):
 		"""
@@ -199,7 +217,7 @@ class underscore(object):
 			>>> _.filter([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)
 			[2, 4, 6]
 		"""
-		return [ x for x in list if underscore._exec1(predicate, context, x)]
+		return [x for x in list if underscore._exec1(predicate, context, x)]
 
 	@staticmethod
 	def where(list, properties):
@@ -210,7 +228,7 @@ class underscore(object):
 			>>> _.where(listOfPlays, {'author': "Shakespeare", 'year': 1611})
 			[{'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'}, {'title': 'Cymbeline', 'year': 1611, 'author': 'Shakespeare'}]
 		"""
-		return [ x for x in list if underscore._extends(x, properties) ]
+		return [x for x in list if underscore._extends(x, properties)]
 
 	@staticmethod
 	def findWhere(list, properties):
@@ -235,10 +253,10 @@ class underscore(object):
 			>>> _.reject([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)
 			[1, 3, 5]
 		"""
-		return [ x for x in list if not underscore._exec1(predicate, context, x)]
+		return [x for x in list if not underscore._exec1(predicate, context, x)]
 
 	@staticmethod
-	def every(list, predicate = lambda x:x, context = None):
+	def every(list, predicate = lambda x: x, context = None):
 		"""
 		Returns true if all of the values in the **list** pass the **predicate** truth test. The default predicate is the identity.
 
@@ -252,7 +270,7 @@ class underscore(object):
 		return True
 
 	@staticmethod
-	def some(list, predicate = lambda x:x, context = None):
+	def some(list, predicate = lambda x: x, context = None):
 		"""
 		**Aliases**:
 			:py:meth:`some`, :py:meth:`any`
@@ -284,7 +302,7 @@ class underscore(object):
 		A convenient version of what is perhaps the most common use-case for :py:meth:`map`: extracting a list of property values from an array of dictionaries.
 
 		Example:
-			>>> _.pluck(stooges, 'name');
+			>>> _.pluck(stooges, 'name')
 			['moe', 'larry', 'curly']
 		"""
 		return [l[propertyName] for l in list]
@@ -300,7 +318,7 @@ class underscore(object):
 		"""
 		if list is None or len(list) == 0:
 			return float("inf")
-		if iteratee is None :
+		if iteratee is None:
 			return max(list)
 		else:
 			return max(list, key=lambda x: underscore._exec1(iteratee, context, x))
@@ -316,7 +334,7 @@ class underscore(object):
 		"""
 		if list is None or len(list) == 0:
 			return float("-inf")
-		if iteratee is None :
+		if iteratee is None:
 			return min(list)
 		else:
 			return min(list, key=lambda x: underscore._exec1(iteratee, context, x))
@@ -400,9 +418,9 @@ class underscore(object):
 			>>> _.shuffle([1, 2, 3, 4, 5, 6])
 			[6, 4, 5, 2, 1, 3]
 		"""
-		indeces = [ i for i in xrange(0, len(list)) ]
-		random.shuffle(indeces);
-		return [ list[i] for i in indeces ]
+		indeces = [i for i in xrange(0, len(list))]
+		random.shuffle(indeces)
+		return [list[i] for i in indeces]
 
 	@staticmethod
 	def sample(list, n = None):
@@ -455,7 +473,7 @@ class underscore(object):
 				yes.append(x)
 			else:
 				no.append(x)
-		return (yes, no) if type(list) is TupleType else [yes,no]
+		return (yes, no) if type(list) is TupleType else [yes, no]
 
 	###############################################################################
 	#                                Array Functions                              #
@@ -509,6 +527,7 @@ class underscore(object):
 		"""
 		return array[n:]
 
+	# noinspection PyShadowingNames
 	@staticmethod
 	def compact(array):
 		"""
@@ -532,7 +551,7 @@ class underscore(object):
 			[1, 2, 3, [[4]]]
 		"""
 		retval = []
-		for x in array :
+		for x in array:
 			if type(x) is ListType:
 				retval +=  x if shallow else underscore.flatten(x)
 			else:
@@ -562,7 +581,7 @@ class underscore(object):
 			return []
 		elif len(arrays) == 1:
 			return [x for x in arrays[0]]
-		else :
+		else:
 			retval = []
 			for a in arrays:
 				for x in a:
@@ -583,7 +602,7 @@ class underscore(object):
 			return []
 		elif len(arrays) == 1:
 			return [x for x in arrays[0]]
-		else :
+		else:
 			curr = arrays[0]
 			retval = []
 			for b in arrays[1:]:
@@ -603,17 +622,18 @@ class underscore(object):
 		"""
 		if len(others) == 0:
 			return [x for x in array]
-		else :
+		else:
 			retval = []
 			for x in array:
-				tobeadded = True
+				to_be_added = True
 				for a in others:
 					if x in a:
-						tobeadded = False
+						to_be_added = False
 						break
 				if tobeadded: retval.append(x)
 			return retval
 
+	# noinspection PyShadowingNames,PyShadowingNames
 	@staticmethod
 	def uniq(array, iteratee = None, context = None, isSorted = False):
 		"""
@@ -658,7 +678,7 @@ class underscore(object):
 			[('moe', 30, True), ('larry', 40, False), ('curly', 50, False)]
 		"""
 		zipped = zip(*arrays)
-		if type(arrays[0]) is TupleType :
+		if type(arrays[0]) is TupleType:
 			return zipped
 		else:
 			return map(lambda x: list(x), zipped)
@@ -675,9 +695,9 @@ class underscore(object):
 			{'larry': 40, 'curly': 50, 'moe': 30}
 		"""
 		if values is None:
-			return {x[0]:x[1] for x in list}
+			return {x[0]: x[1] for x in list}
 		else:
-			return {list[i]:values[i] for i in xrange(0,min(len(list),len(values)))}
+			return {list[i]: values[i] for i in xrange(0, min(len(list), len(values)))}
 
 	@staticmethod
 	def indexOf(array, value, isSorted = False):
@@ -696,7 +716,7 @@ class underscore(object):
 		else:
 			start = 0 if (type(isSorted) is BooleanType and isSorted is False) or type(isSorted) is not IntType else isSorted
 			for i in xrange(start, len(array)):
-				if array[i] == value :
+				if array[i] == value:
 					return i
 			return -1
 
@@ -711,7 +731,7 @@ class underscore(object):
 		"""
 		start = len(array) if fromIndex is None else fromIndex
 		for i in xrange(start-1, -1, -1):
-			if array[i] == value :
+			if array[i] == value:
 				return i
 		return -1
 
@@ -732,8 +752,8 @@ class underscore(object):
 		if iteratee is None:
 			a = array
 			v = value
-		else :
-			a = [ underscore._exec1(iteratee, context, x) for x in array ]
+		else:
+			a = [underscore._exec1(iteratee, context, x) for x in array]
 			v = underscore._exec1(iteratee, context, value)
 		return bisect.bisect_left(a, v)
 
@@ -762,10 +782,10 @@ class underscore(object):
 		Like :py:meth:`findIndex` but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.
 
 		Example:
-			>>> _.findLastIndex([4,6,5,7,12],isPrime)
+			>>> _.findLastIndex([4, 6, 5, 7, 12],isPrime)
 			3
 		"""
-		for i in xrange(len(array)-1,-1,-1):
+		for i in xrange(len(array) - 1, -1, -1):
 			if underscore._exec1(predicate, context, array[i]):
 				return i
 		return -1
@@ -779,14 +799,14 @@ class underscore(object):
 		* **start**, **end**: like before but starting at **start** instead of 0
 		* **start**, **end**, **step**: like before, but stepping with **step** instead of 1. **step** can also be negative
 
-		This is just an alias to Pyhton's built-in **range** function.
+		This is just an alias to Python's built-in **range** function.
 
 		Example:
 			>>> _.range(10)
 			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-			>>> _.range(3,10)
+			>>> _.range(3, 10)
 			[3, 4, 5, 6, 7, 8, 9]
-			>>> _.range(3,10,2)
+			>>> _.range(3, 10, 2)
 			[3, 5, 7, 9]
 		"""
 		return range(*args)
@@ -795,14 +815,13 @@ class underscore(object):
 	#                             Function Functions                              #
 	###############################################################################
 
-
 	@staticmethod
 	def partial(func, *args, **keywords):
 		"""
 		Return a partially bounded version of the function **func** by fixing any number of its arguments and keywords. You may pass ``None`` in your list of arguments to specify an argument that should not be pre-filled, but left open to supply at call-time.
 
 		Example:
-			>>> substract = lambda a, b: b-a
+			>>> substract = lambda a, b: b - a
 			>>> sub5 = _.partial(substract, 5)
 			>>> sub5(20)
 			15
@@ -810,19 +829,19 @@ class underscore(object):
 			>>> subFrom20(5)
 			15
 		"""
-		def combine(a,b):
+		def combine(a, b):
 			retval = ()
-			for i in xrange(0,len(a)):
+			for i in xrange(0, len(a)):
 				if a[i] is None:
 					retval += tuple([b[0]])
 					b = b[1:]
 				else:
 					retval += tuple([a[i]])
 			return retval + b
-		def newfunc(*fargs,**fkeywords):
+		def newfunc(*fargs, **fkeywords):
 			newkeywords = keywords.copy()
 			newkeywords.update(fkeywords)
-			return func(*(combine(args,fargs)), **newkeywords)
+			return func(*(combine(args, fargs)), **newkeywords)
 		return newfunc
 
 	@staticmethod
@@ -845,17 +864,18 @@ class underscore(object):
 		Creates a version of **func**, as a callable object, that will only be run after first being called **count** times.
 
 		Example:
-			>>> delayInit = _.after(2,createApplication)
+			>>> delayInit = _.after(2, createApplication)
 			>>> delayInit()
 			>>> delayInit()
 			>>> delayInit()
 			created
 		"""
 		class _after(object):
-			def __init__(self, count, func):
-				self.count  = count
+			def __init__(self, after_count, after_func):
+				self.count  = after_count
 				self.called = 0
-				self.func   = func
+				self.func   = after_func
+
 			def __call__(self, *args, **keywords):
 				if self.called == self.count:
 					return self.func(*args, **keywords)
@@ -880,11 +900,12 @@ class underscore(object):
 			>>>
 		"""
 		class _before(object):
-			def __init__(self, count, func):
-				self.count  = count
+			def __init__(self, before_count, before_func):
+				self.count  = before_count
 				self.called = 0
 				self.retval = None
-				self.func   = func
+				self.func   = before_func
+
 			def __call__(self, *args, **keywords):
 				if self.called < self.count:
 					self.retval = self.func(*args, **keywords)
@@ -913,7 +934,7 @@ class underscore(object):
 			before, Hello: name, after
 		"""
 		def ff(*args, **keywords):
-			return(wrapper(function, *args, **keywords))
+			return wrapper(function, *args, **keywords)
 		return ff
 
 	@staticmethod
@@ -921,7 +942,7 @@ class underscore(object):
 		"""Returns a new negated version of the **predicate** function (invoked with the arguments).
 
 		Example:
-			>>> test = lambda x,y: x and y
+			>>> test = lambda x, y: x and y
 			>>> _.negate(test,False,True)
 			True
 			>>> _.negate(test,True,True)
@@ -943,8 +964,8 @@ class underscore(object):
 			>>>
 		"""
 		def ff(*args,**keywords):
-			nextarg = functions[-1](*args,**keywords)
-			for i in xrange(len(functions)-2,-1,-1):
+			nextarg = functions[-1](*args, **keywords)
+			for i in xrange(len(functions) - 2, -1, -1):
 				nextarg = functions[i](nextarg)
 			return nextarg
 		return ff
@@ -958,7 +979,7 @@ class underscore(object):
 		"""Retrieve all the names of the **object**'s own enumerable properties. Alias of the built-in Python method.
 
 		Example:
-			>>> _.keys({'one':1, 'two':2, 'three':3})
+			>>> _.keys({'one': 1, 'two': 2, 'three': 3})
 			['three', 'two', 'one']
 		"""
 		return object.keys()
@@ -968,7 +989,7 @@ class underscore(object):
 		"""Retrieve all the names of the object's own enumerable properties. Alias of the built-in Python method.
 
 		Example:
-			>>> _.values({'one':1, 'two':2, 'three':3})
+			>>> _.values({'one': 1, 'two': 2, 'three': 3})
 			[3,2,1]
 		"""
 		return object.values()
@@ -976,7 +997,7 @@ class underscore(object):
 	@staticmethod
 	def mapObject(obj, iteratee = None, context = None):
 		"""Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
-		If **itereatee** is not set or is ``None``, a copy of **obj** is returned.
+		If **iteratee** is not set or is ``None``, a copy of **obj** is returned.
 
 		Example:
 			>>> _.mapObject({'one': 1, 'two': 2, 'three': 3})
@@ -995,12 +1016,12 @@ class underscore(object):
 		"""Convert an **obj** into a list of ``[key, value]`` pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.
 
 		Example:
-			>>> _.pairs({'one':1, 'two':2, 'three':3})
+			>>> _.pairs({'one': 1, 'two': 2, 'three': 3})
 			[['three', 3], ['two', 2], ['one', 1]]
-			>>> _.pairs({'one':1, 'two':2, 'three':3}, tuple = True)
+			>>> _.pairs({'one': 1, 'two': 2, 'three': 3}, tuple = True)
 			[('three', 3), ('two', 2), ('one', 1)]
 		"""
-		return obj.items() if tuple else underscore.zip(obj.keys(),obj.values())
+		return obj.items() if tuple else underscore.zip(obj.keys(), obj.values())
 
 	@staticmethod
 	def invert(obj):
@@ -1010,7 +1031,7 @@ class underscore(object):
 			>>> _.invert({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"})
 			{'Louis': 'Larry', 'Moses': 'Moe', 'Jerome': 'Curly'}
 		"""
-		return {obj[key]:key for key in obj.iterkeys()}
+		return {obj[key]: key for key in obj.iterkeys()}
 
 	@staticmethod
 	def findKey(obj, predicate, context = None):
@@ -1031,7 +1052,7 @@ class underscore(object):
 		"""Copy all of the properties in the source objects of **sources** over to the **destination** object. It's in-order, so the last source will override properties of the same name in previous arguments.  Returns **destination** (for possible chaining).
 
 		Example:
-			>>> _.extend({'name': 'moe', age:'40'}, {'age': 50}, {'age':60, 'gender':'male'})
+			>>> _.extend({'name': 'moe', age: '40'}, {'age': 50}, {'age': 60, 'gender': 'male'})
 			{'gender': 'male', 'age': 60, 'name': 'moe'}
 		"""
 		for source in sources:
@@ -1044,7 +1065,7 @@ class underscore(object):
 		"""Like **extend**, but only copies *own* properties over to the destination object. Return **destination** (for possible chaining).
 
 		Example:
-			>>> _.extendOwn({'name': 'moe', age:'40'}, {'age': 50}, {'age':60, 'gender':'male'})
+			>>> _.extendOwn({'name': 'moe', age: '40'}, {'age': 50}, {'age': 60, 'gender': 'male'})
 			{'age': 60, 'name': 'moe'}
 		"""
 		for source in sources:
@@ -1070,9 +1091,9 @@ class underscore(object):
 		if len(keys) == 0:
 			return {}
 		elif hasattr(keys[0], '__call__'):
-			return {key:obj[key] for key in obj.keys() if keys[0](obj[key], key, obj)}
+			return {key: obj[key] for key in obj.keys() if keys[0](obj[key], key, obj)}
 		else:
-			return {key:obj[key] for key in obj.keys() if key in keys}
+			return {key: obj[key] for key in obj.keys() if key in keys}
 
 	@staticmethod
 	def omit(obj, *keys):
@@ -1091,9 +1112,9 @@ class underscore(object):
 		if len(keys) == 0:
 			return {}
 		elif hasattr(keys[0], '__call__'):
-			return {key:obj[key] for key in obj.keys() if not keys[0](obj[key], key, obj)}
+			return {key: obj[key] for key in obj.keys() if not keys[0](obj[key], key, obj)}
 		else :
-			return {key:obj[key] for key in obj.keys() if key not in keys}
+			return {key: obj[key] for key in obj.keys() if key not in keys}
 
 	@staticmethod
 	def defaults(obj, *defaults):
@@ -1115,11 +1136,10 @@ class underscore(object):
 		"""
 		Create a shallow-copied clone of the provided plain **obj**. Any nested objects or arrays will be copied by reference, not duplicated.
 		"""
-		return { k:obj[k] for k in obj.keys() }
-
+		return {k: obj[k] for k in obj.keys()}
 
 	@staticmethod
-	def has(obj,key):
+	def has(obj, key):
 		"""Return ``True`` if the object contain the given key, ``False`` otherwise. Alias to built in dictionary method"""
 		return key in obj
 
@@ -1152,7 +1172,7 @@ class underscore(object):
 		"""Returns a predicate function that will tell if a passed object contains all of the key/value properties present in **attrs**.
 
 		Example:
-			>>> _.filter(stooges, _.matcher({'age':60}))
+			>>> _.filter(stooges, _.matcher({'age': 60}))
 			[{'age': 60, 'name': 'curly'}]
 		"""
 		def func(obj):
@@ -1174,7 +1194,7 @@ class underscore(object):
 		return underscore.matcher(properties)(obj)
 
 	@staticmethod
-	def isEqual(obj,other):
+	def isEqual(obj, other):
 		"""Performs an optimized deep comparison between **obj** and **other**, returns ``True`` if they are equal, ``False`` otherwise."""
 		return obj == other
 
@@ -1195,7 +1215,7 @@ class underscore(object):
 
 	@staticmethod
 	def isObject(obj):
-		"""Return ``True`` if **obj** is an “Object” (i.e., Dictonary), ``False`` otherwise."""
+		"""Return ``True`` if **obj** is an “Object” (i.e., Dictionary), ``False`` otherwise."""
 		return type(obj) is DictType
 
 	@staticmethod
@@ -1261,7 +1281,7 @@ class underscore(object):
 			>>> stooge = {'name': 'moe' }
 			>>> const = _.constant(stooge)
 			>>> const()
-			{'name': 'moe' }
+			{'name': 'moe'}
 		"""
 		return lambda *args: value
 
@@ -1275,17 +1295,17 @@ class underscore(object):
 		"""
 		Invokes the given **iteratee** function **n** times. Each invocation of **iteratee** is called with an index argument. Produces an array of the returned values.
 		"""
-		return [underscore._exec1(iteratee, context, i) for i in xrange(0,n)]
+		return [underscore._exec1(iteratee, context, i) for i in xrange(0, n)]
 
 	@staticmethod
 	def random(min, max = None):
 		"""Returns a random integer between **min** and **max**, inclusive. If you only pass one argument, it will return a number between 0 and that number."""
-		return random.randint(0,min) if max is None else random.randint(min, max)
+		return random.randint(0, min) if max is None else random.randint(min, max)
 
 	@staticmethod
 	def uniqueId(prefix = None):
 		"""
-		Returns a globally-unique id as a string. If **prefix** is passed, the id will be appended to it. The method relies on the ``uuid.uuid1()``` library function, i.e., is based on the host ID and the current time.
+		Returns a globally-unique id as a string. If **prefix** is passed, the id will be appended to it. The method relies on the ``uuid.uuid1()`` library function, i.e., is based on the host ID and the current time.
 		"""
 		import uuid
 		return str(prefix) + str(uuid.uuid1()) if prefix is not None else str(uuid.uuid1())
@@ -1305,10 +1325,11 @@ class underscore(object):
 		self.current_value = val
 		self.chaining_on   = True
 
-	# This method catches **all** attribute dereferencing attempts. This means that any access to the local variables
+	# This method catches **all** attribute dereference attempts. This means that any access to the local variables
 	# must be done through the superclass and through the special attributes. A bit convoluted, but does the job...
 	def __getattribute__(self, name):
 		if name == "value":
+			# noinspection PyCallByClass
 			def func():
 				#
 				# i.e.:
@@ -1341,12 +1362,12 @@ class underscore(object):
 				return self
 			return func
 		else:
-			raise AttributeError("Chained value already retreived, no more chaining")
+			raise AttributeError("Chained value already retrieved, no more chaining")
 
 	@staticmethod
 	def chain(obj):
 		"""
-		Returns a wrapper object for chaining; see the separate description on chaining. The returned object has, beyond the static underscore methods, to instance methods:
+		Returns a wrapper object for chaining; see the separate description on chaining. The returned object has, beyond the static underscore methods, the additional instance methods:
 
 		**value()**
 		 	Extract the value of the wrapper object. A call to value means that no more chaining is possible.
@@ -1355,14 +1376,14 @@ class underscore(object):
 			Execute the function **func** on the value of the wrapped object; the object itself is returned, and can be used for further chaining. This can be used to 'tap into' the chain.
 
 		Examples:
-			>>> _.chain(stooges).sortBy('age').map(lambda st,*args: "%s is %s" % (st['name'],st['age'])).first().value()
+			>>> _.chain(stooges).sortBy('age').map(lambda st, *args: "%s is %s" % (st['name'], st['age'])).first().value()
 			moe is 40
 			>>> def pr(a):
 			...		print "intermediate: %s" % a
 			...
-			>>> _.chain([1,2,3,200]).filter(lambda num,*args: num % 2 == 0).map(lambda x,*args: x*x).value()
+			>>> _.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).map(lambda x, *args: x*x).value()
 			[4, 40000]
-			>>> _.chain([1,2,3,200]).filter(lambda num,*args: num % 2 == 0).tap(pr).map(lambda x,*args: x*x).value()
+			>>> _.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).tap(pr).map(lambda x, *args: x*x).value()
 			intermediate: [2, 200]
 			[4, 40000]
 		"""
