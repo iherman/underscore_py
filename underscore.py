@@ -996,7 +996,7 @@ class underscore(object):
 
 	@staticmethod
 	def mapObject(obj, iteratee = None, context = None):
-		"""Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+		"""Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``index`` (or ``key``) of the iteration, the ``value``, and finally a reference to the entire list.
 		If **iteratee** is not set or is ``None``, a copy of **obj** is returned.
 
 		Example:
