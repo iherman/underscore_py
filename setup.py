@@ -10,4 +10,9 @@ setup(name='underscore_py',
       url='https://github.com/iherman/underscore_py',
       license='https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document',
       py_modules=['underscore'],
+      classifiers =[
+        'Intended Audience :: Developers',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2'
+      ]
      )
