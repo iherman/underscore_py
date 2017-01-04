@@ -1017,7 +1017,7 @@ class underscore(object):
 			return underscore.clone(obj)
 		else:
 			transform = lambda key: underscore._exec3(iteratee, context, key, obj[key], obj)
-			return {k: transform(k) for k in obj.iterkeys()}
+			return {k: transform(k) for k in obj}
 
 	@staticmethod
 	def pairs(obj, tuple = False):
@@ -1039,7 +1039,7 @@ class underscore(object):
             >>> _.invert({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"})
             {'Louis': 'Larry', 'Moses': 'Moe', 'Jerome': 'Curly'}
         """
-		return {obj[key]: key for key in obj.iterkeys()}
+		return {obj[key] : key for key in obj}
 
 	@staticmethod
 	def findKey(obj, predicate, context = None):
@@ -1134,8 +1134,8 @@ class underscore(object):
             {'flavor': 'chocolate', 'sprinkles': 'lots'}
         """
 		for default in defaults:
-			for key in default.iterkeys():
-				if key not in obj:
+			for key in default:
+				if key not in obj :
 					obj[key] = default[key]
 		return obj
 
