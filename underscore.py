@@ -104,7 +104,7 @@ class underscore(object):
 		return i if i != len(a) and a[i] == x else -1
 
 	@staticmethod
-	def each(list, iteratee, context = None):
+	def each(lst, iteratee, context = None):
 		"""
         **Aliases**:
             :py:meth:`each`, :py:meth:`forEach`
@@ -128,17 +128,17 @@ class underscore(object):
            11
         """
 		if iteratee is None:
-			return list
-		elif isinstance(list, ListType):
-			for i in range(0, len(list)):
-				underscore._exec3(iteratee, context, list[i], i, list)
-			return list
-		elif isinstance(list, DictType):
-			for key in list:
-				underscore._exec3(iteratee, context, list[key], key, list)
-			return list
+			return lst
+		elif isinstance(lst, ListType):
+			for i in range(0, len(lst)):
+				underscore._exec3(iteratee, context, lst[i], i, lst)
+			return lst
+		elif isinstance(lst, DictType):
+			for key in lst:
+				underscore._exec3(iteratee, context, lst[key], key, lst)
+			return lst
 		else:
-			for value in list:
+			for value in lst:
 				underscore._exec3(iteratee, context, value, None, None)
 			return None
 
@@ -680,7 +680,10 @@ class underscore(object):
             >>> _.zip(('moe', 'larry', 'curly'), (30, 40, 50), (True, False, False))
             [('moe', 30, True), ('larry', 40, False), ('curly', 50, False)]
         """
-		zipped = zip(*arrays)
+		if PY3:
+			zipped = list(zip(*arrays))
+		else:
+			zipped = zip(*arrays)
 		if type(arrays[0]) is TupleType:
 			return zipped
 		else:
@@ -802,7 +805,7 @@ class underscore(object):
         * **start**, **end**: like before but starting at **start** instead of 0
         * **start**, **end**, **step**: like before, but stepping with **step** instead of 1. **step** can also be negative
 
-        This is just an alias to Python's built-in **range** function.
+        This is just an alias to Python's built-in **range** function. In Python3, this returns an iterator; in Python2 a list.
 
         Example:
             >>> _.range(10)
@@ -982,6 +985,8 @@ class underscore(object):
 	def keys(object):
 		"""Retrieve all the names of the **object**'s own enumerable properties. Alias of the built-in Python method.
 
+        In Python3 this returns an iterator; in Python2 a list.
+
         Example:
             >>> _.keys({'one': 1, 'two': 2, 'three': 3})
             ['three', 'two', 'one']
@@ -991,6 +996,8 @@ class underscore(object):
 	@staticmethod
 	def values(object):
 		"""Retrieve all the names of the object's own enumerable properties. Alias of the built-in Python method.
+
+        In Python3 this returns an iterator; in Python2 a list.
 
         Example:
             >>> _.values({'one': 1, 'two': 2, 'three': 3})
@@ -1019,13 +1026,19 @@ class underscore(object):
 	def pairs(obj, tuple = False):
 		"""Convert an **obj** into a list of ``[key, value]`` pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.
 
+        In Python3 this returns an iterator; in Python2 a list.
+
         Example:
             >>> _.pairs({'one': 1, 'two': 2, 'three': 3})
             [['three', 3], ['two', 2], ['one', 1]]
             >>> _.pairs({'one': 1, 'two': 2, 'three': 3}, tuple = True)
             [('three', 3), ('two', 2), ('one', 1)]
         """
-		return obj.items() if tuple else underscore.zip(obj.keys(), obj.values())
+
+		if PY3:
+			return obj.items() if tuple else underscore.zip(list(obj.keys()), lsit(obj.values()))
+		else:
+			return obj.items() if tuple else underscore.zip(obj.keys(), obj.values())
 
 	@staticmethod
 	def invert(obj):
