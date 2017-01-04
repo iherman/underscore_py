@@ -103,7 +103,6 @@ class underscore(object):
 		i = bisect.bisect_left(a, x)
 		return i if i != len(a) and a[i] == x else -1
 
-	# noinspection PyPep8,PyPep8
 	@staticmethod
 	def each(list, iteratee, context = None):
 		"""
@@ -143,7 +142,6 @@ class underscore(object):
 				underscore._exec3(iteratee, context, value, None, None)
 			return None
 
-	# noinspection PyPep8,PyPep8
 	@staticmethod
 	def map(lst, iteratee, context = None):
 		"""
@@ -168,11 +166,10 @@ class underscore(object):
 		elif isinstance(lst, ListType):
 			return [underscore._exec3(iteratee, context, lst[i], i, lst) for i in range(0, len(lst))]
 		elif isinstance(lst, DictType):
-			return [underscore._exec3(iteratee, context, lst[key], key, lst) for key in lst.keys()]
+			return [underscore._exec3(iteratee, context, lst[key], key, lst) for key in lst]
 		else:
 			return [underscore._exec3(iteratee, context, value, None, None) for value in lst]
 
-	# noinspection PyPep8,PyPep8
 	@staticmethod
 	def reduce(lst, iteratee, memo = None, context = None):
 		"""
@@ -190,11 +187,10 @@ class underscore(object):
 		if isinstance(lst, ListType):
 			return reduce(lambda m, i: underscore._exec4(iteratee, context, m, lst[i], i, lst), range(0, len(lst)), memo)
 		elif isinstance(lst, DictType):
-			return reduce(lambda m, key: underscore._exec4(iteratee, context, m, lst[key], key, lst), lst.keys(), memo)
+			return reduce(lambda m, key: underscore._exec4(iteratee, context, m, lst[key], key, lst), iter(lst), memo)
 		else:
 			return reduce(lambda value: underscore._exec3(iteratee, context, value, None, None), lst)
 
-	# noinspection PyPep8
 	@staticmethod
 	def find(lst, predicate, context = None):
 		"""
@@ -1099,9 +1095,9 @@ class underscore(object):
 		if len(keys) == 0:
 			return {}
 		elif hasattr(keys[0], '__call__'):
-			return {key: obj[key] for key in obj.keys() if keys[0](obj[key], key, obj)}
+			return {key: obj[key] for key in obj if keys[0](obj[key], key, obj)}
 		else:
-			return {key: obj[key] for key in obj.keys() if key in keys}
+			return {key: obj[key] for key in obj if key in keys}
 
 	@staticmethod
 	def omit(obj, *keys):
@@ -1120,9 +1116,9 @@ class underscore(object):
 		if len(keys) == 0:
 			return {}
 		elif hasattr(keys[0], '__call__'):
-			return {key: obj[key] for key in obj.keys() if not keys[0](obj[key], key, obj)}
+			return {key: obj[key] for key in obj if not keys[0](obj[key], key, obj)}
 		else :
-			return {key: obj[key] for key in obj.keys() if key not in keys}
+			return {key: obj[key] for key in obj if key not in keys}
 
 	@staticmethod
 	def defaults(obj, *defaults):
@@ -1144,7 +1140,7 @@ class underscore(object):
 		"""
         Create a shallow-copied clone of the provided plain **obj**. Any nested objects or arrays will be copied by reference, not duplicated.
         """
-		return {k: obj[k] for k in obj.keys()}
+		return {k: obj[k] for k in obj}
 
 	@staticmethod
 	def has(obj, key):
