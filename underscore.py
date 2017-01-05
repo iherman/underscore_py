@@ -6,8 +6,7 @@ import sys
 PY3 = sys.version_info.major > 2
 if PY3:
     basestring = str
-    ListType   = list
-    DictType   = dict
+
 
 from types import *
 import itertools
@@ -16,7 +15,7 @@ import math
 import bisect
 from functools import reduce
 
-__version__ = 2
+__version__ = 2.0
 
 # noinspection PyCallByClass,PyShadowingBuiltins,PyPep8,PyPep8,PyPep8
 class underscore(object):
@@ -92,7 +91,7 @@ class underscore(object):
 
 	@staticmethod
 	def _extends(obj, ext):
-		if isinstance(obj, DictType) and isinstance(ext, DictType):
+		if isinstance(obj, dict) and isinstance(ext, dict):
 			for key in ext:
 				if key not in obj or obj[key] != ext[key]:
 					return False
@@ -131,11 +130,11 @@ class underscore(object):
         """
 		if iteratee is None:
 			return lst
-		elif isinstance(lst, ListType):
+		elif isinstance(lst, list):
 			for i in range(0, len(lst)):
 				underscore._exec3(iteratee, context, lst[i], i, lst)
 			return lst
-		elif isinstance(lst, DictType):
+		elif isinstance(lst, dict):
 			for key in lst:
 				underscore._exec3(iteratee, context, lst[key], key, lst)
 			return lst
@@ -165,9 +164,9 @@ class underscore(object):
         """
 		if iteratee is None:
 			return lst
-		elif isinstance(lst, ListType):
+		elif isinstance(lst, list):
 			return [underscore._exec3(iteratee, context, lst[i], i, lst) for i in range(0, len(lst))]
-		elif isinstance(lst, DictType):
+		elif isinstance(lst, dict):
 			return [underscore._exec3(iteratee, context, lst[key], key, lst) for key in lst]
 		else:
 			return [underscore._exec3(iteratee, context, value, None, None) for value in lst]
@@ -186,9 +185,9 @@ class underscore(object):
             >>> _.reduce([1, 2, 3], lambda memo, num, *args: memo + num, 0)
             6
         """
-		if isinstance(lst, ListType):
+		if isinstance(lst, list):
 			return reduce(lambda m, i: underscore._exec4(iteratee, context, m, lst[i], i, lst), range(0, len(lst)), memo)
-		elif isinstance(lst, DictType):
+		elif isinstance(lst, dict):
 			return reduce(lambda m, key: underscore._exec4(iteratee, context, m, lst[key], key, lst), iter(lst), memo)
 		else:
 			return reduce(lambda value: underscore._exec3(iteratee, context, value, None, None), lst)
@@ -471,7 +470,7 @@ class underscore(object):
 				yes.append(x)
 			else:
 				no.append(x)
-		return (yes, no) if type(lst) is TupleType else [yes, no]
+		return (yes, no) if type(lst) is tuple else [yes, no]
 
 	###############################################################################
 	#                                Array Functions                              #
@@ -535,7 +534,7 @@ class underscore(object):
             >>> _.compact([0, 1, False, 2, '', 3])
             [1, 2, 3]
         """
-		falsy = lambda x: x is None or x is False or x == "" or x == 0 or (type(x) is FloatType and math.isnan(x))
+		falsy = lambda x: x is None or x is False or x == "" or x == 0 or (type(x) is float and math.isnan(x))
 		return [x for x in array if falsy(x) is not True]
 
 	@staticmethod
@@ -550,7 +549,7 @@ class underscore(object):
         """
 		retval = []
 		for x in array:
-			if type(x) is ListType:
+			if type(x) is list:
 				retval +=  x if shallow else underscore.flatten(x)
 			else:
 				retval.append(x)
@@ -679,7 +678,7 @@ class underscore(object):
 			zipped = list(zip(*arrays))
 		else:
 			zipped = zip(*arrays)
-		if type(arrays[0]) is TupleType:
+		if type(arrays[0]) is tuple:
 			return zipped
 		else:
 			return [list(x) for x in zipped]
@@ -712,10 +711,10 @@ class underscore(object):
 		# I could have relied on findIndex, but this is way simpler. Actually, I could have
 		# also used the built-in facility, but the lastIndexOf cannot be done that way, so
 		# I kept this for the sake of symmetry, but also to use bisect for large arrays
-		if type(isSorted) is BooleanType and isSorted:
+		if type(isSorted) is bool and isSorted:
 			return underscore._index_sorted(array, value)
 		else:
-			start = 0 if (type(isSorted) is BooleanType and isSorted is False) or type(isSorted) is not IntType else isSorted
+			start = 0 if (type(isSorted) is bool and isSorted is False) or type(isSorted) is not int else isSorted
 			for i in range(start, len(array)):
 				if array[i] == value:
 					return i
@@ -1218,17 +1217,17 @@ class underscore(object):
 	@staticmethod
 	def isArray(obj):
 		"""Return ``True`` if **obj** is an Array (i.e., List), ``False`` otherwise."""
-		return type(obj) is ListType
+		return type(obj) is list
 
 	@staticmethod
 	def isTuple(obj):
 		"""Return ``True`` if **obj** is an Tuple, ``False`` otherwise."""
-		return type(obj) is TupleType
+		return type(obj) is tuple
 
 	@staticmethod
 	def isObject(obj):
 		"""Return ``True`` if **obj** is an “Object” (i.e., Dictionary), ``False`` otherwise."""
-		return type(obj) is DictType
+		return type(obj) is dict
 
 	@staticmethod
 	def isFunction(obj):
@@ -1248,22 +1247,22 @@ class underscore(object):
 	@staticmethod
 	def isNumber(obj):
 		"""Return ``True`` if **obj** is a number (float or integer), ``False`` otherwise."""
-		return type(obj) is IntType or type(obj) is FloatType
+		return type(obj) is int or type(obj) is float
 
 	@staticmethod
 	def isFinite(obj):
 		"""Return ``True`` if **obj** is number with a finite value, ``False`` otherwise."""
-		return type(obj) is IntType or (type(obj) is FloatType and not math.isinf(obj))
+		return type(obj) is int or (type(obj) is float and not math.isinf(obj))
 
 	@staticmethod
 	def isNaN(obj):
 		"""Return ``True`` if **obj** is a float with ``NaN`` as value, ``False`` otherwise."""
-		return type(obj) is FloatType and math.isnan(obj)
+		return type(obj) is float and math.isnan(obj)
 
 	@staticmethod
 	def isBoolean(obj):
 		"""Return ``True`` if **obj** is a Boolean, ``False`` otherwise."""
-		return type(obj) is BooleanType
+		return type(obj) is bool
 
 	@staticmethod
 	def isError(obj):
