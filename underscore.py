@@ -985,7 +985,7 @@ class underscore(object):
             >>> _.keys({'one': 1, 'two': 2, 'three': 3})
             ['three', 'two', 'one']
         """
-		return object.keys()
+		return list(object.keys()) if PY3 else object.keys()
 
 	@staticmethod
 	def values(object):
@@ -997,7 +997,7 @@ class underscore(object):
             >>> _.values({'one': 1, 'two': 2, 'three': 3})
             [3,2,1]
         """
-		return object.values()
+		return list(object.values()) if PY3 else object.values()
 
 	@staticmethod
 	def mapObject(obj, iteratee = None, context = None):
@@ -1017,7 +1017,7 @@ class underscore(object):
 			return {k: transform(k) for k in obj}
 
 	@staticmethod
-	def pairs(obj, tuple = False):
+	def pairs(obj, tupl = False):
 		"""Convert an **obj** into a list of ``[key, value]`` pairs. If the value of **tuple** is set to ``True``, an array of tuples is returned, instead of an array of (binary) arrays.
 
         In Python3 this returns an iterator; in Python2 a list.
@@ -1025,14 +1025,13 @@ class underscore(object):
         Example:
             >>> _.pairs({'one': 1, 'two': 2, 'three': 3})
             [['three', 3], ['two', 2], ['one', 1]]
-            >>> _.pairs({'one': 1, 'two': 2, 'three': 3}, tuple = True)
+            >>> _.pairs({'one': 1, 'two': 2, 'three': 3}, tupl = True)
             [('three', 3), ('two', 2), ('one', 1)]
         """
-
 		if PY3:
-			return obj.items() if tuple else underscore.zip(list(obj.keys()), lsit(obj.values()))
+			return obj.items() if tupl else underscore.zip(list(obj.keys()), list(obj.values()))
 		else:
-			return obj.items() if tuple else underscore.zip(obj.keys(), obj.values())
+			return obj.items() if tupl else underscore.zip(obj.keys(), obj.values())
 
 	@staticmethod
 	def invert(obj):
