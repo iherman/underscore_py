@@ -6,6 +6,8 @@ import sys
 PY3 = sys.version_info.major > 2
 if PY3:
     basestring = str
+    ListType   = list
+    DictType   = dict
 
 from types import *
 import itertools
@@ -14,7 +16,7 @@ import math
 import bisect
 from functools import reduce
 
-__version__ = 1.1
+__version__ = 2
 
 # noinspection PyCallByClass,PyShadowingBuiltins,PyPep8,PyPep8,PyPep8
 class underscore(object):
@@ -363,9 +365,11 @@ class underscore(object):
 	@staticmethod
 	def _group(lst, iteratee, context):
 		if isinstance(iteratee, basestring):
-			return itertools.groupby(lst, lambda x: x[iteratee])
+			func = lambda x: x[iteratee]
 		else:
-			return itertools.groupby(lst, lambda x: underscore._exec1(iteratee, context, x))
+			func = lambda x: underscore._exec1(iteratee, context, x)
+		grouped = itertools.groupby(lst, func)
+		return underscore.map(grouped, lambda g, i, l: (g[0], [x for x in g[1]]))
 
 	@staticmethod
 	def groupBy(list, iteratee, context = None):
@@ -375,28 +379,22 @@ class underscore(object):
         Example:
             >>> _.groupBy([1.3, 2.1, 2.4], lambda num: math.floor(num))
             {1.0: [1.3], 2.0: [2.1, 2.4]}
-            >>> st2= [{'name': 'joe', 'age': 40}, {'name': 'tom', 'age': 50}, {'name': 'bill', 'age': 50}]
+            >>> st2 = [{'name': 'joe', 'age': 40}, {'name': 'tom', 'age': 50}, {'name': 'bill', 'age': 50}]
             >>> _.groupBy(st2, 'age')
             {40: [{'age': 40, 'name': 'joe'}], 50: [{'age': 50, 'name': 'tom'}, {'age': 50, 'name': 'bill'}]}
         """
-		retval = {}
-		for group in underscore._group(list, iteratee, context):
-			retval[group[0]] = [x for x in group[1]]
-		return retval
+		return dict(underscore._group(list, iteratee, context))
 
 	@staticmethod
 	def indexBy(lst, iteratee, context = None):
 		"""
-        Given a **list**, and an **iteratee** function that returns a key for each element in the list (or a property name), returns an object with an index of each item. Just like :py:meth:`groupBy`, but for when you know your keys are unique.
+        Given a **list**, and an **iteratee** function that returns a key for each element in the list (or a property name), returns an object with an index of each item. Just like :py:meth:`groupBy`, but when you know your keys are unique.
 
         Example:
             >>> _.indexBy(stooges, 'age')
             {40: {'age': 40, 'name': 'moe'}, 50: {'age': 50, 'name': 'larry'}, 60: {'age': 60, 'name': 'curly'}}
         """
-		retval = {}
-		for group in underscore._group(lst, iteratee, context):
-			retval[group[0]] = group[1].next()
-		return retval
+		return {g[0] : g[1][0] for g in underscore._group(lst, iteratee, context)}
 
 	@staticmethod
 	def countBy(lst, iteratee, context = None):
@@ -407,10 +405,7 @@ class underscore(object):
             >>> _.countBy([1, 2, 3, 4, 5], lambda num: 'even' if num % 2 == 0 else 'odd')
             {'even': 1, 'odd': 1}
         """
-		retval = {}
-		for group in underscore._group(lst, iteratee, context):
-			retval[group[0]] = len([x for x in group[1]])
-		return retval
+		return { g[0] : len(g[1]) for g in underscore._group(lst, iteratee, context) }
 
 	@staticmethod
 	def shuffle(lst):
