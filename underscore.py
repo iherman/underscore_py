@@ -118,7 +118,7 @@ class underscore(object):
 
         Example:
             >>> def pr(element, index, list):
-            ...	    print element
+            ...	    print(element)
             >>> _.each([1, 2, 3], pr)
             1
             2
@@ -438,7 +438,7 @@ class underscore(object):
         Creates a real array from the **lst** (anything that can be iterated over). Useful for transmuting the arguments object. An alias to the built-in **list** function.
 
         Example:
-            >>> _.toArray(xrange(0,4))
+            >>> _.toArray(range(0,4))
             [0, 1, 2, 3]
         """
 		return list(lst)
@@ -1389,7 +1389,7 @@ class underscore(object):
             >>> _.chain(stooges).sortBy('age').map(lambda st, *args: "%s is %s" % (st['name'], st['age'])).first().value()
             moe is 40
             >>> def pr(a):
-            ...        print "intermediate: %s" % a
+            ...        print("intermediate: %s" % a)
             ...
             >>> _.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).map(lambda x, *args: x*x).value()
             [4, 40000]
