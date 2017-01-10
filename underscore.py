@@ -14,6 +14,7 @@ import random
 import math
 import bisect
 from functools import reduce
+from collections import Iterable
 
 __version__ = 2.0
 
@@ -110,10 +111,13 @@ class underscore(object):
         **Aliases**:
             :py:meth:`each`, :py:meth:`forEach`
 
-        Iterates over a **list** of elements, yielding each in turn to an **iteratee** function. Each invocation of **iteratee** is called with three arguments: if **list** is of list type, then the arguments are ``(element, index, list)``; if it is of dictionary type
-        the arguments are ``(value, key, list``). Returns **list** for possible chaining.
+        Iterates over a **lst** of elements, yielding each in turn to an **iteratee** function.
+        Each invocation of **iteratee** is called with three arguments: if **lst** is of list type,
+        then the arguments are ``(element, index, list)``; if it is of dictionary type
+        the arguments are ``(value, key, list``). Returns **lst** for possible chaining.
 
-        The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked with ``None`` for the second and third
+        The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked
+        with ``None`` for the second and third
         argument. In that case the return value of the method is also ``None``; i.e., no chaining is possible.
 
         Example:
@@ -144,15 +148,17 @@ class underscore(object):
 			return None
 
 	@staticmethod
-	def map(lst, iteratee, context = None):
+	def map(lst, iteratee = None, context = None):
 		"""
         **Aliases**:
             :py:meth:`map`, :py:meth:`collect`
 
-        Produces a *new* array of values by mapping each value in **list** through a transformation function (**iteratee**). Similarly to :py:meth:`each`, the **iteratee** is passed three arguments: the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+        Produces a *new* array of values by mapping each value in **lst** through a transformation
+        function (**iteratee**). Similarly to :py:meth:`each`, the **iteratee** is passed three arguments:
+        the ``value``, then the ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
 
-        The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked with ``None`` for the second and third
-        argument.
+        The method also works for an arbitrary iterator; however, in that case the **iteratee** is invoked
+        with ``None`` for the second and third argument.
 
         Example:
             >>> _.map([1, 2, 3], lambda num, index, list: num * 3)
@@ -177,20 +183,45 @@ class underscore(object):
         **Aliases**:
             :py:meth:`reduce`, :py:meth:`inject`
 
-        Reduce boils down a **list** of values into a single value that is returned. **memo** is the initial state of the reduction, and each successive step of it should be returned by **iteratee**. The **iteratee** is passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index`` (or ``key``) of the iteration, and finally a reference to the entire list.
+        Reduce boils down a **lst** of values into a single value that is returned. **memo** is the initial state
+        of the reduction, and each successive step of it should be returned by **iteratee**. The **iteratee** is
+        passed four arguments: ``memo`` (ie, the current state of reduction), then the ``value`` and ``index``
+        (or ``key``) of the iteration, and finally a reference to the entire list.
 
-        If no memo is passed to the initial invocation of reduce, **iteratee** is not invoked on the first element of the list. The first element is instead passed as the ``memo`` in the invocation of the **iteratee** on the next element in the list.
+        If no memo is passed to the initial invocation of reduce, **iteratee** is not invoked on the first element
+        of the list. The first element is instead passed as the ``memo`` in the invocation of the **iteratee** on
+        the next element in the list. In the case of a dictionary this means the first element of the keys, which is n
+        ot deterministic (unless an ordered dictionary is used)
 
         Example:
-            >>> _.reduce([1, 2, 3], lambda memo, num, *args: memo + num, 0)
+            >>> _.reduce([1, 2, 3], lambda memo, num, *args: memo + num, 1)
+            7
+            >>> _.reduce([1, 2, 3], lambda memo, num, *args: memo + num)
             6
+            >>> _.reduce({'one':1,'two':2,'three':3,'four':4},lambda memo, value, *args: memo*value, 2)
+            48
+            >>> _.reduce({'one':1,'two':2,'three':3,'four':4},lambda memo, value, *args: memo*value)
+            24
         """
 		if isinstance(lst, list):
-			return reduce(lambda m, i: underscore._exec4(iteratee, context, m, lst[i], i, lst), range(0, len(lst)), memo)
+			if memo is None:
+				if len(lst) == 0:
+					raise IndexError("empty list with no initial value")
+				else :
+					return reduce(lambda m, i: underscore._exec4(iteratee, context, m, lst[i], i, lst), range(1, len(lst)), lst[0])
+			else:
+				return reduce(lambda m, i: underscore._exec4(iteratee, context, m, lst[i], i, lst), range(0, len(lst)), memo)
 		elif isinstance(lst, dict):
-			return reduce(lambda m, key: underscore._exec4(iteratee, context, m, lst[key], key, lst), iter(lst), memo)
+			if memo is None:
+				if len(lst) == 0:
+					raise IndexError("empty dict with no initial value")
+				else:
+					keys = list(lst.keys()) if PY3 else lst.keys()
+					return reduce(lambda m, key : underscore._exec4(iteratee, context, m, lst[key], key, lst), keys[1:], lst[keys[0]])
+			else:
+				return reduce(lambda m, key: underscore._exec4(iteratee, context, m, lst[key], key, lst), iter(lst), memo)
 		else:
-			return reduce(lambda value: underscore._exec3(iteratee, context, value, None, None), lst)
+			return TypeError("should be a list or a dict")
 
 	@staticmethod
 	def find(lst, predicate, context = None):
@@ -198,16 +229,21 @@ class underscore(object):
         **Aliases**:
             :py:meth:`find`, :py:meth:`detect`
 
-        Looks through each value in the **list**, returning the first one that passes a truth test (**predicate**), or ``None`` if no value passes the test. The function returns as soon as it finds an acceptable element, and doesn't traverse the entire list.
+        Looks through each value in the **lst**, returning the first one that passes a truth test (**predicate**),
+        or ``None`` if no value passes the test. The function returns as soon as it finds an acceptable
+        element, and doesn't traverse the entire list.
 
         Example:
             >>> _.find([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)
             2
         """
-		for x in lst:
-			if underscore._exec1(predicate, context, x):
-				return x
-		return None
+		if isinstance(lst, Iterable):
+			for x in lst:
+				if underscore._exec1(predicate, context, x):
+					return x
+			return None
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def filter(lst, predicate, context = None):
@@ -215,63 +251,81 @@ class underscore(object):
         **Aliases**:
             :py:meth:`filter`, :py:meth:`select`
 
-        Looks through each value in the **list**, returning an array of all the values that pass a truth test (**predicate**).
+        Looks through each value in the **lst**, returning an array of all the values that pass a
+        truth test (**predicate**).
 
         Example:
             >>> _.filter([1, 2, 3, 4, 5, 6], lambda num, *args: num % 2 == 0)
             [2, 4, 6]
         """
-		return [x for x in lst if underscore._exec1(predicate, context, x)]
+		if isinstance(lst, Iterable):
+			return [x for x in lst if underscore._exec1(predicate, context, x)]
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def where(lst, properties):
 		"""
-        Looks through each value in the **list**, returning an array of all the values that contain all of the key-value pairs listed in **properties**.
+        Looks through each value in the **lst**, returning an array of all the values that contain all of
+        the key-value pairs listed in **properties**.
 
         Example:
             >>> _.where(listOfPlays, {'author': "Shakespeare", 'year': 1611})
             [{'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'}, {'title': 'Cymbeline', 'year': 1611, 'author': 'Shakespeare'}]
         """
-		return [x for x in lst if underscore._extends(x, properties)]
+		if isinstance(lst, Iterable):
+			return [x for x in lst if underscore._extends(x, properties)]
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def findWhere(lst, properties):
 		"""
-        Looks through the **list** and returns the *first* value that matches all of the key-value pairs listed in **properties**.
+        Looks through the **lst** and returns the *first* value that matches all of the key-value pairs
+        listed in **properties**.
 
         Example:
             >>> _.findWhere(listOfPlays, {'author': "Shakespeare", 'year': 1611})
             {'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'}
         """
-		for x in lst:
-			if underscore._extends(x, properties):
-				return x
-		return None
+		if isinstance(lst, Iterable):
+			for x in lst:
+				if underscore._extends(x, properties):
+					return x
+			return None
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def reject(lst, predicate, context = None):
 		"""
-        Returns the values in **list** without the elements that the truth test (**predicate**) passes. The opposite of :py:meth:`filter`.
+        Returns the values in **lst** without the elements that the truth test (**predicate**) passes. The opposite of :py:meth:`filter`.
 
         Example:
             >>> _.reject([1, 2, 3, 4, 5, 6], lambda num: num % 2 == 0)
             [1, 3, 5]
         """
-		return [x for x in lst if not underscore._exec1(predicate, context, x)]
+		if isinstance(lst, Iterable):
+			return [x for x in lst if not underscore._exec1(predicate, context, x)]
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def every(lst, predicate = lambda x: x, context = None):
 		"""
-        Returns true if all of the values in the **list** pass the **predicate** truth test. The default predicate is the identity.
+        Returns true if all of the values in the **lst** pass the **predicate** truth test. The default predicate is the identity.
 
         Example:
             >>> _.every([True, 1, None, 'yes'], _.identity)
             False
         """
-		for x in lst:
-			if not underscore._exec1(predicate, context, x):
-				return False
-		return True
+		if isinstance(lst, Iterable):
+			for x in lst:
+				if not underscore._exec1(predicate, context, x):
+					return False
+			return True
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def some(lst, predicate = lambda x: x, context = None):
@@ -279,16 +333,21 @@ class underscore(object):
         **Aliases**:
             :py:meth:`some`, :py:meth:`any`
 
-        Returns ``True`` if any of the values in the **list** pass the predicate truth test. Short-circuits and stops traversing the list if a true element is found.  The default predicate is the identity.
+        Returns ``True`` if any of the values in the **lst** pass the predicate truth test.
+        Short-circuits and stops traversing the list if a true element is found.
+        The default predicate is the identity.
 
         Example:
             >>> _.some([None, 0, True, False])
             True
         """
-		for x in lst:
-			if underscore._exec1(predicate, context, x):
-				return True
-		return False
+		if isinstance(lst, Iterable):
+			for x in lst:
+				if underscore._exec1(predicate, context, x):
+					return True
+			return False
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def contains(lst, value):
@@ -303,7 +362,8 @@ class underscore(object):
 	@staticmethod
 	def pluck(lst, propertyName):
 		"""
-        A convenient version of what is perhaps the most common use-case for :py:meth:`map`: extracting a list of property values from an array of dictionaries.
+        A convenient version of what is perhaps the most common use-case for :py:meth:`map`:
+        extracting a list of property values from an array of dictionaries.
 
         Example:
             >>> _.pluck(stooges, 'name')
@@ -312,41 +372,64 @@ class underscore(object):
 		return [l[propertyName] for l in lst]
 
 	@staticmethod
-	def max(list, iteratee = None, context = None):
+	def max(lst, iteratee = None, context = None):
 		"""
-        Returns the maximum value in **list**. If an **iteratee** function is provided, it will be used on each value to generate the criterion by which the value is ranked. ``float("inf")`` is returned if list is empty.
+        Returns the maximum value in **lst**. If an **iteratee** function is provided,
+        it will be used on each value to generate the criterion by which the value is ranked.
+        ``float("inf")`` is returned if list is empty.
 
         Example:
-            >>> _.max(stooges, lambda stooge: stooge['age'])
-            {'age': 60, 'name': 'curly'}
-        """
-		if list is None or len(list) == 0:
-			return float("inf")
-		if iteratee is None:
-			return max(list)
+           >>>> _.max([1,2,3,4])"
+            4
+            >>>> _.max([1,2,3,4], lambda x: -x)
+            1
+            >>>> _.max([])
+            inf
+            >>>> .max(stooges, lambda stooge: stooge['age'])
+           {'name': 'moe', 'age': 40}
+         """
+		if isinstance(lst, Iterable):
+			if lst is None or len(lst) == 0:
+				return float("inf")
+			if iteratee is None:
+				return max(lst)
+			else:
+				return max(lst, key=lambda x: underscore._exec1(iteratee, context, x))
 		else:
-			return max(list, key=lambda x: underscore._exec1(iteratee, context, x))
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def min(lst, iteratee = None, context = None):
 		"""
-        Returns the min value in **list**. If an **iteratee** function is provided, it will be used on each value to generate the criterion by which the value is ranked. ``float("-inf")`` is returned if list is empty, so an guard may be required.
+        Returns the min value in **lst**. If an **iteratee** function is provided,
+        it will be used on each value to generate the criterion by which the value
+        is ranked. ``float("-inf")`` is returned if list is empty, so an guard may be required.
 
         Example:
-            >>> _.max(stooges, lambda stooge: stooge['age'])
-            {'age': 40, 'name': 'moe'}
+            >>>> _.min([1,2,3,4])"
+            1
+            >>>> _.min([1,2,3,4], lambda x: -x)
+            4
+            >>>> _.min([])
+            -inf
+            >>>> .min(stooges, lambda stooge: stooge['age'])
+           {'name': 'curly', 'age': 60}
         """
-		if lst is None or len(lst) == 0:
-			return float("-inf")
-		if iteratee is None:
-			return min(lst)
+		if isinstance(lst, Iterable):
+			if lst is None or len(lst) == 0:
+				return float("-inf")
+			if iteratee is None:
+				return min(lst)
+			else:
+				return min(lst, key=lambda x: underscore._exec1(iteratee, context, x))
 		else:
-			return min(lst, key=lambda x: underscore._exec1(iteratee, context, x))
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def sortBy(lst, iteratee = None, context = None):
 		"""
-        Returns a sorted copy of **list**, ranked in ascending order by the results of running each value through **iteratee**. **iteratee** may also be the string name of the property.
+        Returns a sorted copy of **lst**, ranked in ascending order by the results of running each
+        value through **iteratee**. **iteratee** may also be the string name of the property.
 
         Example:
             >>> _.sortBy([1, 2, 3, 4, 5, 6], lambda num: math.sin(num))
@@ -367,13 +450,23 @@ class underscore(object):
 			func = lambda x: x[iteratee]
 		else:
 			func = lambda x: underscore._exec1(iteratee, context, x)
-		grouped = itertools.groupby(lst, func)
-		return underscore.map(grouped, lambda g, i, l: (g[0], [x for x in g[1]]))
+
+		retval = {}
+		for x in lst:
+			key = func(x)
+			if key in retval:
+				retval[key].append(x)
+			else:
+				retval[key] = [x]
+		return retval
+
 
 	@staticmethod
-	def groupBy(list, iteratee, context = None):
+	def groupBy(lst, iteratee, context = None):
 		"""
-        Splits a **list** into sets, grouped by the result of running each value through **iteratee**. If **iteratee** is a string instead of a function, groups by the property named by iteratee on each of the values.
+        Splits a **lst** into sets, grouped by the result of running each value through **iteratee**.
+        If **iteratee** is a string instead of a function, groups by the property named by
+        iteratee on each of the values.
 
         Example:
             >>> _.groupBy([1.3, 2.1, 2.4], lambda num: math.floor(num))
@@ -382,47 +475,63 @@ class underscore(object):
             >>> _.groupBy(st2, 'age')
             {40: [{'age': 40, 'name': 'joe'}], 50: [{'age': 50, 'name': 'tom'}, {'age': 50, 'name': 'bill'}]}
         """
-		return dict(underscore._group(list, iteratee, context))
+		if isinstance(lst, Iterable):
+			return underscore._group(lst, iteratee, context)
+		else:
+			raise TypeError("lst must be iterable")
 
 	@staticmethod
 	def indexBy(lst, iteratee, context = None):
 		"""
-        Given a **list**, and an **iteratee** function that returns a key for each element in the list (or a property name), returns an object with an index of each item. Just like :py:meth:`groupBy`, but when you know your keys are unique.
+        Given a **lst**, and an **iteratee** function that returns a key for each element in the
+        list (or a property name), returns an object with an index of each item. Just
+        like :py:meth:`groupBy`, but when you know your keys are unique.
 
         Example:
             >>> _.indexBy(stooges, 'age')
             {40: {'age': 40, 'name': 'moe'}, 50: {'age': 50, 'name': 'larry'}, 60: {'age': 60, 'name': 'curly'}}
         """
-		return {g[0] : g[1][0] for g in underscore._group(lst, iteratee, context)}
+		if isinstance(lst, Iterable):
+			grouped = underscore._group(lst, iteratee, context)
+			return {g:grouped[g][0]  for g in grouped}
+		else:
+			raise TypeError("lst must be iterable")
 
 	@staticmethod
 	def countBy(lst, iteratee, context = None):
 		"""
-        Sorts a **list** into groups and returns a count for the number of objects in each group. Similar to :py:meth:`groupBy`, but instead of returning a list of values, returns a count for the number of values in that group.
+        Sorts a **lst** into groups and returns a count for the number of objects in each group.
+        Similar to :py:meth:`groupBy`, but instead of returning a list of values, returns a count for the
+        number of values in that group.
 
         Example:
             >>> _.countBy([1, 2, 3, 4, 5], lambda num: 'even' if num % 2 == 0 else 'odd')
-            {'even': 1, 'odd': 1}
+            {'even': 2, 'odd': 3}
         """
-		return { g[0] : len(g[1]) for g in underscore._group(lst, iteratee, context) }
+		if isinstance(lst, Iterable):
+			grouped = underscore._group(lst, iteratee, context)
+			return {g: len(grouped[g]) for g in grouped}
+		else:
+			raise TypeError("lst must be iterable")
+
 
 	@staticmethod
 	def shuffle(lst):
 		"""
-        Returns a (randomly) shuffled copy of the **list**.
+        Returns a (randomly) shuffled copy of the **lst**.
 
         Example:
             >>> _.shuffle([1, 2, 3, 4, 5, 6])
             [6, 4, 5, 2, 1, 3]
         """
-		indeces = [i for i in range(0, len(lst))]
+		indeces = list(range(0, len(lst)))
 		random.shuffle(indeces)
 		return [lst[i] for i in indeces]
 
 	@staticmethod
 	def sample(lst, n = None):
 		"""
-        Produce a random sample from the **list**. Pass a number to return **n** random elements from the list. Otherwise a single random item will be returned.
+        Produce a random sample from the **lst**. Pass a number to return **n** random elements from the list. Otherwise a single random item will be returned.
 
         Example:
             >>> _.sample([1, 2, 3, 4, 5, 6])
@@ -435,42 +544,55 @@ class underscore(object):
 	@staticmethod
 	def toArray(lst):
 		"""
-        Creates a real array from the **lst** (anything that can be iterated over). Useful for transmuting the arguments object. An alias to the built-in **list** function.
+        Creates a real array from the **lst** (anything that can be iterated over).
+		Useful for transmuting the arguments object. An alias to the built-in **list** function.
 
         Example:
             >>> _.toArray(range(0,4))
             [0, 1, 2, 3]
         """
-		return list(lst)
+		if isinstance(lst, Iterable):
+			return list(lst)
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def size(lst):
 		"""
-        Return the number of values in the **list**. An alias to the built-in *len* function.
+        Return the number of values in the **lst**. An alias to the built-in *len* function.
 
         Example:
             >>> _.size({'one': 1, 'two': 2, 'three': 3})
             3
         """
-		return len(lst)
+		if isinstance(lst, Iterable):
+			return len(lst)
+		else:
+			raise TypeError("argument must be Iterable")
 
 	@staticmethod
 	def partition(lst, predicate, context = None):
 		"""
-        Split **list** into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy **predicate**. If **list** is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the 'yes' and 'no' order.
+        Split **lst** into two arrays: one with elements that satisfy predicate and one with elements that do not satisfy **predicate**. If **lst** is actually a tuple, then a tuple is returned, otherwise an array, each containing the two generated arrays in the 'yes' and 'no' order.
 
         Example:
             >>> _.partition([0, 1, 2, 3, 4, 5], lambda num: num % 2 != 0)
             [[1, 3, 5], [0, 2, 4]]
+			>>> _.partition((0, 1, 2, 3, 4, 5), lambda num: num % 2 != 0)
+            ((1, 3, 5), (0, 2, 4))
         """
 		yes = []
 		no  = []
-		for x in lst:
-			if underscore._exec1(predicate, context, x) is True:
-				yes.append(x)
-			else:
-				no.append(x)
-		return (yes, no) if type(lst) is tuple else [yes, no]
+		if isinstance(lst, Iterable):
+			for x in lst:
+				if underscore._exec1(predicate, context, x) is True:
+					yes.append(x)
+				else:
+					no.append(x)
+			return (tuple(yes), tuple(no)) if type(lst) is tuple else [yes, no]
+		else:
+			raise TypeError("argument must be Iterable")
+
 
 	###############################################################################
 	#                                Array Functions                              #
@@ -1415,4 +1537,5 @@ class underscore(object):
 
 
 if __name__ == '__main__':
-	pass
+	print(underscore.countBy([1, 2, 3, 4, 5], lambda num: 'even' if num % 2 == 0 else 'odd'))
+	#print(reduce(f,[1,2,3]))
