@@ -9,6 +9,21 @@ from underscore import underscore as _
 import math
 from collections import OrderedDict
 
+def isPrime(n):
+    """"pre-condition: n is a nonnegative integer
+    post-condition: return True if n is prime and False otherwise."""
+    if n < 2:
+         return False;
+    if n % 2 == 0:
+         return n == 2  # return False
+    k = 3
+    while k*k <= n:
+         if n % k == 0:
+             return False
+         k += 2
+    return True
+
+
 listOfPlays = [
 	{
 		"author" : "Shakespeare",
@@ -28,6 +43,7 @@ listOfPlays = [
 ]
 stooges = [{'name': 'moe', 'age': 40}, {'name': 'larry', 'age': 50}, {'name': 'curly', 'age': 60}, {'name':'joe', 'age':60}]
 stooges0 = [{'name': 'moe', 'age': 40}, {'name': 'larry', 'age': 50}, {'name': 'curly', 'age': 60}]
+stooges2 = [{'name': 'moe', 'age': 40}, {'name': 'curly', 'age': 60}]
 
 
 class OneTest:
@@ -52,12 +68,6 @@ class OneTest:
 			eval(self.toEval)
 		else:
 			print("  >>> " + str(eval(self.toEval)))
-
-
-
-
-
-
 
 _tests = [
 	(
@@ -377,6 +387,372 @@ _tests = [
 			),
 		]
 	),
+	(
+		"first",
+		[
+			OneTest(
+					"first element",
+					"5",
+					[],
+					"_.first([5, 4, 3, 2, 1])"
+			),
+			OneTest(
+					"first three elements",
+					"[5, 4, 3]",
+					[],
+					"_.first([5, 4, 3, 2, 1],3)"
+			),
+		]
+	),
+	(
+		"initial",
+		[
+			OneTest(
+					"initial part of array",
+					"[5, 4, 3, 2]",
+					[],
+					"_.initial([5, 4, 3, 2, 1])"
+			),
+			OneTest(
+					"initial with three elements removed",
+					"[5, 4]",
+					[],
+					"_.initial([5, 4, 3, 2, 1],3)"
+			),
+		]
+	),
+	(
+		"last",
+		[
+			OneTest(
+					"last element of array",
+					"1",
+					[],
+					"_.last([5, 4, 3, 2, 1])"
+			),
+			OneTest(
+					"last three elements of array",
+					"[3, 2, 1]",
+					[],
+					"_.last([5, 4, 3, 2, 1],3)"
+			),
+		]
+	),
+	(
+		"rest",
+		[
+			OneTest(
+					"rest of array",
+					"[4, 3, 2, 1]",
+					[],
+					"_.rest([5, 4, 3, 2, 1])"
+			),
+			OneTest(
+					"rest of array starting by index '3'",
+					"[2, 1]",
+					[],
+					"_.rest([5, 4, 3, 2, 1],3)"
+			),
+		]
+	),
+	(
+		"compact",
+		[
+			OneTest(
+					"remove 'falsy' values",
+					"[1, 2, 3, 4, 5]",
+					[],
+					"_.compact([0, 1, False, 2, '', 3, None, 4, float('nan'), 5])"
+			),
+		]
+	),
+	(
+		"flatten",
+		[
+			OneTest(
+					"'deep' flatten",
+					"[1, 2, 3, 4]",
+					[],
+					"_.flatten([1, [2], [3, [[4]]]])"
+			),
+			OneTest(
+					"'shallow' flatten",
+					"[1, 2, 3, 4]",
+					[],
+					"_.flatten([1, [2], [3, [[4]]]], shallow = True)"
+			),
+		]
+	),
+	(
+		"without",
+		[
+			OneTest(
+					"array with two elements removed",
+					"[1, 2, 3, 4]",
+					[],
+					"_.without([1, 2, 1, 0, 3, 1, 4], 0, 1)"
+			),
+		]
+	),
+	(
+		"union",
+		[
+			OneTest(
+					"Union of arrays",
+					"[1, 2, 3, 101, 10]",
+					[],
+					"_.union([1, 2, 3], [101, 2, 1, 10], [2, 1])"
+			),
+		]
+	),
+	(
+		"intersection",
+		[
+			OneTest(
+					"Intersection of arrays",
+					"[1, 2]",
+					[],
+					"_.intersection([1, 2, 3], [101, 2, 1, 10], [2, 1])"
+			),
+			OneTest(
+					"Intersection of arrays 2nd.",
+					"[2]",
+					[],
+					"_.intersection([1, 2, 3], [101, 2, 1, 10], [2])"
+			),
+		]
+	),
+	(
+		"difference",
+		[
+			OneTest(
+					"Difference of arrays",
+					"[1, 3, 4]",
+					[],
+					"_.difference([1, 2, 3, 4, 5], [5, 2, 10])"
+			),
+			OneTest(
+					"Difference of arrays",
+					"[3, 4]",
+					[],
+					"_.difference([1, 2, 3, 4, 5], [5, 2, 10], [1])"
+			),
+		]
+	),
+	(
+		"uniq",
+		[
+			OneTest(
+					"Duplicate free version of array",
+					"[1, 2, 3, 4]",
+					[],
+					"_.uniq([1, 2, 1, 3, 1, 4, 2])"
+			),
+			OneTest(
+					"Duplicate free version of sorted array",
+					"[1, 2, 3, 4, 5]",
+					[],
+					"_.uniq([1, 1, 1, 2, 3, 4, 4, 5], isSorted = True)"
+			),
+			OneTest(
+					"Uniq version of transformed array",
+					"[1.5, 2.0, 3.0, 4.0]",
+					[],
+					"_.uniq([1.5, 1.7, 2.0, 2.5, 2.5, 3.0, 4.0], iteratee = math.floor)"
+			),
+		]
+	),
+	(
+		"zip",
+		[
+			OneTest(
+					"Zip arrays",
+					"[['moe', 30, True], ['larry', 40, False], ['curly', 50, False]]",
+					[],
+					"_.zip(['moe', 'larry', 'curly'], [30, 40, 50], [True, False, False])"
+			),
+			OneTest(
+					"Zip tuples",
+					"[('moe', 30, True), ('larry', 40, False), ('curly', 50, False)]",
+					[],
+					"_.zip(('moe', 'larry', 'curly'), (30, 40, 50), (True, False, False))"
+			),
+		]
+	),
+	(
+		"object",
+		[
+			OneTest(
+					"Object created with pairs in arrays",
+					"{'larry': 40, 'curly': 50, 'moe': 30}",
+					[],
+					"_.object([['moe', 30], ['larry', 40], ['curly', 50]])"
+			),
+			OneTest(
+					"Object created with pairs in arrays",
+					"{'larry': 40, 'curly': 50, 'moe': 30}",
+					[],
+					"_.object([('moe', 30), ('larry', 40), ('curly', 50)])"
+			),
+			OneTest(
+					"Object created with separate arrays",
+					"{'larry': 40, 'curly': 50, 'moe': 30}",
+					[],
+					"_.object(['moe', 'larry', 'curly'], [30, 40, 50])"
+			),
+		]
+	),
+	(
+		"indexOf",
+		[
+			OneTest(
+					"Simple indexOf",
+					"1",
+					[],
+					"_.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2)"
+			),
+			OneTest(
+					"Simple indexOf using a start and end indeces",
+					"4",
+					[],
+					"_.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)"
+			),
+			OneTest(
+					"Simple indexOf with negative result",
+					"-1",
+					[],
+					"_.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 10)"
+			),
+		]
+	),
+	(
+		"lastIndexOf",
+		[
+			OneTest(
+					"Simple lastIndexOf",
+					"7",
+					[],
+					"_.lastIndexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2)"
+			),
+			OneTest(
+					"lastIndexOf using a start and end indeces",
+					"4",
+					[],
+					"_.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)"
+			),
+			OneTest(
+					"lastIndexOf with negative result",
+					"-1",
+					[],
+					"_.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 10)"
+			),
+		]
+	),
+	(
+		"sortedIndex",
+		[
+			OneTest(
+					"Simple sorted index",
+					"3",
+					[],
+					"_.sortedIndex([10, 20, 30, 40, 50], 35)"
+			),
+			OneTest(
+					"sorted index pointing to the last place in the array",
+					"5",
+					[],
+					"_.sortedIndex([10, 20, 30, 40, 50], 55)"
+			),
+			OneTest(
+					"sorted index with a simple iteratee",
+					"1",
+					[stooges2],
+					"_.sortedIndex(stooges2, {'name': 'larry', 'age': 50}, 'age')"
+			),
+		]
+	),
+	(
+		"findIndex",
+		[
+			OneTest(
+					"findIndex with negative results",
+					"-1",
+					[],
+					"_.findIndex([4, 6, 8, 12, 14, 16], isPrime)"
+			),
+			OneTest(
+					"findIndex with positive results",
+					"2",
+					[],
+					"_.findIndex([4, 6, 3, 12, 14, 16], isPrime)"
+			),
+			OneTest(
+					"findIndex with negative results on a subarray",
+					"-1",
+					[],
+					"_.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=3)"
+			),
+			OneTest(
+					"findIndex with positive results on a subarray",
+					"2",
+					[],
+					"_.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=1, endIndex=5)"
+			),
+		]
+	),
+	(
+		"findLastIndex",
+		[
+			OneTest(
+					"findIndex with negative results",
+					"-1",
+					[],
+					"_.findLastIndex([4, 6, 8, 12, 14, 16], isPrime)"
+			),
+			OneTest(
+					"findLastIndex with positive results",
+					"4",
+					[],
+					"_.findLastIndex([2, 6, 7, 12, 13, 16], isPrime)"
+			),
+			OneTest(
+					"findLastIndex with positive results on a subarray",
+					"4",
+					[],
+					"_.findLastIndex([2, 6, 7, 12, 13, 16], isPrime, startIndex = 1)"
+			),
+			OneTest(
+					"findLastIndex with positive results on a subarray",
+					"2",
+					[],
+					"_.findLastIndex([2, 6, 7, 12, 13, 16], isPrime, startIndex = 1, endIndex = 3)"
+			),
+		]
+	),
+	(
+		"range",
+		[
+			OneTest(
+					"range, starting with 0",
+					"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+					[],
+					"_.range(10)"
+			),
+			OneTest(
+					"range with an explicit starting value",
+					"[3, 4, 5, 6, 7, 8, 9]",
+					[],
+					"_.range(3, 10)"
+			),
+			OneTest(
+					"range with explicit step",
+					"[3, 5, 7, 9]",
+					[],
+					"_.range(3, 10, 2)"
+			),
+		]
+	),
+
 ]
 AllTests = OrderedDict(_tests)
 

@@ -100,12 +100,6 @@ class underscore(object):
 		return False
 
 	@staticmethod
-	def _index_sorted(a, x):
-		"""Locate the leftmost value exactly equal to x when the array is sorted"""
-		i = bisect.bisect_left(a, x)
-		return i if i != len(a) and a[i] == x else -1
-
-	@staticmethod
 	def each(lst, iteratee, context = None):
 		"""
         **Aliases**:
@@ -608,11 +602,15 @@ class underscore(object):
             >>> _.first([5, 4, 3, 2, 1],3)
             [5, 4, 3]
         """
-		return array[0] if n is None else array[0:n]
+		if isinstance(array, list):
+			return array[0] if n is None else array[0:n]
+		else:
+			raise TypeError("argument must be a list")
 
 	@staticmethod
 	def initial(array, n = 1):
-		"""Returns everything but the last entry of the **array**. Especially useful on the arguments object. Pass **n** to exclude the last n elements from the result.
+		"""Returns everything but the last entry of the **array**. Especially useful on the arguments object.
+		Pass **n** to exclude the last n elements from the result.
 
         Example:
             >>> _.initial([5, 4, 3, 2, 1])
@@ -620,7 +618,10 @@ class underscore(object):
             >>> _.initial([5, 4, 3, 2, 1],3)
             [5, 4]
         """
-		return array[:-n]
+		if isinstance(array, list):
+			return array[:-n]
+		else:
+			raise TypeError("argument must be a list")
 
 	@staticmethod
 	def last(array, n = None):
@@ -632,11 +633,15 @@ class underscore(object):
             >>> _.last([5, 4, 3, 2, 1],3)
             [3, 2, 1]
         """
-		return array[-1] if n is None else array[-n:]
+		if isinstance(array, list):
+			return array[-1] if n is None else array[-n:]
+		else:
+			raise TypeError("argument must be a list")
 
 	@staticmethod
 	def rest(array, n = 1):
-		"""Returns the rest of the elements in an **array**. Pass an index to return the values of the array from that index onward.
+		"""Returns the rest of the elements in an **array**. Pass an index to return
+		the values of the array from that index onward.
 
         Example:
             >>> _.rest([5, 4, 3, 2, 1])
@@ -644,7 +649,10 @@ class underscore(object):
             >>> _.rest([5, 4, 3, 2, 1],3)
             [2, 1]
         """
-		return array[n:]
+		if isinstance(array, list):
+			return array[n:]
+		else:
+			raise TypeError("argument must be a list")
 
 	# noinspection PyShadowingNames
 	@staticmethod
@@ -653,11 +661,14 @@ class underscore(object):
         Returns a copy of the **array** with all falsy values removed. ``False``, ``None``, 0, "" (empty string), and ``NaN`` for floats are all falsy.
 
         Example:
-            >>> _.compact([0, 1, False, 2, '', 3])
-            [1, 2, 3]
+            >>> _.compact([0, 1, False, 2, '', 3, None, 4, float('nan'), 5])
+            [1, 2, 3, 4, 5]
         """
-		falsy = lambda x: x is None or x is False or x == "" or x == 0 or (type(x) is float and math.isnan(x))
-		return [x for x in array if falsy(x) is not True]
+		if isinstance(array, list):
+			falsy = lambda x: x is None or x is False or x == "" or x == 0 or (type(x) is float and math.isnan(x))
+			return [x for x in array if falsy(x) is not True]
+		else:
+			raise TypeError("argument must be a list")
 
 	@staticmethod
 	def flatten(array, shallow = False):
@@ -669,13 +680,16 @@ class underscore(object):
             >>> _.flatten([1, [2], [3, [[4]]]], True)
             [1, 2, 3, [[4]]]
         """
-		retval = []
-		for x in array:
-			if type(x) is list:
-				retval +=  x if shallow else underscore.flatten(x)
-			else:
-				retval.append(x)
-		return retval
+		if isinstance(array, list):
+			retval = []
+			for x in array:
+				if type(x) is list:
+					retval +=  x if shallow else underscore.flatten(x)
+				else:
+					retval.append(x)
+			return retval
+		else:
+			raise TypeError("argument must be a list")
 
 	@staticmethod
 	def without(array, *values):
@@ -685,12 +699,16 @@ class underscore(object):
             >>> _.without([1, 2, 1, 0, 3, 1, 4], 0, 1)
             [2, 3, 4]
         """
-		return [x for x in array if x not in values]
+		if isinstance(array, list):
+			return [x for x in array if x not in values]
+		else:
+			raise TypeError("argument must be a list")
 
 	@staticmethod
 	def union(*arrays):
 		"""
-        Returns the union of the passed-in **arrays**: a list of unique items, in order, that are present in one or more of the **arrays**.
+        Returns the union of the passed-in **arrays**: a list of unique items, in order,
+		that are present in one or more of the **arrays**.
 
         Example:
             >>> _.union([1, 2, 3], [101, 2, 1, 10], [2, 1])
@@ -698,20 +716,26 @@ class underscore(object):
         """
 		if len(arrays) == 0:
 			return []
-		elif len(arrays) == 1:
-			return [x for x in arrays[0]]
+
+		check = [True if isinstance(x, list) else False for x in arrays]
+		if False in [True if isinstance(x, list) else False for x in arrays]:
+			raise TypeError("all arguments must be arrays")
 		else:
-			retval = []
-			for a in arrays:
-				for x in a:
-					if x not in retval:
-						retval.append(x)
-			return retval
+			if len(arrays) == 1:
+				return [x for x in arrays[0]]
+			else:
+				retval = []
+				for a in arrays:
+					for x in a:
+						if x not in retval:
+							retval.append(x)
+				return retval
 
 	@staticmethod
 	def intersection(*arrays):
 		"""
-        Returns the list of values that are the intersection of all the **arrays**. Each value in the result is present in each of the **arrays**.
+        Returns the list of values that are the intersection of all the **arrays**.
+		Each value in the result is present in each of the **arrays**.
 
         Example:
             >>> _.intersection([1, 2, 3], [101, 2, 1, 10], [2, 1])
@@ -719,16 +743,23 @@ class underscore(object):
         """
 		if len(arrays) == 0:
 			return []
-		elif len(arrays) == 1:
-			return [x for x in arrays[0]]
+
+		if False in [True if isinstance(x, list) else False for x in arrays]:
+			raise TypeError("all arguments must be arrays")
 		else:
-			curr = arrays[0]
-			retval = []
-			for b in arrays[1:]:
+			if len(arrays) == 1:
+				return [x for x in arrays[0]]
+			else:
+				curr = arrays[0]
+				retval = []
 				for x in curr:
-					if x in b and x not in retval:
-						retval.append(x)
-			return retval
+					to_be_added = True
+					for Z in arrays[1:]:
+						if x not in Z:
+							to_be_added = False
+							break
+					if to_be_added: retval.append(x)
+				return retval
 
 	@staticmethod
 	def difference(array, *others):
@@ -739,56 +770,64 @@ class underscore(object):
             >>> _.difference([1, 2, 3, 4, 5], [5, 2, 10])
             [1, 3, 4]
         """
+		if not isinstance(array, list):
+			raise TypeError("argument must be an array")
 		if len(others) == 0:
 			return [x for x in array]
+
+		if False in [True if isinstance(x, list) else False for x in others]:
+			raise TypeError("all arguments must be arrays")
 		else:
 			retval = []
 			for x in array:
 				to_be_added = True
-				for a in others:
-					if x in a:
+				for A in others:
+					if x in A:
 						to_be_added = False
 						break
-				if to_be_added : retval.append(x)
+				if to_be_added: retval.append(x)
 			return retval
 
 	# noinspection PyShadowingNames,PyShadowingNames
 	@staticmethod
-	def uniq(array, iteratee = None, context = None, isSorted = False):
+	def uniq(array, iteratee = None, context = None):
 		"""
         **Aliases**:
             :py:meth:`uniq`, :py:meth:`unique`
 
-        Returns a duplicate-free version of the **array**, based on the *in* operator of Python's list. If you want to compute unique items after a transformation, pass an **iteratee** function. If you know in advance that the array is sorted, passing ``True`` for **isSorted** will run a much faster algorithm.
+        Returns a duplicate-free version of the **array**, based on the **in** operator of Python's list. If you want to compute unique items after a transformation, pass an **iteratee** function (the retained element in the array will be the first one found).
 
         Example:
-            >>> _.uniq([1, 2, 1, 3, 1, 4])
+            >>> _.uniq([1, 2, 1, 3, 1, 4, 2])
             [1, 2, 3, 4]
+			>>> _.uniq([1, 1, 1, 2, 3, 4, 4, 5], isSorted = True)
+			[1, 2, 3, 4, 5]
+			>>> _.uniq([1.5, 1.7, 2.0, 2.5, 2.5, 3.0, 4.0], iteratee = math.floor)
+			[1.5, 2.0, 3.0, 4.0]
         """
+		if not isinstance(array, list):
+			raise TypeError("argument must be an array")
+
 		if len(array) == 0:
 			return []
 		else:
 			to_compare = (lambda x: x) if iteratee is None else (lambda x: underscore._exec1(iteratee, context, x))
 			retval      = [array[0]]
 			comparisons = [to_compare(array[0])]
-			if isSorted:
-				for x in array[1:]:
-					y = to_compare(x)
-					if underscore._index_sorted(comparisons, y) == -1:
-						retval.append(x)
-						comparisons.append(y)
-			else:
-				for x in array[1:]:
-					y = to_compare(x)
-					if y not in comparisons:
-						retval.append(x)
-						comparisons.append(y)
+			for x in array[1:]:
+				y = to_compare(x)
+				if y not in comparisons:
+					retval.append(x)
+					comparisons.append(y)
 			return retval
 
 	@staticmethod
 	def zip(*arrays):
 		"""
-        Merges together the values of each of the **arrays** with the values at the corresponding position. Useful when you have separate data sources that are coordinated through matching array indexes. If the arguments are tuples, a tuple is returned, otherwise an array.
+        Merges together the values of each of the **arrays** with the values at the
+		corresponding position. Useful when you have separate data sources that
+		are coordinated through matching array indexes. If the arguments are tuples,
+		a tuple is returned in each position, otherwise an array.
 
         Example:
             >>> _.zip(['moe', 'larry', 'curly'], [30, 40, 50], [True, False, False])
@@ -796,63 +835,79 @@ class underscore(object):
             >>> _.zip(('moe', 'larry', 'curly'), (30, 40, 50), (True, False, False))
             [('moe', 30, True), ('larry', 40, False), ('curly', 50, False)]
         """
-		if PY3:
-			zipped = list(zip(*arrays))
+		if False in [True if isinstance(x, list) or isinstance(x, tuple) else False for x in arrays]:
+			raise TypeError("all arguments must be arrays")
 		else:
-			zipped = zip(*arrays)
-		if type(arrays[0]) is tuple:
-			return zipped
-		else:
-			return [list(x) for x in zipped]
+			if PY3:
+				zipped = list(zip(*arrays))
+			else:
+				zipped = zip(*arrays)
+			return zipped if isinstance(arrays[0], tuple) else [list(x) for x in zipped]
 
 	@staticmethod
-	def object(list, values = None):
+	def object(array, values = None):
 		"""
-        Converts arrays into a dictionary and return it. Pass either a single list of ``[key, value]`` pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.
+        Converts arrays into a dictionary and return it. Pass either a single list of ``[key, value]`` (or ``(key, value)``) pairs, or a list of keys, and a list of values. If duplicate keys exist, the last value wins.
+
+		The first option is an alias to a possible ``dict`` constructor in Python.
 
         Example:
-            >>> _.object(['moe', 'larry', 'curly'], [30, 40, 50])
-            {'larry': 40, 'curly': 50, 'moe': 30}
             >>> _.object([['moe', 30], ['larry', 40], ['curly', 50]])
             {'larry': 40, 'curly': 50, 'moe': 30}
+            >>> _.object([('moe', 30), ('larry', 40), ('curly', 50)])
+			{'larry': 40, 'curly': 50, 'moe': 30}
+            >>> _.object(['moe', 'larry', 'curly'], [30, 40, 50])
+            {'larry': 40, 'curly': 50, 'moe': 30}
         """
+		if not isinstance(array, list):
+			raise TypeError("all arguments must be arrays")
 		if values is None:
-			return {x[0]: x[1] for x in list}
+			return dict(array)
 		else:
-			return {list[i]: values[i] for i in range(0, min(len(list), len(values)))}
+			return {array[i]: values[i] for i in range(0, min(len(array), len(values)))}
 
 	@staticmethod
-	def indexOf(array, value, isSorted = False):
+	def indexOf(array, value, startIndex = 0, endIndex = None):
 		"""
-        Returns the index at which **value** can be found in the **array**, or -1 if value is not present in the **array**. If you're working with a large array, and you know that the array is already sorted, pass ``True`` for **isSorted** to use a faster binary search; or pass a number as the third argument in order to look for the first matching value in the array after the given index.
+        Returns the index at which **value** can be found in the **array**, or -1 if value is not present in the **array**. The values of **startIndex** and **endIndex** may be used to refer to an interval where the search should be made.
 
         Example:
-            >>> _.indexOf([1, 2, 3, 1, 2, 3], 2)
+            >>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2)
             1
+			>>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)
+			4
+			_.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 10)
+			-1
         """
 		# I could have relied on findIndex, but this is way simpler. Actually, I could have
 		# also used the built-in facility, but the lastIndexOf cannot be done that way, so
 		# I kept this for the sake of symmetry, but also to use bisect for large arrays
-		if type(isSorted) is bool and isSorted:
-			return underscore._index_sorted(array, value)
+		if not isinstance(array, list):
+			raise TypeError("arguments must be a list")
 		else:
-			start = 0 if (type(isSorted) is bool and isSorted is False) or type(isSorted) is not int else isSorted
-			for i in range(start, len(array)):
-				if array[i] == value:
-					return i
-			return -1
+			if endIndex is None:
+				endIndex = len(array)
+			try:
+				return array.index(value, startIndex, endIndex)
+			except ValueError:
+				return -1
 
 	@staticmethod
-	def lastIndexOf(array, value, fromIndex = None):
+	def lastIndexOf(array, value, startIndex = 0, endIndex = None):
 		"""
-        Returns the index of the last occurrence of value in the **array**, or -1 if value is not present. Pass **fromIndex**, if not ``None``, to start your search at a given index.
+        Returns the index of the last occurrence of value in the **array**, or -1 if value is not present. The values of **startIndex** and **endIndex** may be used to refer to an interval where the search should be made.
 
         Example:
-            >>> _.lastIndexOf([1, 2, 3, 1, 2, 3], 2)
-            4
+            >>> _.lastIndexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2)
+            7
+			>>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)
+			4
         """
-		start = len(array) if fromIndex is None else fromIndex
-		for i in range(start-1, -1, -1):
+		if not isinstance(array, list):
+			raise TypeError("arguments must be a list")
+		start = len(array) if endIndex is None else endIndex
+		end   = startIndex
+		for i in range(start-1, end-1, -1):
 			if array[i] == value:
 				return i
 		return -1
@@ -865,12 +920,16 @@ class underscore(object):
         Example:
             >>> _.sortedIndex([10, 20, 30, 40, 50], 35)
             3
+			>>> _.sortedIndex([10, 20, 30, 40, 50], 55)
+            5
             >>> stooges2 = [{'name': 'moe', 'age': 40}, {'name': 'curly', 'age': 60}]
             >>> _.sortedIndex(stooges2, {'name': 'larry', 'age': 50}, 'age')
             1
         """
 		# The version with a real iteratee is inefficient for larger arrays.
 		# Ideally, the bisect module should be rewritten to use the iteratee directly. T.B.D.
+		if not isinstance(array, list):
+			raise TypeError("arguments must be a list")
 		if iteratee is None:
 			a = array
 			v = value
@@ -880,9 +939,9 @@ class underscore(object):
 		return bisect.bisect_left(a, v)
 
 	@staticmethod
-	def findIndex(array, predicate, context = None):
+	def findIndex(array, predicate, context = None, startIndex = 0, endIndex = None ):
 		"""
-        Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1. (Note that the **isSorted** parameter of :py:meth:`indexOf` is not used in this case.)
+        Similar to :py:meth:`indexOf`, returns the first index where the predicate truth test passes; otherwise returns -1. The values of **startIndex** and **endIndex** may be used to refer to an interval where the search should be made.
 
         Example:
             >>> def isPrime(n):
@@ -892,22 +951,41 @@ class underscore(object):
             -1
             >>> _.findIndex([4, 6, 7, 12], isPrime)
             2
+			>>> _.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=3)
+			-1
+			>>> _.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=1, endIndex=5)
+			2
         """
-		for i in range(0, len(array)):
+
+		if not isinstance(array, list):
+			raise TypeError("arguments must be a list")
+		else:
+			if endIndex is None:
+				endIndex = len(array)
+
+		for i in range(startIndex, endIndex):
 			if underscore._exec1(predicate, context, array[i]):
 				return i
 		return -1
 
 	@staticmethod
-	def findLastIndex(array, predicate, context = None):
+	def findLastIndex(array, predicate, context = None, startIndex = 0, endIndex = None):
 		"""
-        Like :py:meth:`findIndex` but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes.
+        Like :py:meth:`findIndex` but iterates the array in reverse, returning the index closest to the end where the predicate truth test passes. The values of **startIndex** and **endIndex** may be used to refer to an interval where the search should be made.
 
         Example:
             >>> _.findLastIndex([4, 6, 5, 7, 12],isPrime)
             3
+			>>> _.findLastIndex([2, 6, 7, 12, 13, 16], isPrime, startIndex = 1, endIndex = 3)
+			2
         """
-		for i in range(len(array) - 1, -1, -1):
+		if not isinstance(array, list):
+			raise TypeError("arguments must be a list")
+		else:
+			if endIndex is None:
+				endIndex = len(array)
+
+		for i in range(endIndex - 1, startIndex - 1, -1):
 			if underscore._exec1(predicate, context, array[i]):
 				return i
 		return -1
@@ -921,7 +999,7 @@ class underscore(object):
         * **start**, **end**: like before but starting at **start** instead of 0
         * **start**, **end**, **step**: like before, but stepping with **step** instead of 1. **step** can also be negative
 
-        This is just an alias to Python's built-in **range** function. In Python3, this returns an iterator; in Python2 a list.
+        This is just an alias to Python2's built-in **range** function. In Python3, the result of the same built-in is turned into a list before return.
 
         Example:
             >>> _.range(10)
@@ -931,7 +1009,7 @@ class underscore(object):
             >>> _.range(3, 10, 2)
             [3, 5, 7, 9]
         """
-		return range(*args)
+		return list(range(*args)) if PY3 else range(*args)
 
 	###############################################################################
 	#                             Function Functions                              #
