@@ -48,7 +48,16 @@ stooges2 = [{'name': 'moe', 'age': 40}, {'name': 'curly', 'age': 60}]
 
 class OneTest:
 	def __init__(self, testName, toExpect, toDisplay, toEval, supressOutput = False):
-		glob = globals()
+		"""
+		testName: arbitrary text to label the output of a specific toExpect
+		toExpect: a string that shows what the correct output of the test should be
+		toDisplay: (possibly empty) array of variables in this module that should be displayed as part of the test.
+		toEval: the test that should be executed. There are two flavours:
+			- toEval is a string; this is displayed and then run through Python's eval. This means it is an expression, not an assignment
+			- toEval is list of tuples. Each tuple is a string and a boolean; the string is to be executed via Python's exec (if the second element of the tuple is True) or through eval (if the second element of the tuple is False). This means that the string may refer to an assignment (if using exec). The list is typically used when the test requires several consecutive statements, eg, for function functions. Such an array typically ends with a ('command', False) tuple.
+		supressOutput: if the output of the (last) command should be displayed or not. For some tests, the result is a side-effect of some internal functions, in which case the output of the last command may not be relevant...
+		"""
+		self.glob = glob = globals()
 		self.name      = testName
 		pr = lambda name, variable: "  >>> %s = %s" % (name, variable)
 		self.toDisplay = [pr(k, x) for x in toDisplay for k in glob if glob[k] == x]
@@ -63,11 +72,37 @@ class OneTest:
 		print("Test run:")
 		if self.toDisplay is not None and len(self.toDisplay) != 0:
 			_.forEach(self.toDisplay, lambda x, *args: print(x))
-		print("  >>> " + self.toEval)
-		if self.supressOutput:
-			eval(self.toEval)
+		if isinstance(self.toEval,str):
+			print("  >>> " + self.toEval)
+			if self.supressOutput:
+				eval(self.toEval)
+			else:
+				print("  >>> " + str(eval(self.toEval)))
 		else:
-			print("  >>> " + str(eval(self.toEval)))
+			# In some cases an array of calls must be executed, with first few strings setting variables...
+			for i in range(0, len(self.toEval)):
+				command, toExec = self.toEval[i]
+				print(" >>> " + command)
+				if i < len(self.toEval) - 1:
+					if toExec:
+						exec(command, self.glob)
+					else:
+						if self.supressOutput:
+							eval(command)
+						else:
+							print(" >>> " + str(eval(command)))
+				else:
+					# Last one has to display the results, unless explicitly supressed
+					if self.supressOutput:
+						if toExec:
+							exec(command, self.glob)
+						else:
+							eval(command)
+					else:
+						if toExec:
+							exec(command, self.glob)
+						else:
+							print(" >>> " + str(eval(command)))
 
 _tests = [
 	(
@@ -752,7 +787,141 @@ _tests = [
 			),
 		]
 	),
-
+	(
+		"partial",
+		[
+			OneTest(
+					"partial 1.",
+					"15",
+					[],
+					[
+						("sub = lambda a,b:b-a", True),
+						("sub5 = _.partial(sub,5)", True),
+						("sub5(20)", False)
+					]
+			),
+			OneTest(
+					"partial 2.",
+					"15",
+					[],
+					[
+						("sub = lambda a,b:b-a", True),
+						("subFrom20 = _.partial(sub,None,20)", True),
+						("subFrom20(5)", False)
+					]
+			),
+		]
+	),
+	(
+		"before",
+		[
+			OneTest(
+					"before 3",
+					"created\n  >>> created\n  >>> created",
+					[],
+					[
+						("createApplication = lambda : print('created')", True),
+						("createOnly3 = _.before(3,createApplication)", True),
+						("createOnly3()", False),
+						("createOnly3()", False),
+						("createOnly3()", False),
+						("createOnly3()", False)
+					],
+					True
+			),
+		]
+	),
+	(
+		"after",
+		[
+			OneTest(
+					"after 2",
+					"created",
+					[],
+					[
+						("createApplication = lambda : print('created')", True),
+						("delayInit = _.after(2,createApplication)", True),
+						("delayInit()", False),
+						("delayInit()", False),
+						("delayInit()", False)
+					],
+					True
+			),
+		]
+	),
+	(
+		"once",
+		[
+			OneTest(
+					"create only once",
+					"created\n  >>> ",
+					[],
+					[
+						("createApplication = lambda : print('created')", True),
+						("initialize = _.once(createApplication)", True),
+						("initialize()", False),
+						("initialize()", False),
+					],
+					True
+			),
+		]
+	),
+	(
+		"wrap",
+		[
+			OneTest(
+					"Wrap a function",
+					"Do something with the arguments: (1, 2, 3)\nHello: 'tester'\nDo something after execution of wrapped",
+					[],
+					[
+						("func = lambda x : print('Hello: \"' + x + '\"')", True),
+						("def wrapper(f,*args,**keywords): print('Do something with the arguments: ' + str(args)); f('tester'); print('Do something after execution of wrapped')", True),
+						("wrapped = _.wrap(func, wrapper)", True),
+						("wrapped(1,2,3)", False),
+					],
+					True
+			),
+		]
+	),
+	(
+		"negate",
+		[
+			OneTest(
+					"Negate false",
+					"True",
+					[],
+					[
+						("test = lambda x, y: x and y", True),
+						("_.negate(test,False,True)", False),
+					]
+			),
+			OneTest(
+					"Negate True",
+					"False",
+					[],
+					[
+						("test = lambda x, y: x and y", True),
+						("_.negate(test,True,True)", False),
+					]
+			),
+		]
+	),
+	(
+		"compose",
+		[
+			OneTest(
+					"composition of greeting",
+					"hi: MOE!",
+					[],
+					[
+						("greet    = lambda name: 'hi: ' + name", True),
+						("exclaim  = lambda statement: statement.upper() + '!'", True),
+						("welcome  = _.compose(greet, exclaim)", True),
+						("welcome('moe')", False)
+					]
+			),
+		]
+	),
 ]
 AllTests = OrderedDict(_tests)
 

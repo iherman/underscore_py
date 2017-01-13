@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
+from __future__ import print_function
 import sys
 
 # Tricks to handle Python3
@@ -1615,5 +1616,7 @@ class underscore(object):
 
 
 if __name__ == '__main__':
-	print(underscore.countBy([1, 2, 3, 4, 5], lambda num: 'even' if num % 2 == 0 else 'odd'))
-	#print(reduce(f,[1,2,3]))
+	func = lambda x : print('Hello: \"' + x + '\"')
+	def wrapper(f,*args,**keywords): print("Do something with the arguments: " + str(args)); f('tester'); print("Do something after execution of wrapped")
+	wrapped = underscore.wrap(func,wrapper)
+	wrapped(1,2,3)
