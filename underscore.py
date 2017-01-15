@@ -1178,14 +1178,14 @@ class underscore(object):
 
 	@staticmethod
 	def keys(object):
-		"""Retrieve all the names of the **object**'s own enumerable properties. Alias of the built-in Python method.
-
-        In Python3 this returns an iterator; in Python2 a list.
+		"""Retrieve all the names of the **object**'s own enumerable properties. Alias of the built-in Python method, but in case of Python3, it returns a list and not an iterator.
 
         Example:
             >>> _.keys({'one': 1, 'two': 2, 'three': 3})
             ['three', 'two', 'one']
         """
+		if not isinstance(object, dict):
+			raise TypeError("argument must be a dictionary")
 		return list(object.keys()) if PY3 else object.keys()
 
 	@staticmethod
@@ -1198,6 +1198,8 @@ class underscore(object):
             >>> _.values({'one': 1, 'two': 2, 'three': 3})
             [3,2,1]
         """
+		if not isinstance(object, dict):
+			raise TypeError("argument must be a dictionary")
 		return list(object.values()) if PY3 else object.values()
 
 	@staticmethod
@@ -1211,6 +1213,8 @@ class underscore(object):
             >>> _.mapObject({'one': 1, 'two': 2, 'three': 3}, lambda key, val, obj: 3*val)
             {'one': 3, 'three': 9, 'two': 6}
         """
+		if not isinstance(obj, dict):
+			raise TypeError("argument must be a dictionary")
 		if iteratee is None:
 			return underscore.clone(obj)
 		else:
@@ -1229,10 +1233,13 @@ class underscore(object):
             >>> _.pairs({'one': 1, 'two': 2, 'three': 3}, tupl = True)
             [('three', 3), ('two', 2), ('one', 1)]
         """
-		if PY3:
-			return obj.items() if tupl else underscore.zip(list(obj.keys()), list(obj.values()))
+		if not isinstance(obj, dict):
+			raise TypeError("argument must be a dictionary")
 		else:
-			return obj.items() if tupl else underscore.zip(obj.keys(), obj.values())
+			if tupl:
+				return list(obj.items()) if PY3 else obj.items()
+			else:
+				return [[k,v] for (k,v) in obj.items()]
 
 	@staticmethod
 	def invert(obj):
@@ -1242,7 +1249,10 @@ class underscore(object):
             >>> _.invert({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"})
             {'Louis': 'Larry', 'Moses': 'Moe', 'Jerome': 'Curly'}
         """
-		return {obj[key] : key for key in obj}
+		if not isinstance(obj, dict):
+			raise TypeError("argument must be a dictionary")
+		else:
+			return {v:k for (k,v) in obj.items()}
 
 	@staticmethod
 	def findKey(obj, predicate, context = None):
@@ -1252,20 +1262,26 @@ class underscore(object):
             >>> _.findKey({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"}, lambda val: val == "Jerome")
             Curly
         """
-		check = lambda val: underscore._exec1(predicate, context, val)
-		for key in obj:
-			if check(obj[key]):
-				return key
-		return None
+		if not isinstance(obj, dict):
+			raise TypeError("argument must be a dictionary")
+		else:
+			check = lambda val: underscore._exec1(predicate, context, val)
+			for key in obj:
+				if check(obj[key]):
+					return key
+			return None
 
 	@staticmethod
 	def extend(destination, *sources):
 		"""Copy all of the properties in the source objects of **sources** over to the **destination** object. It's in-order, so the last source will override properties of the same name in previous arguments.  Returns **destination** (for possible chaining).
 
         Example:
-            >>> _.extend({'name': 'moe', age: '40'}, {'age': 50}, {'age': 60, 'gender': 'male'})
+            >>> _.extend({'name': 'moe', 'age': '40'}, {'age': 50}, {'age': 60, 'gender': 'male'})
             {'gender': 'male', 'age': 60, 'name': 'moe'}
         """
+		if not isinstance(destination, dict) or (False in [isinstance(s, dict) for s in sources]):
+			raise TypeError("arguments must be dictionaries")
+
 		for source in sources:
 			for key in source:
 				destination[key] = source[key]
@@ -1279,6 +1295,9 @@ class underscore(object):
             >>> _.extendOwn({'name': 'moe', age: '40'}, {'age': 50}, {'age': 60, 'gender': 'male'})
             {'age': 60, 'name': 'moe'}
         """
+		if not isinstance(destination, dict) or (False in [isinstance(s, dict) for s in sources]):
+			raise TypeError("arguments must be dictionaries")
+
 		for source in sources:
 			for key in source:
 				if key in destination:
@@ -1299,6 +1318,8 @@ class underscore(object):
             >>> _.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, lambda val, *args: _.isNumber(val))
             {'age': 50}
         """
+		if not isinstance(obj, dict):
+			raise TypeError("argument must be a dictionary")
 		if len(keys) == 0:
 			return {}
 		elif hasattr(keys[0], '__call__'):
@@ -1320,6 +1341,8 @@ class underscore(object):
             >>> _.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, lambda val, *args: _.isNumber(val))
             {'userid': 'moe1', 'name': 'moe'}
         """
+		if not isinstance(obj, dict):
+			raise TypeError("argument must be a dictionary")
 		if len(keys) == 0:
 			return {}
 		elif hasattr(keys[0], '__call__'):
@@ -1335,7 +1358,13 @@ class underscore(object):
             >>> iceCream = {'flavor': "chocolate"}
             >>> _.defaults(iceCream, {'flavor': "vanilla", 'sprinkles': "lots"})
             {'flavor': 'chocolate', 'sprinkles': 'lots'}
+			>>> myDefaults = [{'flavor':'vanilla', 'sprinkles':'lots'}, {'toGo': True}]
+			>>> _.defaults(iceCream, *myDefaults)
+			{'flavor': 'chocolate', 'sprinkles': 'lots', 'toGo' : True}
         """
+		if not isinstance(obj, dict) or (False in [isinstance(s, dict) for s in defaults]):
+			raise TypeError("arguments must be dictionaries")
+
 		for default in defaults:
 			for key in default:
 				if key not in obj :
@@ -1343,11 +1372,12 @@ class underscore(object):
 		return obj
 
 	@staticmethod
-	def clone(obj):
+	def clone(obj, deep = True):
 		"""
-        Create a shallow-copied clone of the provided plain **obj**. Any nested objects or arrays will be copied by reference, not duplicated.
+        Create a clone of the provided plain **obj**. If ``deep`` is False, then any nested objects or arrays will be copied by reference, not duplicated; otherwise each constituent arrays or dictionaries will also be cloned (recursively).
         """
-		return {k: obj[k] for k in obj}
+		import copy
+		return copy.deepcopy(obj) if deep else copy.copy(obj)
 
 	@staticmethod
 	def has(obj, key):
@@ -1383,9 +1413,15 @@ class underscore(object):
 		"""Returns a predicate function that will tell if a passed object contains all of the key/value properties present in **attrs**.
 
         Example:
-            >>> _.filter(stooges, _.matcher({'age': 60}))
-            [{'age': 60, 'name': 'curly'}]
+            >>> checkAge = _.matcher({'age': 60})
+			>>> checkAge(stooges[0])
+			False
+			>>> CheckAge(stooges[2])
+			True
         """
+		if not isinstance(attrs, dict):
+			raise TypeError("argument must be a dictionary")
+
 		def func(obj):
 			for k in attrs:
 				if k not in obj or obj[k] != attrs[k]:
@@ -1398,10 +1434,11 @@ class underscore(object):
 		"""Returns ``True`` if the keys and values in **properties** are contained in **obj**, ``False`` otherwise.
 
         Example:
-            >>> stooge = {'name': 'moe', 'age': 40}
-            >>> _.isMatch(stooge, {'age': 40})
+            >>> _.isMatch(stooge[0], {'age': 40})
             True
         """
+		if not isinstance(obj, dict) or not isinstance(properties, dict):
+			raise TypeError("arguments must be dictionaries")
 		return underscore.matcher(properties)(obj)
 
 	@staticmethod
@@ -1417,22 +1454,31 @@ class underscore(object):
 	@staticmethod
 	def isArray(obj):
 		"""Return ``True`` if **obj** is an Array (i.e., List), ``False`` otherwise."""
-		return type(obj) is list
+		return isinstance(obj, list)
 
 	@staticmethod
 	def isTuple(obj):
 		"""Return ``True`` if **obj** is an Tuple, ``False`` otherwise."""
-		return type(obj) is tuple
+		return isinstance(obj, tuple)
 
 	@staticmethod
 	def isObject(obj):
 		"""Return ``True`` if **obj** is an “Object” (i.e., Dictionary), ``False`` otherwise."""
-		return type(obj) is dict
+		return isintance(obj, dict)
 
 	@staticmethod
 	def isFunction(obj):
-		"""Return ``True`` if **obj** is a function or a method, ``False`` otherwise."""
-		return type(obj) is FunctionType or type(obj) is MethodType
+		"""Return ``True`` if **obj** is a function or a method, ``False`` otherwise.
+
+        Example:
+            >>> _.isFunction(isPrime)
+            True
+			>>> _.isFunction(lambda x: x+1)
+            True
+			>>> _.isFunction(1)
+            False
+		"""
+		return isinstance(obj, (LambdaType, FunctionType, MethodType))
 
 	@staticmethod
 	def isCallable(obj):
@@ -1441,28 +1487,28 @@ class underscore(object):
 
 	@staticmethod
 	def isString(obj):
-		"""Return ``True`` if **obj** is a string, ``False`` otherwise."""
+		"""Return ``True`` if **obj** is a string, ``False`` otherwise. For Python2 this checks against a string or a unicode. In (Python3 there is no such distinction.)"""
 		return isinstance(obj, basestring)
 
 	@staticmethod
 	def isNumber(obj):
 		"""Return ``True`` if **obj** is a number (float or integer), ``False`` otherwise."""
-		return type(obj) is int or type(obj) is float
+		return isinstance(obj, (int, float))
 
 	@staticmethod
 	def isFinite(obj):
 		"""Return ``True`` if **obj** is number with a finite value, ``False`` otherwise."""
-		return type(obj) is int or (type(obj) is float and not math.isinf(obj))
+		return isinstance(obj, (int, float)) and not math.isinf(obj))
 
 	@staticmethod
 	def isNaN(obj):
 		"""Return ``True`` if **obj** is a float with ``NaN`` as value, ``False`` otherwise."""
-		return type(obj) is float and math.isnan(obj)
+		return isinstance(obj, float) and math.isnan(obj)
 
 	@staticmethod
 	def isBoolean(obj):
 		"""Return ``True`` if **obj** is a Boolean, ``False`` otherwise."""
-		return type(obj) is bool
+		return isinstance(obj, bool)
 
 	@staticmethod
 	def isError(obj):

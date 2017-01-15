@@ -41,10 +41,9 @@ listOfPlays = [
 		"title"  : "Romeo and Juliet"
 	},
 ]
-stooges = [{'name': 'moe', 'age': 40}, {'name': 'larry', 'age': 50}, {'name': 'curly', 'age': 60}, {'name':'joe', 'age':60}]
+stooges  = [{'name': 'moe', 'age': 40}, {'name': 'larry', 'age': 50}, {'name': 'curly', 'age': 60}, {'name':'joe', 'age':60}]
 stooges0 = [{'name': 'moe', 'age': 40}, {'name': 'larry', 'age': 50}, {'name': 'curly', 'age': 60}]
 stooges2 = [{'name': 'moe', 'age': 40}, {'name': 'curly', 'age': 60}]
-
 
 class OneTest:
 	def __init__(self, testName, toExpect, toDisplay, toEval, supressOutput = False):
@@ -59,25 +58,25 @@ class OneTest:
 		"""
 		self.glob = glob = globals()
 		self.name      = testName
-		pr = lambda name, variable: "  >>> %s = %s" % (name, variable)
+		pr = lambda name, variable: " >>> %s = %s" % (name, variable)
 		self.toDisplay = [pr(k, x) for x in toDisplay for k in glob if glob[k] == x]
 		self.toExpect  = toExpect
 		self.toEval    = toEval
 		self.supressOutput = supressOutput
 
 	def execute_and_display(self):
-		print("\n= Test: '%s' =" % self.name)
+		print("\n== Test: '%s' ==" % self.name)
 		if self.toExpect and len(self.toExpect) != 0:
-			print("Expected:\n  >>> " + self.toExpect)
-		print("Test run:")
+			print("= Expected:\n" + self.toExpect)
+		print("= Test run:")
 		if self.toDisplay is not None and len(self.toDisplay) != 0:
 			_.forEach(self.toDisplay, lambda x, *args: print(x))
 		if isinstance(self.toEval,str):
-			print("  >>> " + self.toEval)
+			print(" >>> " + self.toEval)
 			if self.supressOutput:
 				eval(self.toEval)
 			else:
-				print("  >>> " + str(eval(self.toEval)))
+				print(str(eval(self.toEval)))
 		else:
 			# In some cases an array of calls must be executed, with first few strings setting variables...
 			for i in range(0, len(self.toEval)):
@@ -90,7 +89,7 @@ class OneTest:
 						if self.supressOutput:
 							eval(command)
 						else:
-							print(" >>> " + str(eval(command)))
+							print(str(eval(command)))
 				else:
 					# Last one has to display the results, unless explicitly supressed
 					if self.supressOutput:
@@ -102,7 +101,7 @@ class OneTest:
 						if toExec:
 							exec(command, self.glob)
 						else:
-							print(" >>> " + str(eval(command)))
+							print(str(eval(command)))
 
 _tests = [
 	(
@@ -817,7 +816,7 @@ _tests = [
 		[
 			OneTest(
 					"before 3",
-					"created\n  >>> created\n  >>> created",
+					"created\ncreated\ncreated",
 					[],
 					[
 						("createApplication = lambda : print('created')", True),
@@ -854,7 +853,7 @@ _tests = [
 		[
 			OneTest(
 					"create only once",
-					"created\n  >>> ",
+					"created\n ",
 					[],
 					[
 						("createApplication = lambda : print('created')", True),
@@ -922,6 +921,304 @@ _tests = [
 			),
 		]
 	),
+	(
+		"keys",
+		[
+			OneTest(
+					"Keys of a dict",
+					"['three', 'two', 'one'] (in some order)",
+					[],
+					"_.keys({'one': 1, 'two': 2, 'three': 3})"
+			),
+		]
+	),
+	(
+		"values",
+		[
+			OneTest(
+					"Valuse of a dict",
+					"[1,3,2] (in some order)",
+					[],
+					"_.values({'one': 1, 'two': 2, 'three': 3})"
+			),
+		]
+	),
+	(
+		"mapObject",
+		[
+			OneTest(
+					"Map object without an iterator (simply a clone)",
+					"{'one': 1, 'three': 3, 'two': 2}",
+					[],
+					"_.mapObject({'one': 1, 'two': 2, 'three': 3})"
+			),
+			OneTest(
+					"Map object with an iterator",
+					"{'one': 1, 'three': 3, 'two': 2}",
+					[],
+					"_.mapObject({'one': 1, 'two': 2, 'three': 3}, lambda key, val, obj: 3*val)"
+			),
+		]
+	),
+	(
+		"pairs",
+		[
+			OneTest(
+					"pairs in the form of arrays",
+					"{'one': 1, 'three': 3, 'two': 2}",
+					[],
+					"_.pairs({'one': 1, 'two': 2, 'three': 3})"
+			),
+			OneTest(
+					"pairs in the form of a tuple",
+					"{'one': 1, 'three': 3, 'two': 2}",
+					[],
+					"_.pairs({'one': 1, 'two': 2, 'three': 3}, tupl = True)"
+			),
+		]
+	),
+	(
+		"invert",
+		[
+			OneTest(
+					"invert the object",
+					"{'Louis': 'Larry', 'Moses': 'Moe', 'Jerome': 'Curly'}",
+					[],
+					'_.invert({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"})'
+			),
+		]
+	),
+	(
+		"findKey",
+		[
+			OneTest(
+					"find an existing key",
+					"Curly",
+					[],
+					'_.findKey({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"}, lambda val: val == "Jerome")'
+			),
+			OneTest(
+					"look for a non-existing key",
+					"None",
+					[],
+					'_.findKey({"Moe": "Moses", "Larry": "Louis", "Curly": "Jerome"}, lambda val: val == "Philipp")'
+			),
+		]
+	),
+	(
+		"extend",
+		[
+			OneTest(
+					"find an existing key",
+					"{'gender': 'male', 'age': 60, 'name': 'moe'}",
+					[],
+					"_.extend({'name': 'moe', 'age': '40'}, {'age': 50}, {'age': 60, 'gender': 'male'})"
+			),
+		]
+	),
+	(
+		"extendOwn",
+		[
+			OneTest(
+					"find an existing key",
+					"{'age': 60, 'name': 'moe'}",
+					[],
+					"_.extendOwn({'name': 'moe', 'age': '40'}, {'age': 50}, {'age': 60, 'gender': 'male'})"
+			),
+		]
+	),
+	(
+		"pick",
+		[
+			OneTest(
+					"pick via a series of keys",
+					"{'age': 50, 'name': 'moe'}",
+					[],
+					"_.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, 'name', 'age')"
+			),
+			OneTest(
+					"find an existing key",
+					"{'age': 50, 'name': 'moe'}",
+					[],
+					[
+						("a = ['name', 'age']", True),
+						("_.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, *a)", False)
+					]
+			),
+			OneTest(
+					"pick via a series of keys via a predicate",
+					"{'age': 50}",
+					[],
+					"_.pick({'name': 'moe', 'age': 50, 'userid': 'moe1'}, lambda val, *args: _.isNumber(val))"
+			),
+		]
+	),
+	(
+		"omit",
+		[
+			OneTest(
+					"omit via a series of keys",
+					"{userid': 'moe1'}",
+					[],
+					"_.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, 'name', 'age')"
+			),
+			OneTest(
+					"omit an existing key",
+					"{userid': 'moe1'}",
+					[],
+					[
+						("a = ['name', 'age']", True),
+						("_.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, *a)", False)
+					]
+			),
+			OneTest(
+					"omit via a series of keys via a predicate",
+					"{'name': 'moe', userid': 'moe1'}",
+					[],
+					"_.omit({'name': 'moe', 'age': 50, 'userid': 'moe1'}, lambda val, *args: _.isNumber(val))"
+			),
+		]
+	),
+	(
+		"default",
+		[
+			OneTest(
+					"omit an existing key",
+					"{'flavor': 'chocolate', 'sprinkles': 'lots'}",
+					[],
+					[
+						("iceCream = {'flavor': 'chocolate'}", True),
+						("_.defaults(iceCream, {'flavor': 'vanilla', 'sprinkles': 'lots'})", False)
+					]
+			),
+			OneTest(
+					"omit an existing key",
+					"{'flavor': 'chocolate', 'sprinkles': 'lots', 'toGo' : True}",
+					[],
+					[
+						("iceCream = {'flavor': 'chocolate'}", True),
+						("myDefaults = [{'flavor':'vanilla', 'sprinkles':'lots'}, {'toGo': True}]", True),
+						("_.defaults(iceCream, *myDefaults)", False)
+					]
+			),
+		]
+	),
+	(
+		"default",
+		[
+			OneTest(
+					"shallow clone",
+					"{'flavor': 'chocolate', 'sprinkles': 'lots', 'toGo' : True}",
+					[],
+					"_.clone({'flavor': 'chocolate', 'sprinkles': 'lots', 'toGo' : True})"
+			),
+			OneTest(
+					"deep clone",
+					"{'flavor': 'chocolate', 'sprinkles': { 'nut': True, 'sultana': False}, 'toGo' : True}",
+					[],
+					"_.clone({'flavor': 'chocolate', 'sprinkles': { 'nut': True, 'sultana': False}, 'toGo' : True}, deep = True)"
+			),
+		]
+	),
+	(
+		"property",
+		[
+			OneTest(
+					"function to get 'name'",
+					"joe\nmoe",
+					[stooges, stooges0],
+					[
+						("getName = _.property('name')", True),
+						("getName(stooges[3])", False),
+						("getName(stooges0[0])", False)
+					]
+			),
+		]
+	),
+	(
+		"propertyOf",
+		[
+			OneTest(
+					"function to get values of a dict",
+					"joe\n60",
+					[stooges],
+					[
+						("getValue = _.propertyOf(stooges[3])", True),
+						("getValue('name')", False),
+						("getValue('age')", False)
+					]
+			),
+		]
+	),
+	(
+		"propertyOf",
+		[
+			OneTest(
+					"function to get values of a dict",
+					"joe\n60",
+					[stooges],
+					[
+						("getValue = _.propertyOf(stooges[3])", True),
+						("getValue('name')", False),
+						("getValue('age')", False)
+					]
+			),
+		]
+	),
+	(
+		"matcher",
+		[
+			OneTest(
+					"function to probe key/value pair",
+					"False\nTrue",
+					[stooges],
+					[
+						("checkAge = _.matcher({'age': 60})", True),
+						("checkAge(stooges[0])", False),
+						("checkAge(stooges[2])", False),
+					]
+			),
+		]
+	),
+	(
+		"isMatch",
+		[
+			OneTest(
+					"matching objects",
+					"True\nFalse",
+					[stooges],
+					[
+						("probe = {'age':40}", True),
+						("_.isMatch(stooges[0], probe)", False),
+						("_.isMatch(stooges[3], probe)", False),
+					]
+			),
+		]
+	),
+	(
+		"isFunction",
+		[
+			OneTest(
+					"test 1.",
+					"True",
+					[],
+					"_.isFunction(isPrime)"
+			),
+			OneTest(
+					"test 2.",
+					"True",
+					[],
+					"_.isFunction(lambda x: x+1)"
+			),
+			OneTest(
+					"test 3.",
+					"False",
+					[],
+					"_.isFunction(1)"
+			),
+		]
+	),
+
 ]
 AllTests = OrderedDict(_tests)
 
