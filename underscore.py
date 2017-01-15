@@ -1204,7 +1204,11 @@ class underscore(object):
 
 	@staticmethod
 	def mapObject(obj, iteratee = None, context = None):
-		"""Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``index`` (or ``key``) of the iteration, the ``value``, and finally a reference to the entire list.
+		"""
+		**Aliases**:
+            :py:meth:`mapObject`, :py:meth:`collectObject`
+
+		Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``index`` (or ``key``) of the iteration, the ``value``, and finally a reference to the entire list.
         If **iteratee** is not set or is ``None``, a copy of **obj** is returned.
 
         Example:
@@ -1386,7 +1390,11 @@ class underscore(object):
 
 	@staticmethod
 	def property(key):
-		"""Returns a function that will itself return the **key** property of any passed-in object.
+		"""
+		**Aliases**:
+            :py:meth:`property`, :py:meth:`attribute`
+
+		Returns a function that will itself return the **key** property of any passed-in object.
 
         Example:
             >>> getName = _.property('name')
@@ -1399,7 +1407,11 @@ class underscore(object):
 
 	@staticmethod
 	def propertyOf(obj):
-		"""Inverse of :py:meth:`property`. Takes an **obj** and returns a function which will return the value of a provided property. In effect, the functional equivalent of ``obj[key]`` where ``obj`` is fixed.
+		"""
+		**Aliases**:
+            :py:meth:`propertyOf`, :py:meth:`attributeOf`
+
+		Inverse of :py:meth:`property`. Takes an **obj** and returns a function which will return the value of a provided property. In effect, the functional equivalent of ``obj[key]`` where ``obj`` is fixed.
 
         Example:
             >>> getValue = _.propertyOf(stooges[0])
@@ -1498,7 +1510,7 @@ class underscore(object):
 	@staticmethod
 	def isFinite(obj):
 		"""Return ``True`` if **obj** is number with a finite value, ``False`` otherwise."""
-		return isinstance(obj, (int, float)) and not math.isinf(obj))
+		return isinstance(obj, (int, float)) and not math.isinf(obj)
 
 	@staticmethod
 	def isNaN(obj):
@@ -1551,13 +1563,20 @@ class underscore(object):
 	def times(n, iteratee, context = None):
 		"""
         Invokes the given **iteratee** function **n** times. Each invocation of **iteratee** is called with an index argument. Produces an array of the returned values.
+
+        Example:
+            >>> _.times(3, _.identity)
+            [0, 1, 2]
         """
 		return [underscore._exec1(iteratee, context, i) for i in range(0, n)]
 
 	@staticmethod
 	def random(min, max = None):
-		"""Returns a random integer between **min** and **max**, inclusive. If you only pass one argument, it will return a number between 0 and that number."""
-		return random.randint(0, min) if max is None else random.randint(min, max)
+		"""Returns a pseudo-random integer between **min** and **max**, inclusive. If you only pass one argument, it will return a number between 0 and that number. The pseudo-random generator should not be used for security purposes."""
+		if isinstance(min, int) and (max is None or isinstance(max,int)) :
+			return random.randint(0, min) if max is None else random.randint(min, max)
+		else:
+			raise TypeError("arguments should be integeters")
 
 	@staticmethod
 	def uniqueId(prefix = None):
@@ -1651,18 +1670,17 @@ class underscore(object):
 	###############################################################################
 
 	# Aliases to some of the core method names
-	forEach = each
-	collect = map
-	inject  = reduce
-	detect  = find
-	select  = filter
-	any     = some
-	include = contains
-	unique  = uniq
-
+	forEach       = each
+	collect       = map
+	collectObject = mapObject
+	inject        = reduce
+	detect        = find
+	select        = filter
+	any           = some
+	include       = contains
+	unique        = uniq
+	attribute     = property
+	attributeOf   = propertyOf
 
 if __name__ == '__main__':
-	func = lambda x : print('Hello: \"' + x + '\"')
-	def wrapper(f,*args,**keywords): print("Do something with the arguments: " + str(args)); f('tester'); print("Do something after execution of wrapped")
-	wrapped = underscore.wrap(func,wrapper)
-	wrapped(1,2,3)
+	print(underscore.now())

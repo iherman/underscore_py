@@ -1218,7 +1218,17 @@ _tests = [
 			),
 		]
 	),
-
+	(
+		"times",
+		[
+			OneTest(
+					"test 1.",
+					"[0, 1, 2]",
+					[],
+					"_.times(3, _.identity)"
+			),
+		]
+	),
 ]
 AllTests = OrderedDict(_tests)
 
