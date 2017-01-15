@@ -1596,7 +1596,7 @@ class underscore(object):
 	#                                    Chaining                                 #
 	###############################################################################
 
-	# Chaining is done by creating an instance of underscore, and catching all method requests...
+	# Chaining is done by creating an instance of underscore, and catching all method requests
 	def __init__(self, val):
 		self.current_value = val
 		self.chaining_on   = True
@@ -1683,4 +1683,5 @@ class underscore(object):
 	attributeOf   = propertyOf
 
 if __name__ == '__main__':
-	print(underscore.now())
+	pr = lambda a: print('intermediate: %s' % a)
+	print(underscore.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).map(lambda x, *args: x*x).value())

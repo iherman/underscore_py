@@ -1229,9 +1229,34 @@ _tests = [
 			),
 		]
 	),
+	(
+		"chaining",
+		[
+			OneTest(
+					"simple chain 1",
+					"moe is 40",
+					[stooges],
+					"_.chain(stooges).sortBy('age').map(lambda st, *args: '%s is %s' % (st['name'], st['age'])).first().value()"
+			),
+			OneTest(
+					"simple chain 2",
+					"[4, 40000]",
+					[],
+					"_.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).map(lambda x, *args: x*x).value()"
+			),
+			OneTest(
+					"simple chain 2, with a tap",
+					"intermediate: [2, 200]\n[4, 40000]",
+					[],
+					[
+						("pr = lambda a: print('intermediate: %s' % a)", True),
+						("_.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).tap(pr).map(lambda x, *args: x*x).value()", False)
+					]
+			),
+		]
+	),
 ]
 AllTests = OrderedDict(_tests)
-
 
 def run_tests(argv):
 	def display_one_test_group(key) :
