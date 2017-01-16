@@ -23,6 +23,14 @@ def isPrime(n):
          k += 2
     return True
 
+class Multiplier:
+	def __init__(self):
+		self.factor = 1
+	def setValue(self,i):
+		self.factor = i
+	def mult(self, x, *args):
+		return self.factor * x
+
 
 listOfPlays = [
 	{
@@ -1251,6 +1259,31 @@ _tests = [
 					[
 						("pr = lambda a: print('intermediate: %s' % a)", True),
 						("_.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).tap(pr).map(lambda x, *args: x*x).value()", False)
+					]
+			),
+		]
+	),
+	(
+		"context",
+		[
+			OneTest(
+					"Using a method directly",
+					"[20, 30, 40]",
+					[],
+					[
+						("m = Multiplier()", True),
+						("m.setValue(10)", True),
+						("_.map([2,3,4], m.mult)", False)
+					]
+			),
+			OneTest(
+					"Using a class method and explicit context",
+					"[20, 30, 40]",
+					[],
+					[
+						("m = Multiplier()", True),
+						("m.setValue(10)", True),
+						("_.map([2,3,4], Multiplier.mult, m)", False)
 					]
 			),
 		]

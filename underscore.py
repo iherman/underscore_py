@@ -1683,5 +1683,17 @@ class underscore(object):
 	attributeOf   = propertyOf
 
 if __name__ == '__main__':
-	pr = lambda a: print('intermediate: %s' % a)
-	print(underscore.chain([1, 2, 3, 200]).filter(lambda num, *args: num % 2 == 0).map(lambda x, *args: x*x).value())
+	class Multiplier:
+		def __init__(self):
+			self.factor = 1
+		def setValue(self,i):
+			self.factor = i
+		def mult(self, x, *args):
+			return self.factor * x
+
+	a = [2,3,4]
+	print(underscore.map(a, underscore.identity))
+	m = Multiplier()
+	m.setValue(10)
+	print(underscore.map(a, m.mult))
+	print(underscore.map(a, Multiplier.mult, m))
