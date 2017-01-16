@@ -8,7 +8,6 @@ PY3 = sys.version_info.major > 2
 if PY3:
     basestring = str
 
-
 from types import *
 import itertools
 import random
@@ -42,15 +41,42 @@ class underscore(object):
                 "title"  : "Romeo and Juliet"
             },
         ]
-        stooges = [{'name': 'moe',   'age': 40},
-                   {'name': 'larry', 'age': 50},
-                   {'name': 'curly', 'age': 60}]
+
+        stooges  = [
+            {'name': 'moe', 'age': 40},
+            {'name': 'larry', 'age': 50},
+            {'name': 'curly', 'age': 60},
+            {'name':'joe', 'age':60}
+        ]
+        stooges0 = [
+            {'name': 'moe', 'age': 40},
+            {'name': 'larry', 'age': 50},
+            {'name': 'curly', 'age': 60}
+        ]
+        stooges2 = [
+            {'name': 'moe', 'age': 40},
+            {'name': 'curly', 'age': 60}
+        ]
+
         def createApplication():
             print("created")
 
+        def isPrime(i):
+            # code to test whether `i` is prime, returning a Boolean value
+            ...
+
+        class Multiplier:
+            def __init__(self):
+                self.factor = 1
+            def setValue(self,i):
+                self.factor = i
+            def mult(self, x, *args):
+                return self.factor * x
+
+
     These structures are used in some of the examples and are listed here to avoid repeating their definition separately.
 
-    A further simplification of the examples is the usage of the ``*args`` idioms. Many “iteratee” arguments represent a function with 3-4 arguments, per definition of the underscore method, but the example uses only the first few. Instead of::
+    A further simplification of the examples is the usage of the ``*args`` idioms. Many “iteratee” arguments represent a function with 3-4 arguments, (look at the definition of the underscore methods), but the example uses only the first few. Instead of::
 
         lambda name, index, list: ...
 
@@ -116,8 +142,6 @@ class underscore(object):
         argument. In that case the return value of the method is also ``None``; i.e., no chaining is possible.
 
         Example:
-            >>> def pr(element, index, list):
-            ...	    print(element)
             >>> _.each([1, 2, 3], pr)
             1
             2
@@ -125,7 +149,7 @@ class underscore(object):
             >>> _.each({'one': 11, 'two': 22, 'three': 33}, pr)
             33
             22
-           11
+            11
         """
 		if iteratee is None:
 			return lst
@@ -266,7 +290,8 @@ class underscore(object):
 
         Example:
             >>> _.where(listOfPlays, {'author': "Shakespeare", 'year': 1611})
-            [{'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'}, {'title': 'Cymbeline', 'year': 1611, 'author': 'Shakespeare'}]
+            [{'title': 'The tempest', 'year': 1611, 'author': 'Shakespeare'},
+             {'title': 'Cymbeline', 'year': 1611, 'author': 'Shakespeare'}]
         """
 		if isinstance(lst, Iterable):
 			return [x for x in lst if underscore._extends(x, properties)]
@@ -374,14 +399,14 @@ class underscore(object):
         ``float("inf")`` is returned if list is empty.
 
         Example:
-           >>>> _.max([1,2,3,4])"
+            >>> _.max([1,2,3,4])"
             4
-            >>>> _.max([1,2,3,4], lambda x: -x)
+            >>> _.max([1,2,3,4], lambda x: -x)
             1
-            >>>> _.max([])
+            >>> _.max([])
             inf
-            >>>> .max(stooges, lambda stooge: stooge['age'])
-           {'name': 'moe', 'age': 40}
+            >>> .max(stooges0, lambda stooge: stooge['age'])
+            {'name': 'curly', 'age': 60}
          """
 		if isinstance(lst, Iterable):
 			if lst is None or len(lst) == 0:
@@ -401,14 +426,14 @@ class underscore(object):
         is ranked. ``float("-inf")`` is returned if list is empty, so an guard may be required.
 
         Example:
-            >>>> _.min([1,2,3,4])"
+            >>> _.min([1,2,3,4])"
             1
-            >>>> _.min([1,2,3,4], lambda x: -x)
+            >>> _.min([1,2,3,4], lambda x: -x)
             4
-            >>>> _.min([])
+            >>> _.min([])
             -inf
-            >>>> .min(stooges, lambda stooge: stooge['age'])
-           {'name': 'curly', 'age': 60}
+            >>> .min(stooges0, lambda stooge: stooge['age'])
+            {'name': 'moe', 'age': 40}
         """
 		if isinstance(lst, Iterable):
 			if lst is None or len(lst) == 0:
@@ -429,7 +454,7 @@ class underscore(object):
         Example:
             >>> _.sortBy([1, 2, 3, 4, 5, 6], lambda num: math.sin(num))
             [5, 4, 6, 3, 1, 2]
-            >>> _.sortBy(stooges, 'name')
+            >>> _.sortBy(stooges0, 'name')
             [{'age': 60, 'name': 'curly'}, {'age': 50, 'name': 'larry'}, {'age': 40, 'name': 'moe'}]
         """
 		if iteratee is None:
@@ -483,7 +508,7 @@ class underscore(object):
         like :py:meth:`groupBy`, but when you know your keys are unique.
 
         Example:
-            >>> _.indexBy(stooges, 'age')
+            >>> _.indexBy(stooges0, 'age')
             {40: {'age': 40, 'name': 'moe'}, 50: {'age': 50, 'name': 'larry'}, 60: {'age': 60, 'name': 'curly'}}
         """
 		if isinstance(lst, Iterable):
@@ -573,7 +598,7 @@ class underscore(object):
         Example:
             >>> _.partition([0, 1, 2, 3, 4, 5], lambda num: num % 2 != 0)
             [[1, 3, 5], [0, 2, 4]]
-			>>> _.partition((0, 1, 2, 3, 4, 5), lambda num: num % 2 != 0)
+            >>> _.partition((0, 1, 2, 3, 4, 5), lambda num: num % 2 != 0)
             ((1, 3, 5), (0, 2, 4))
         """
 		yes = []
@@ -801,10 +826,10 @@ class underscore(object):
         Example:
             >>> _.uniq([1, 2, 1, 3, 1, 4, 2])
             [1, 2, 3, 4]
-			>>> _.uniq([1, 1, 1, 2, 3, 4, 4, 5], isSorted = True)
-			[1, 2, 3, 4, 5]
-			>>> _.uniq([1.5, 1.7, 2.0, 2.5, 2.5, 3.0, 4.0], iteratee = math.floor)
-			[1.5, 2.0, 3.0, 4.0]
+            >>> _.uniq([1, 1, 1, 2, 3, 4, 4, 5], isSorted = True)
+            [1, 2, 3, 4, 5]
+            >>> _.uniq([1.5, 1.7, 2.0, 2.5, 2.5, 3.0, 4.0], iteratee = math.floor)
+            [1.5, 2.0, 3.0, 4.0]
         """
 		if not isinstance(array, list):
 			raise TypeError("argument must be an array")
@@ -856,7 +881,7 @@ class underscore(object):
             >>> _.object([['moe', 30], ['larry', 40], ['curly', 50]])
             {'larry': 40, 'curly': 50, 'moe': 30}
             >>> _.object([('moe', 30), ('larry', 40), ('curly', 50)])
-			{'larry': 40, 'curly': 50, 'moe': 30}
+            {'larry': 40, 'curly': 50, 'moe': 30}
             >>> _.object(['moe', 'larry', 'curly'], [30, 40, 50])
             {'larry': 40, 'curly': 50, 'moe': 30}
         """
@@ -875,10 +900,10 @@ class underscore(object):
         Example:
             >>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2)
             1
-			>>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)
-			4
-			_.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 10)
-			-1
+            >>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)
+            4
+            _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 10)
+            -1
         """
 		# I could have relied on findIndex, but this is way simpler. Actually, I could have
 		# also used the built-in facility, but the lastIndexOf cannot be done that way, so
@@ -901,8 +926,8 @@ class underscore(object):
         Example:
             >>> _.lastIndexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2)
             7
-			>>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)
-			4
+            >>> _.indexOf([1, 2, 3, 1, 2, 3, 4, 2, 5], 2, 3, 6)
+            4
         """
 		if not isinstance(array, list):
 			raise TypeError("arguments must be a list")
@@ -921,7 +946,7 @@ class underscore(object):
         Example:
             >>> _.sortedIndex([10, 20, 30, 40, 50], 35)
             3
-			>>> _.sortedIndex([10, 20, 30, 40, 50], 55)
+            >>> _.sortedIndex([10, 20, 30, 40, 50], 55)
             5
             >>> stooges2 = [{'name': 'moe', 'age': 40}, {'name': 'curly', 'age': 60}]
             >>> _.sortedIndex(stooges2, {'name': 'larry', 'age': 50}, 'age')
@@ -952,12 +977,11 @@ class underscore(object):
             -1
             >>> _.findIndex([4, 6, 7, 12], isPrime)
             2
-			>>> _.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=3)
-			-1
-			>>> _.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=1, endIndex=5)
-			2
+            >>> _.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=3)
+            -1
+            >>> _.findIndex([4, 6, 3, 12, 14, 16], isPrime, startIndex=1, endIndex=5)
+            2
         """
-
 		if not isinstance(array, list):
 			raise TypeError("arguments must be a list")
 		else:
@@ -977,8 +1001,8 @@ class underscore(object):
         Example:
             >>> _.findLastIndex([4, 6, 5, 7, 12],isPrime)
             3
-			>>> _.findLastIndex([2, 6, 7, 12, 13, 16], isPrime, startIndex = 1, endIndex = 3)
-			2
+            >>> _.findLastIndex([2, 6, 7, 12, 13, 16], isPrime, startIndex = 1, endIndex = 3)
+            2
         """
 		if not isinstance(array, list):
 			raise TypeError("arguments must be a list")
@@ -1205,11 +1229,10 @@ class underscore(object):
 	@staticmethod
 	def mapObject(obj, iteratee = None, context = None):
 		"""
-		**Aliases**:
+        **Aliases**:
             :py:meth:`mapObject`, :py:meth:`collectObject`
 
-		Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``index`` (or ``key``) of the iteration, the ``value``, and finally a reference to the entire list.
-        If **iteratee** is not set or is ``None``, a copy of **obj** is returned.
+		Like :py:meth:`map`, but for objects (a.k.a. dictionaries). Transform the value of each property in turn. The **iteratee** is passed three arguments: the ``index`` (or ``key``) of the iteration, the ``value``, and finally a reference to the entire list. If **iteratee** is not set or is ``None``, a copy of **obj** is returned.
 
         Example:
             >>> _.mapObject({'one': 1, 'two': 2, 'three': 3})
@@ -1362,9 +1385,9 @@ class underscore(object):
             >>> iceCream = {'flavor': "chocolate"}
             >>> _.defaults(iceCream, {'flavor': "vanilla", 'sprinkles': "lots"})
             {'flavor': 'chocolate', 'sprinkles': 'lots'}
-			>>> myDefaults = [{'flavor':'vanilla', 'sprinkles':'lots'}, {'toGo': True}]
-			>>> _.defaults(iceCream, *myDefaults)
-			{'flavor': 'chocolate', 'sprinkles': 'lots', 'toGo' : True}
+            >>> myDefaults = [{'flavor':'vanilla', 'sprinkles':'lots'}, {'toGo': True}]
+            >>> _.defaults(iceCream, *myDefaults)
+            {'flavor': 'chocolate', 'sprinkles': 'lots', 'toGo' : True}
         """
 		if not isinstance(obj, dict) or (False in [isinstance(s, dict) for s in defaults]):
 			raise TypeError("arguments must be dictionaries")
@@ -1391,32 +1414,34 @@ class underscore(object):
 	@staticmethod
 	def property(key):
 		"""
-		**Aliases**:
-            :py:meth:`property`, :py:meth:`attribute`
+        **Aliases**:
+        :py:meth:`property`, :py:meth:`attribute`
 
 		Returns a function that will itself return the **key** property of any passed-in object.
 
         Example:
             >>> getName = _.property('name')
-            >>> getName(stooges[0])
+            >>> getName(stooges[3])
+            joe
+            >>> getName(stooges0[0])
             moe
-            >>> getName(stooges[1])
-            larry
         """
 		return lambda obj: obj[key]
 
 	@staticmethod
 	def propertyOf(obj):
 		"""
-		**Aliases**:
-            :py:meth:`propertyOf`, :py:meth:`attributeOf`
+        **Aliases**:
+           :py:meth:`propertyOf`, :py:meth:`attributeOf`
 
 		Inverse of :py:meth:`property`. Takes an **obj** and returns a function which will return the value of a provided property. In effect, the functional equivalent of ``obj[key]`` where ``obj`` is fixed.
 
         Example:
-            >>> getValue = _.propertyOf(stooges[0])
+            >>> getValue = _.propertyOf(stooges[3])
             >>> getValue('name')
-            moe
+            joe
+            >>> getValue('age')
+            60
         """
 		return lambda key: obj[key]
 
@@ -1426,10 +1451,10 @@ class underscore(object):
 
         Example:
             >>> checkAge = _.matcher({'age': 60})
-			>>> checkAge(stooges[0])
-			False
-			>>> CheckAge(stooges[2])
-			True
+            >>> checkAge(stooges[0])
+            False
+            >>> CheckAge(stooges[2])
+            True
         """
 		if not isinstance(attrs, dict):
 			raise TypeError("argument must be a dictionary")
@@ -1448,6 +1473,8 @@ class underscore(object):
         Example:
             >>> _.isMatch(stooge[0], {'age': 40})
             True
+            >>> _.isMatch(stooge[3], {'age': 40})
+            False
         """
 		if not isinstance(obj, dict) or not isinstance(properties, dict):
 			raise TypeError("arguments must be dictionaries")
@@ -1485,9 +1512,9 @@ class underscore(object):
         Example:
             >>> _.isFunction(isPrime)
             True
-			>>> _.isFunction(lambda x: x+1)
+            >>> _.isFunction(lambda x: x+1)
             True
-			>>> _.isFunction(1)
+            >>> _.isFunction(1)
             False
 		"""
 		return isinstance(obj, (LambdaType, FunctionType, MethodType))
@@ -1683,17 +1710,4 @@ class underscore(object):
 	attributeOf   = propertyOf
 
 if __name__ == '__main__':
-	class Multiplier:
-		def __init__(self):
-			self.factor = 1
-		def setValue(self,i):
-			self.factor = i
-		def mult(self, x, *args):
-			return self.factor * x
-
-	a = [2,3,4]
-	print(underscore.map(a, underscore.identity))
-	m = Multiplier()
-	m.setValue(10)
-	print(underscore.map(a, m.mult))
-	print(underscore.map(a, Multiplier.mult, m))
+	pass

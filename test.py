@@ -294,8 +294,8 @@ _tests = [
 			OneTest(
 					"max on an dict",
 					"{'name': 'curly', 'age': 60}",
-					[stooges],
-					"_.max(stooges, lambda stooge: stooge['age'])"
+					[stooges0],
+					"_.max(stooges0, lambda stooge: stooge['age'])"
 			),
 		]
 	),
@@ -323,8 +323,8 @@ _tests = [
 			OneTest(
 					"min on an dict",
 					"{'name': 'moe', 'age': 40}",
-					[stooges],
-					"_.min(stooges, lambda stooge: stooge['age'])"
+					[stooges0],
+					"_.min(stooges0, lambda stooge: stooge['age'])"
 			),
 		]
 	),
@@ -340,8 +340,8 @@ _tests = [
 			OneTest(
 					"sort by on a dictionary with a predicate name",
 					"[{'age': 60, 'name': 'curly'}, {'age': 60, 'name': 'joe'}, {'age': 50, 'name': 'larry'}, {'age': 40, 'name': 'moe'}]",
-					[stooges],
-					"_.sortBy(stooges, 'name')"
+					[stooges0],
+					"_.sortBy(stooges0, 'name')"
 			),
 		]
 	),
